@@ -1,30 +1,0 @@
-8
-
-dir
-0
-http://ninjas.ideias3.com/bd/docs
-http://ninjas.ideias3.com/bd
-add
-
-
-
-
-
-
-
-svn:special svn:externals svn:needs-lock
-
-teste.textile
-file
-
-
-
-add
-
-coiso.txt
-file
-
-
-
-add
-
