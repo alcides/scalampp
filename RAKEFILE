@@ -4,10 +4,10 @@ require 'ftools'
 require 'fileutils'
 require "erb"
 
-$title = "Example"
+$title = "Projecto de Sistemas Distribuídos 2008/2009"
 $input_folder = "docs"
 $output_folder = "html" # Export folder for converted files
-$template = "docs_templates/clean.html.erb"
+$template = "docs_templates/dei.html.erb"
 
 def convert_to_textile(src,dest)
   
