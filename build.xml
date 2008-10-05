@@ -3,6 +3,7 @@
 
 <project name="sd" default="compile" basedir=".">
 
+  <property name="user.name"		 value="Alcides Fonseca"/>	
   <property name="project.name"      value="sd"/>	
   <property name="project.version"   value="0.1.0"/>	
 
@@ -18,6 +19,7 @@
   <property name="src.includes-java"      value="**/*.java"/>	
   <property name="src.excludes"      value="**/*.class"/>	
 
+  <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar"/>
 
   <path id="library.classpath">
   	<pathelement location="${scala.home}/lib/scala-decoder.jar" />
@@ -53,7 +55,6 @@ does not already exist.
     <mkdir dir="${docs.dir}"/>
     <mkdir dir="${dist.dir}"/>
 
-    <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar"/>
     <path id="build.classpath">
       <pathelement location="${scala-library.jar}"/>
       <path refid="library.classpath"/>
@@ -115,7 +116,17 @@ just one file at a time.
   </target>
 	
   <target name="dist" depends="clean,compile,docs">
-		<jar jarfile="${dist.dir}/${project.name}-${project.version}.jar" basedir="${build.dir}"/>
+		<jar jarfile="${dist.dir}/${project.name}-${project.version}.jar" basedir="${build.dir}">
+			<zipfileset dir="${build.dir}" prefix="" />
+			<zipfileset src="${scala-library.jar}" />
+			<manifest>
+				<attribute name="Main-Class" value="${main.class}"/>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Implementation-Vendor" value="${user.name}"/>
+				<attribute name="Implementation-Title" value="${project.name}"/>
+				<attribute name="Implementation-Version" value="${project.version}"/>
+		    </manifest>
+		</jar>
 		<jar jarfile="${dist.dir}/${project.name}-${project.version}.doc.jar" basedir="${docs.dir}"/>		
   </target>
 

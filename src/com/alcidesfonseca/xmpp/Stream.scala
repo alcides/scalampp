@@ -8,7 +8,7 @@ package com.alcidesfonseca.xmpp
 
 import scala.xml._
 
-class Stream {
+class Stream(out:OutChannel) {
 	var init = 0
 	def parse(x:String):Boolean = {
 		
@@ -16,6 +16,7 @@ class Stream {
 			// So here we look for a valid stream. Works with Adium at least
 			try {
 				var xml = XML.loadString(x + "</stream:stream>") 
+				out.write(XMLStrings.startString(out.getId()) + XMLStrings.authenticationString )
 				init = 1
 				true
 			} 
@@ -23,8 +24,24 @@ class Stream {
 				case e : Exception => false
 			}
 		} else {
+			
+			if (x == "</stream:stream>") false // Connection closed TODO
+			
 			//stream is initialized, so here we should be looking for stanzas
-			false
+			try {
+				var xml = XML.loadString(x)
+				
+				xml match {
+					case <auth>{ inside @ _ * }</auth> => {
+						println("SECRET: " + inside(0))
+						true
+					}
+				    case _ => false 
+				}
+			} 
+			catch {
+				case e : Exception => false
+			}
 		}
 
 	}
