@@ -9,6 +9,6 @@ import com.alcidesfonseca.xmpp._
 
 object Boot {
 	def main(args: Array[String]) {
-		Test.main(null)
+		TCPserver.main(args)
 	}
 }

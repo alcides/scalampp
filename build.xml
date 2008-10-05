@@ -14,7 +14,8 @@
   <property name="dist.dir"          value="./dist"/>
   <property name="docs.dir"          value="./documentation"/>
 
-  <property name="src.includes"      value="**/*.scala"/>	
+  <property name="src.includes"      value="**/*.scala"/>
+  <property name="src.includes-java"      value="**/*.java"/>	
   <property name="src.excludes"      value="**/*.class"/>	
 
 
@@ -72,7 +73,17 @@ projects: the compile target is trivial, since it just says to build
 everything.  Fancier compiler targets are easy if you want to build
 just one file at a time.
  -->
-    <target name="compile" depends="init">
+
+	 <target name="compile-java" depends="init">
+	     <javac srcdir="${src.dir}" 
+	            destdir="${build.dir}"
+	            debug="${compile.debug}"
+	            source="1.5">
+	        <classpath refid="library.classpath"/>
+	     </javac>
+	 </target>
+
+    <target name="compile" depends="compile-java">
 	 	<fsc srcdir="${src.dir}"
 	            destdir="${build.dir}"
 	            classpathref="build.classpath"

@@ -7,8 +7,13 @@
 
 package com.alcidesfonseca.xmpp;
 
-object Test {
-	def main(args: Array[String]) {
-		println("Hello, world!")
+class Stream {
+	
+	def parse(x:String):Boolean = {
+		x match {
+		          case <stream> => true
+		          case _ => false
+		}
 	}
+	
 }
