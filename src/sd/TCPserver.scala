@@ -6,9 +6,10 @@ import com.alcidesfonseca.xmpp._
 
 class Connection(clientSocket:Socket) extends Thread {
 	val in:BufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	//val in:DataInputStream = new DataInputStream(clientSocket.getInputStream());
 	val out:DataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
 	var cstream = new Stream()
+	val host = clientSocket.getInetAddress()
+	val port = clientSocket.getPort()
 	
 	override def run = {
 		try {
@@ -25,7 +26,7 @@ class Connection(clientSocket:Socket) extends Thread {
 					    case true => ""
 						case false => data_to_parse
 					}
-					println(data_to_parse)
+					if (cstream.init == 1) println(host + ":" + port + " initialized a valid stream")
 				}
 				
 				()
@@ -36,7 +37,7 @@ class Connection(clientSocket:Socket) extends Thread {
 			case e : IOException => println("IO: " + e)
 		}
 	}
-	println("Received connection from: " + clientSocket.getInetAddress()  + ":" + clientSocket.getPort() )
+	println("Received connection from: " + host  + ":" + port )
 	start()
 }
 
