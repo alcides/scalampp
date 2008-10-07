@@ -10,5 +10,12 @@ import java.net.InetAddress;
 
 object XMLStrings {
 	def startString(id:String) = "<?xml version='1.0'?><stream:stream from='"+InetAddress.getLocalHost().getHostAddress()+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
-	val authenticationString = "<stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
+	
+	val authenticationString = <stream:features>
+			<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+				<mechanism>PLAIN</mechanism>
+			</mechanisms>
+		</stream:features>
+		
+		
 }
