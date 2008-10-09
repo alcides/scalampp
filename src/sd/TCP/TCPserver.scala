@@ -25,8 +25,6 @@ class Connection(clientSocket:Socket) extends Thread {
 					    case true => ""
 						case false => data_to_parse
 					}
-					// DEBUG
-					println(data_to_parse)
 				}
 				
 				()

@@ -19,7 +19,8 @@ class Stream(out:OutChannel) {
 			// So here we look for a valid stream. Works with Adium at least
 			try {
 				var xml = XML.loadString(x + XMLStrings.stream_end) 
-				out.write(XMLStrings.stream_start(out.getId()) + XMLStrings.stream_auth_methods )
+				out.write( XMLStrings.stream_start(out.getId()) )
+				out.write( XMLStrings.stream_auth_methods.toString() )
 				init = 1
 				true
 			} 
@@ -42,7 +43,7 @@ class Stream(out:OutChannel) {
 						
 						//println("decoded: " + decoded)
 						
-						out.write(XMLStrings.stream_auth_accepted.toString())
+						//out.write(XMLStrings.stream_auth_accepted.toString())
 						
 						// out.write(XMLStrings.stream_auth_failed + XMLStrings.stream_end)
 						
