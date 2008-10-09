@@ -9,13 +9,24 @@ package com.alcidesfonseca.xmpp
 import java.net.InetAddress;
 
 object XMLStrings {
-	def startString(id:String) = "<?xml version='1.0'?><stream:stream from='"+InetAddress.getLocalHost().getHostAddress()+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
 	
-	val authenticationString = <stream:features>
+	val xmlInit = "<?xml version='1.0'?>"
+	
+	def stream_start(id:String) = xmlInit + "<stream:stream from='"+InetAddress.getLocalHost().getHostAddress()+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
+	
+	val stream_end = "</stream:stream>"
+	
+	val stream_auth_methods = <stream:features>
 			<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
 				<mechanism>PLAIN</mechanism>
 			</mechanisms>
 		</stream:features>
+		
+	val stream_auth_accepted =  <success xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>
+	
+	val stream_auth_rejected = <failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+	     <not-authorized/>
+	   </failure>
 		
 		
 }
