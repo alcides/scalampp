@@ -79,7 +79,21 @@ class Stream(out:OutChannel) {
 					out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_features)
 					true
 				}
-				false
+				
+				try {
+					var xml = XML.loadString(x)
+
+					xml match {
+						case <iq><bind><resource>{ res @ _ * }</resource></bind></iq> => {
+							println("resource: " + res)
+							true
+						}
+					    case _ => false 
+					}
+				} 
+				catch {
+					case e : Exception => false
+				}
 			}
 			
 		

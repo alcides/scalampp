@@ -3,6 +3,9 @@ package com.alcidesfonseca.xmpp
 class Session(id:int) {
 	var init = false
 	var logged = false
+	var connected = false
+	
+	
 	def getId() = "c2s_"+ id.toString()
 	
 	
