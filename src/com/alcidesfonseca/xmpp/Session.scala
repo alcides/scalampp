@@ -1,7 +1,12 @@
 package com.alcidesfonseca.xmpp
 
-class Session {
+class Session(id:int) {
+	var init = false
 	var logged = false
-	var id = 0
-	def getId() = id.toString()
+	def getId() = "c2s_"+ id.toString()
+	
+	
+	def close() = {
+		SessionManager.destroySession(this)
+	}
 }

@@ -10,18 +10,20 @@ import scala.xml._
 import org.publicdomain._
 
 class Stream(out:OutChannel) {
-	var init = 0
+	
+	var session = SessionManager.createSession
+	
 	def parse(x:String):Boolean = {
 	
 		println("in: " + x)
 		
-		if (init == 0) {
+		if (session.init == false) {
 			// So here we look for a valid stream. Works with Adium at least
 			try {
 				var xml = XML.loadString(x + XMLStrings.stream_end)
 				
-				out.write("<?xml version=\"1.0\" ?><stream:stream from=\"gmail.com\" id=\"559CC06030C3637E\" version=\"1.0\" xmlns:stream=\"http://etherx.jabber.org/streams\" xmlns=\"jabber:client\"><stream:features><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>") //XMLStrings.stream_start("id") + XMLStrings.stream_auth_methods_alt )
-				init = 1
+				out.write( XMLStrings.stream_start("id") + XMLStrings.stream_auth_methods_alt )
+				session.init = true
 				true
 			} 
 			catch {
@@ -29,7 +31,10 @@ class Stream(out:OutChannel) {
 			}
 		} else {
 			
-			if (x == XMLStrings.stream_end) false // Connection closed TODO
+			if (x == XMLStrings.stream_end) {
+				session.close
+				false
+			}
 			
 			//stream is initialized, so here we should be looking for stanzas
 			try {
@@ -37,15 +42,14 @@ class Stream(out:OutChannel) {
 				
 				xml match {
 					case <auth>{ inside @ _ * }</auth> => {
-						println("test")
 						
-						//var decoded = new String(Base64.decode( inside(0).toString() ))
+						var decoded = new String(Base64.decode( inside(0).toString() ))
 						
-						//println("decoded: " + decoded)
+						println("decoded: " + decoded)
 						
-						//out.write(XMLStrings.stream_auth_accepted.toString())
+						out.write(XMLStrings.stream_auth_accepted.toString())
 						
-						// out.write(XMLStrings.stream_auth_failed + XMLStrings.stream_end)
+						//out.write(XMLStrings.stream_auth_failed + XMLStrings.stream_end)
 						
 						true
 					}
