@@ -13,14 +13,14 @@ class Stream(out:OutChannel) {
 	var init = 0
 	def parse(x:String):Boolean = {
 	
-		println(x)
+		println("in: " + x)
 		
 		if (init == 0) {
 			// So here we look for a valid stream. Works with Adium at least
 			try {
-				var xml = XML.loadString(x + XMLStrings.stream_end) 
-				out.write( XMLStrings.stream_start(out.getId()) )
-				out.write( XMLStrings.stream_auth_methods.toString() )
+				var xml = XML.loadString(x + XMLStrings.stream_end)
+				
+				out.write("<?xml version=\"1.0\" ?><stream:stream from=\"gmail.com\" id=\"559CC06030C3637E\" version=\"1.0\" xmlns:stream=\"http://etherx.jabber.org/streams\" xmlns=\"jabber:client\"><stream:features><mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\"><mechanism>PLAIN</mechanism></mechanisms></stream:features>") //XMLStrings.stream_start("id") + XMLStrings.stream_auth_methods_alt )
 				init = 1
 				true
 			} 
