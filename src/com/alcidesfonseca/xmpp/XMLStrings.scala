@@ -22,13 +22,17 @@ object XMLStrings {
 			</mechanisms>
 		</stream:features>
 		
-	val stream_auth_methods_alt = "<stream:features><starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'><required/></starttls><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>X-GOOGLE-TOKEN</mechanism></mechanisms></stream:features>"
+	val stream_auth_methods_alt = "<stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism></mechanisms></stream:features>"
 		
 	val stream_auth_accepted =  <success xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>
 	
-	val stream_auth_rejected = <failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
+	val stream_auth_failed = <failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
 	     <not-authorized/>
 	   </failure>
 		
+	val stream_features =  <stream:features>
+	     <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/>
+	     <session xmlns="urn:ietf:params:xml:ns:xmpp-session"/>
+	   </stream:features>
 		
 }
