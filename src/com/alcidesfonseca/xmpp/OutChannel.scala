@@ -8,5 +8,4 @@ package com.alcidesfonseca.xmpp
 
 abstract class OutChannel {
 	def write(s:String):Unit
-	def getId():String
 }

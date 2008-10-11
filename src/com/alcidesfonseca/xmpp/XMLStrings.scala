@@ -20,6 +20,7 @@ object XMLStrings {
 			<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
 				<mechanism>PLAIN</mechanism>
 			</mechanisms>
+			<register xmlns="http://jabber.org/features/iq-register/" />
 		</stream:features>
 		
 	val stream_auth_methods_alt = "<stream:features><mechanisms xmlns='urn:ietf:params:xml:ns:xmpp-sasl'><mechanism>PLAIN</mechanism></mechanisms></stream:features>"

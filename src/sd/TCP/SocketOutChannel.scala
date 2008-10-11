@@ -18,8 +18,5 @@ class SocketOutChannel(socket:Socket) extends OutChannel {
 		println("out: " + s)
 		()
 	}
-	
-	def getId():String = {
-		socket.getInetAddress() + ":" + socket.getPort()
-	}
+
 }
