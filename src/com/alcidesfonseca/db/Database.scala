@@ -14,14 +14,15 @@ object Database {
 	}
 	
 	def getUsers(): List[User]= {
-		var l = List()
+		var l = new java.util.ArrayList[User]
 		val rs = query("SELECT * FROM users")
+		var u:User = null
 		while (rs.next()) {
-			println(rs.getString("name"))
-		 	//(new User(rs.getString("name"),rs.getString("pass"))) :: l
+			u = new User(rs.getString("name"),rs.getString("pass"))
+			l.add(u)
 		}
 		rs.close();
-		l
+		(for(i <- 0 until l.size) yield l.get(i)).toList
 	}
 	
 	def close = conn.close
