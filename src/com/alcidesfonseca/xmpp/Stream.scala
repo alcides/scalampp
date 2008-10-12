@@ -93,6 +93,7 @@ class Stream(out:OutChannel) {
 								true
 							}
 							case <iq><session /></iq> => {
+								session.makeActive
 								out.write(XMLStrings.session_set((xml \ "@id").toString))
 								true
 							}

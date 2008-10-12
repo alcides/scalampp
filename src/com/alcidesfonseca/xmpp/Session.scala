@@ -7,6 +7,7 @@ class Session(id:int) {
 	var init = false
 	var logged = false
 	var connected = false
+	var active = false
 	var user:User = new User("","")
 	var resource = ""
 	
@@ -18,4 +19,10 @@ class Session(id:int) {
 	def close() = {
 		SessionManager.destroySession(this)
 	}
+	
+	def makeActive = {
+		active = true
+		user.setOnline(true)
+	} 
+	
 }
