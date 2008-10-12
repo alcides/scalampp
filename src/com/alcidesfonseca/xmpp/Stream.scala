@@ -54,10 +54,18 @@ class Stream(out:OutChannel) {
 
 						xml match {
 							case <auth>{ inside @ _ * }</auth> => {
-
-								var decoded = new String(Base64.decode( inside(0).toString() )) // ,"UTF-8")
 								
-								var splitted = decoded.split("\0") // \0 + username + \0 + pass
+								var decoded = ""
+								var splitted = Array[String]()
+								
+								try {	
+									decoded = new String(Base64.decode( inside(0).toString() )) // ,"UTF-8")
+									splitted = decoded.split("\0") // \0 + username + \0 + pass
+									()
+								} 
+								catch {
+									case e : Exception => out.write(XMLStrings.stream_auth_incorrect_encoding)
+								}
 
 								var u = UserManager.auth(splitted(1),splitted(2))
 								
