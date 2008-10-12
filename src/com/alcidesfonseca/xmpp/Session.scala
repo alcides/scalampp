@@ -1,6 +1,7 @@
 package com.alcidesfonseca.xmpp
 
 import com.alcidesfonseca.db._
+import java.net.InetAddress
 
 class Session(id:int) {
 	var init = false
@@ -12,6 +13,7 @@ class Session(id:int) {
 	
 	def getId() = "c2s_"+ id.toString()
 	
+	def jid() = user.name + "@" + InetAddress.getLocalHost.getHostName + "/" + resource
 	
 	def close() = {
 		SessionManager.destroySession(this)

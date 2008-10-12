@@ -88,8 +88,16 @@ class Stream(out:OutChannel) {
 
 						xml match {
 							case <iq><bind><resource>{ res @ _ * }</resource></bind></iq> => {
-								session.resource = res(0)
-								
+								session.resource = res(0).toString
+								out.write(XMLStrings.session_bind((xml \ "@id").toString,session.jid))
+								true
+							}
+							case <iq><session /></iq> => {
+								out.write(XMLStrings.session_set((xml \ "@id").toString))
+								true
+							}
+							case <iq><query /></iq> => {
+								println( xml(0) \ "@xmlns" )
 								true
 							}
 						    case _ => false 

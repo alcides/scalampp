@@ -12,7 +12,7 @@ object XMLStrings {
 	
 	val xmlInit = "<?xml version='1.0'?>"
 	
-	def stream_start(id:String) = xmlInit + "<stream:stream from='localhost' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
+	def stream_start(id:String) = xmlInit + "<stream:stream from='"+InetAddress.getLocalHost.getHostName+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
 	
 	val stream_end = "</stream:stream>"
 	
@@ -35,5 +35,14 @@ object XMLStrings {
 	     <bind xmlns="urn:ietf:params:xml:ns:xmpp-bind"/>
 	     <session xmlns="urn:ietf:params:xml:ns:xmpp-session"/>
 	   </stream:features>
+	
+	def session_bind(id:String,jid:String) = <iq xmlns="jabber:client" type="result" id={ id } >
+		<bind xmlns="urn:ietf:params:xml:ns:xmpp-bind">
+			<jid>{jid}</jid>
+		</bind>
+	</iq>
 		
+	def session_set(id:String) = <iq type="result" id={ id } >
+		<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/>
+	</iq>
 }
