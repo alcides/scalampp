@@ -56,9 +56,10 @@ class Stream(out:OutChannel) {
 							case <auth>{ inside @ _ * }</auth> => {
 
 								var decoded = new String(Base64.decode( inside(0).toString() )) // ,"UTF-8")
-								var plain = decoded.toList.filter{ i => i.isLetterOrDigit }.mkString("","","")
+								
+								var splitted = decoded.split("\0") // \0 + username + \0 + pass
 
-								var u = UserManager.auth(plain)
+								var u = UserManager.auth(splitted(1),splitted(2))
 								
 								if ( u.valid )  {
 									out.write(XMLStrings.stream_auth_accepted.toString())
