@@ -6,12 +6,12 @@
 //
 
 import com.alcidesfonseca.xmpp._
-import java.sql.{DriverManager}
+import com.alcidesfonseca.db._
 
 object Boot {
 	def main(args: Array[String]) {
-		Class.forName("org.sqlite.JDBC")
-	    val conn = DriverManager.getConnection("jdbc:sqlite:db/dev.db")
+		
+		Database.getUsers.foreach( user => println(user) )
 		
 		TCPserver.main(args)
 	}
