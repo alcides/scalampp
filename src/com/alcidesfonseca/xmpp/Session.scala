@@ -7,6 +7,7 @@ class Session(id:int) {
 	var logged = false
 	var connected = false
 	var user:User = new User("","")
+	var resource = ""
 	
 	
 	def getId() = "c2s_"+ id.toString()
