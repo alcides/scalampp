@@ -54,11 +54,10 @@ class Stream(out:OutChannel) {
 						xml match {
 							case <auth>{ inside @ _ * }</auth> => {
 
-								var decoded = new String(Base64.decode( inside(0).toString() ))
+								var decoded = new String(Base64.decode( inside(0).toString() )) // ,"UTF-8")
+								var plain = decoded.toList.filter{ i => i.isLetterOrDigit }.mkString("","","")
 
-								println("decoded: " + decoded)
-
-								if ( !decoded.equals("alcidestkhxbq") ) { //TODO inverted
+								if ( plain.equals("alcidestkhxbq") ) {
 									out.write(XMLStrings.stream_auth_accepted.toString())
 									session.logged = true
 								} else {

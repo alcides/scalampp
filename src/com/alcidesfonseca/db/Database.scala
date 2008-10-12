@@ -3,17 +3,12 @@ package com.alcidesfonseca.db
 import java.sql.{DriverManager,ResultSet}
 
 
-class User(name:String, pass:String) {
-	override def toString() = name	
-}
-
-
 object Database {
 	
 	Class.forName("org.sqlite.JDBC")
 	val conn = DriverManager.getConnection("jdbc:sqlite:db/dev.db")
 	
-	def query(sql:String):ResultSet = {
+	def query(sql:String):ResultSet = synchronized {
 		val stat = conn.createStatement()
 		stat.executeQuery(sql)
 	}
