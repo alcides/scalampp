@@ -6,9 +6,13 @@
 //
 
 import com.alcidesfonseca.xmpp._
+import com.alcidesfonseca.db._
 
 object Boot {
 	def main(args: Array[String]) {
+		
+		//Database.getUsers.foreach( user => println(user) )
+		
 		TCPserver.main(args)
 	}
 }

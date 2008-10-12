@@ -8,6 +8,7 @@ package com.alcidesfonseca.xmpp
 
 import scala.xml._
 import org.publicdomain._
+import com.alcidesfonseca.db._
 
 class Stream(out:OutChannel) {
 	
@@ -54,13 +55,15 @@ class Stream(out:OutChannel) {
 						xml match {
 							case <auth>{ inside @ _ * }</auth> => {
 
-								var decoded = new String(Base64.decode( inside(0).toString() ))
+								var decoded = new String(Base64.decode( inside(0).toString() )) // ,"UTF-8")
+								var plain = decoded.toList.filter{ i => i.isLetterOrDigit }.mkString("","","")
 
-								println("decoded: " + decoded)
-
-								if ( !decoded.equals("alcidestkhxbq") ) { //TODO inverted
+								var u = UserManager.auth(plain)
+								
+								if ( u.valid )  {
 									out.write(XMLStrings.stream_auth_accepted.toString())
 									session.logged = true
+									session.user = u
 								} else {
 									out.write(XMLStrings.stream_auth_failed + XMLStrings.stream_end)
 								}

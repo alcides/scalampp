@@ -14,6 +14,7 @@
   <property name="build.dir"         value="./build"/>
   <property name="dist.dir"          value="./dist"/>
   <property name="docs.dir"          value="./documentation"/>
+  <property name="lib.dir"    		 value="./library"/>
 
   <property name="src.includes"      value="**/*.scala"/>
   <property name="src.includes-java"      value="**/*.java"/>	
@@ -24,10 +25,7 @@
   <path id="library.classpath">
   	<pathelement location="${scala.home}/lib/scala-decoder.jar" />
 	<pathelement location="${scala.home}/lib/scala-dbc.jar"     />
-  </path>
-
-  <path id="library.path">
-  	<pathelement location="." />
+	<fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
 
@@ -98,6 +96,7 @@ just one file at a time.
     <java fork="true" classname="${main.class}" classpathref="build.classpath">
 		<jvmarg value="-Dfile.encoding=utf-8" />
 		<jvmarg value="-Djava.library.path=${library.path}" />
+		<classpath refid="library.classpath"/>
     </java>
   </target>
 

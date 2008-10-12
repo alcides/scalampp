@@ -12,22 +12,11 @@ class Connection(clientSocket:Socket) extends Thread {
 	
 	override def run = {
 		try {
-			var data_to_parse = ""
-			var code = ""
+			val parser:XMLParser = new XMLParser(cstream)
+
 			while ( clientSocket.isConnected() ) {				
-				code = Helper.asciiDecoder(in.read())
-				if (code != "") {
-					data_to_parse += code
-				}
-				if (code == ">") {
-					
-					data_to_parse = cstream.parse(data_to_parse) match {
-					    case true => ""
-						case false => data_to_parse
-					}
-				}
 				
-				()
+				parser.parse(in.read)
 			}
 		} 
 		catch {
