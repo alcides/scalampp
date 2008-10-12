@@ -87,8 +87,8 @@ class Stream(out:OutChannel) {
 					var xml = XML.loadString(x)
 
 					xml match {
-						case <iq><bind><resource>{ res @ _ * }</resource></bind></iq> => {
-							println("resource: " + res)
+						case <iq><bind>{ res @ _ * }</bind></iq> => {
+							println("resource: " + res(0))
 							true
 						}
 					    case _ => false 

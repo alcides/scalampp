@@ -1,4 +1,4 @@
-package com.acidesfonseca.xmpp;
+package com.alcidesfonseca.xmpp;
 
 public final class Helper {
 	static String asciiDecoder(int i) {

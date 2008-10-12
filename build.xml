@@ -14,12 +14,14 @@
   <property name="build.dir"         value="./build"/>
   <property name="dist.dir"          value="./dist"/>
   <property name="docs.dir"          value="./documentation"/>
-  <property name="lib.dir"    		 value="./library"/>
+  <property name="lib.dir"    		 value="./lib"/>
+  <property name="db.dir"           value="./db"/>
 
   <property name="src.includes"      value="**/*.scala"/>
   <property name="src.includes-java"      value="**/*.java"/>	
   <property name="src.excludes"      value="**/*.class"/>	
 
+  <property name="sqlite.jar" value="./lib/sqlitejdbc.jar"/>
   <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar"/>
 
   <path id="library.classpath">
@@ -117,7 +119,9 @@ just one file at a time.
   <target name="dist" depends="clean,compile,docs">
 		<jar jarfile="${dist.dir}/${project.name}-${project.version}.jar" basedir="${build.dir}">
 			<zipfileset dir="${build.dir}" prefix="" />
+			<zipfileset dir="${db.dir}" />
 			<zipfileset src="${scala-library.jar}" />
+			<zipfileset src="${sqlite.jar}" />
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}"/>
 				<attribute name="Built-By" value="${user.name}"/>
