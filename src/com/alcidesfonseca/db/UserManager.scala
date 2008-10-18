@@ -19,15 +19,18 @@ class User(val name:String, val pass:String) {
 
 object UserManager {
 	var users = Database.getUsers()
-	println(users.length)
 		
-	def auth(username:String,pwd:String) = {
+	def auth(username:String,pwd:String) = synchronized {
 		var result = users.filter { u => ( (u.name == username) && (u.pass == pwd)) }
 		if (result.length == 0) {
 			new User("","")
 		} else {
 			result(0)
 		}
+	}
+	
+	def sendMessage(to:String,content:String) = synchronized {
 		
 	}
+	
 }

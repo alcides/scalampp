@@ -125,7 +125,6 @@ class Stream(out:OutChannel) {
 								println("body: " + content(0).text )
 							}
 							case _ => {}
-						
 						}
 						true
 					} else false
