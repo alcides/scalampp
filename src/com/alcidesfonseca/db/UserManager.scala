@@ -29,8 +29,4 @@ object UserManager {
 		}
 	}
 	
-	def sendMessage(to:String,content:String) = synchronized {
-		
-	}
-	
 }

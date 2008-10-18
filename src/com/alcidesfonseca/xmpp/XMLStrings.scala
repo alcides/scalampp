@@ -54,4 +54,6 @@ object XMLStrings {
 		<query xmlns="jabber:iq:roster"/>
 	</iq>
 	
+	def message(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
+	
 }

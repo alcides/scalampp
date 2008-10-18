@@ -28,8 +28,6 @@ class Stream(out:OutChannel) {
 	
 	
 	def parse(x:String):Boolean = {
-	
-		println("in: " + x)
 		
 		if (session.init == false) {
 			if (checkStart(x)) {
@@ -51,7 +49,8 @@ class Stream(out:OutChannel) {
 					//stream is initialized, so here we should be looking for stanzas
 					try {
 						var xml = XML.loadString(x)
-
+						println("in: " + x)
+						
 						xml match {
 							case <auth>{ inside @ _ * }</auth> => {
 								
@@ -121,8 +120,9 @@ class Stream(out:OutChannel) {
 									session.setPriority( (xml \ "priority").text.toInt)
 							}
 							case <message>{ content @ _ * }</message> => {
-								println("to: " + xml \ "@to" )
-								println("body: " + content(0).text )
+								SessionManager.sendMessage(session.jid,
+									(xml \ "@to").toString,
+									content(0).text)
 							}
 							case _ => {}
 						}

@@ -4,6 +4,9 @@ import com.alcidesfonseca.db._
 import java.net.InetAddress
 
 class Session(id:int,outc:OutChannel) {
+	
+	var host = "localhost" // InetAddress.getLocalHost.getHostName
+	
 	var init = false
 	var logged = false
 	var connected = false
@@ -15,9 +18,9 @@ class Session(id:int,outc:OutChannel) {
 	
 	def getId() = "c2s_"+ id.toString()
 	
-	def jid() = user.name + "@" + InetAddress.getLocalHost.getHostName + "/" + resource
+	def jid() = user.name + "@" + host + "/" + resource
 	
-	def shortJid() = user.name + "@" + InetAddress.getLocalHost.getHostName
+	def shortJid() = user.name + "@" + host
 	
 	def close() = {
 		SessionManager.destroySession(this)

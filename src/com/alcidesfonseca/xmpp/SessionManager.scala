@@ -6,7 +6,7 @@ object SessionManager {
 	
 	def createSession(out:OutChannel) = synchronized {
 		var n = new Session(cid,out)
-		sessions.::(n)
+		sessions = sessions.::(n)
 		cid += 1
 		n
 	}
@@ -15,8 +15,12 @@ object SessionManager {
 		sessions.remove { ses => (ses == s) }
 	}
 	
-	def getOutChannel(jid:String):OutChannel = synchronized {
-		sessions.filter{ s => s.shortJid().contains(jid) }(0).out
+	def getOutChannels(jid:String):List[OutChannel] = synchronized {
+		sessions.filter { s => s.jid().startsWith(jid) }.map{i => i.out}
+	}
+	
+	def sendMessage(from:String,to:String,content:String) = synchronized {
+		getOutChannels(to).foreach { c => c.write( XMLStrings.message(from,to,content) ) }
 	}
 	
 }
