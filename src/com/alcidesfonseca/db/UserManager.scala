@@ -30,6 +30,4 @@ object UserManager {
 		}
 		
 	}
-	
-	
 }

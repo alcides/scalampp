@@ -8,7 +8,7 @@ package com.alcidesfonseca.xmpp
 
 abstract class OutChannel {
 	def write(s:String):Unit
-	def write(s:Any):Unit = {
+	def write(s:Any):Unit = synchronized {
 		write(s.toString)
 	}
 }

@@ -12,7 +12,7 @@ import com.alcidesfonseca.db._
 
 class Stream(out:OutChannel) {
 	
-	var session = SessionManager.createSession
+	var session = SessionManager.createSession(out)
 	
 	
 	def checkStart(x:String):Boolean = {
@@ -107,21 +107,38 @@ class Stream(out:OutChannel) {
 								true
 							}
 							case <iq><query /></iq> => {
-								println( xml(0) \ "@xmlns" )
+								if ( (xml \ "query").first.namespace == "jabber:iq:roster") {
+									out.write(XMLStrings.roster( (xml \ "@id").toString ))
+								}
+									
 								true
 							}
 							
+							case <iq>{ extra @ _ * }</iq> => {
+								println("WHATS WRONG?")
+								true
+							}
+							
+							
+							case <presence>{ content @ _ * }</presence> => {
+								if ( xml.descendant.count( e => e == <priority /> ) > 0 )
+									println( (xml \ "priority").text.toInt )
+									session.setPriority( (xml \ "priority").text.toInt)
+								true
+							}
 							case <message><body>{ body }</body></message> => {
-								println("from: " + xml(0) \ "@from" )
-								println("to: " + xml(0) \ "@to" )
+								println("from: " + xml \ "@from" )
+								println("to: " + xml \ "@to" )
 								println("body: " + body)
+								true
 							}
 							
 						    case _ => false 
 						}
 					} 
 					catch {
-						case e : Exception => false
+						case e : Exception => { println("not")
+						 false}
 					}
 				}
 			}

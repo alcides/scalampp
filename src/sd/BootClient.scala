@@ -8,8 +8,9 @@
 import com.alcidesfonseca.xmpp._
 import com.alcidesfonseca.db._
 
-object Boot {
+object BootClient {
 	def main(args: Array[String]) {
-		TCPserver.main(args)
+		
+		//TCPclient.main(args)
 	}
 }

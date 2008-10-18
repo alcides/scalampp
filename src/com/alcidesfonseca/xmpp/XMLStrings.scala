@@ -49,4 +49,9 @@ object XMLStrings {
 	def session_set(id:String) = <iq type="result" id={ id } >
 		<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/>
 	</iq>
+	
+	def roster(id:String) = <iq type="result" id={ id } >
+		<query xmlns="jabber:iq:roster"/>
+	</iq>
+	
 }
