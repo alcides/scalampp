@@ -59,7 +59,7 @@ class Stream(out:OutChannel) {
 								var splitted = Array[String]()
 								
 								try {	
-									decoded = new String(Base64.decode( inside(0).toString() )) // ,"UTF-8")
+									decoded = new String(Base64.decode( inside(0).toString() ))
 									splitted = decoded.split("\0") // \0 + username + \0 + pass
 									()
 								} 
@@ -110,6 +110,13 @@ class Stream(out:OutChannel) {
 								println( xml(0) \ "@xmlns" )
 								true
 							}
+							
+							case <message><body>{ body }</body></message> => {
+								println("from: " + xml(0) \ "@from" )
+								println("to: " + xml(0) \ "@to" )
+								println("body: " + body)
+							}
+							
 						    case _ => false 
 						}
 					} 
