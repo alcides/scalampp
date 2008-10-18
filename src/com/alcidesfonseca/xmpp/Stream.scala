@@ -31,7 +31,7 @@ class Stream(out:OutChannel) {
 		
 		if (session.init == false) {
 			if (checkStart(x)) {
-				out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_auth_methods_alt )
+				out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_auth_methods )
 				session.init = true
 				true
 			} else {
@@ -52,6 +52,25 @@ class Stream(out:OutChannel) {
 						println("in: " + x)
 						
 						xml match {
+							
+							case <iq><query><username>{ us @ _ * }</username><password>{ pw @ _ * }</password></query></iq> => {
+								var usern = us(0).toString
+								var passw = pw(0).toString
+								
+								if (UserManager.createUser(usern,passw)) {
+									out.write(XMLStrings.register_success( (xml \ "@id").toString ))
+								} else {
+									out.write( XMLStrings.register_error( (xml \ "@id").toString,usern,passw ))
+								}
+								true
+							}
+							
+							case <iq><query /></iq> => {
+								if ( (xml \ "query").first.namespace == "jabber:iq:register")
+									out.write(XMLStrings.register_info((xml \ "@id").toString))
+								true
+							}
+							
 							case <auth>{ inside @ _ * }</auth> => {
 								
 								var decoded = ""

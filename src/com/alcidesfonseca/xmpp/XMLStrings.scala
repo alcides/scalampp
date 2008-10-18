@@ -46,6 +46,28 @@ object XMLStrings {
 		</bind>
 	</iq>
 		
+		
+	def register_info(id:String) = <iq type="result" id={ id }>
+	        <query xmlns="jabber:iq:register">
+	          <username/>
+	          <password/>
+	        </query>
+	      </iq>
+	
+	def register_success(id:String) = <iq type="result" id={ id }>
+		        <query xmlns="jabber:iq:register"/>
+		      </iq>
+		
+	def register_error(id:String,us:String,pw:String) = <iq type="error" id={ id }>
+			<query xmlns="jabber:iq:register">
+				<username>{ us }</username>
+				<password>{ pw }</password>
+			</query>
+			<error code="409">Username Not Available</error>
+		</iq>	
+		
+		
+		
 	def session_set(id:String) = <iq type="result" id={ id } >
 		<session xmlns="urn:ietf:params:xml:ns:xmpp-session"/>
 	</iq>
@@ -54,6 +76,6 @@ object XMLStrings {
 		<query xmlns="jabber:iq:roster"/>
 	</iq>
 	
-	def message(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
+	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	
 }

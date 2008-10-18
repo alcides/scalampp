@@ -13,7 +13,12 @@ object Database {
 		stat.executeQuery(sql)
 	}
 	
-	def getUsers(): List[User]= {
+	def update(sql:String) = synchronized {
+		val stat = conn.createStatement()
+		stat.executeUpdate(sql);
+	}
+	
+	def getUsers(): List[User]= synchronized {
 		var l = new java.util.ArrayList[User]
 		val rs = query("SELECT * FROM users")
 		var u:User = null

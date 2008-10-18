@@ -20,7 +20,7 @@ object SessionManager {
 	}
 	
 	def sendMessage(from:String,to:String,content:String) = synchronized {
-		getOutChannels(to).foreach { c => c.write( XMLStrings.message(from,to,content) ) }
+		getOutChannels(to).foreach { c => c.write( XMLStrings.message_chat(from,to,content) ) }
 	}
 	
 }

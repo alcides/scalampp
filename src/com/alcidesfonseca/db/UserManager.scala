@@ -29,4 +29,15 @@ object UserManager {
 		}
 	}
 	
+	def createUser(us:String,pw:String) = synchronized {
+		if ( users.filter { u => u.name == us }.length > 0  )
+			false
+		else {
+			Database.update("INSERT INTO users VALUES (NULL, '"+us+"', '"+pw+"');")
+			users = users.::( new User(us,pw) )
+			true
+		}
+		
+	}
+		
 }
