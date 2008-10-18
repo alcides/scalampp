@@ -92,54 +92,43 @@ class Stream(out:OutChannel) {
 					true
 				} else {
 					
-					try {
-						var xml = XML.loadString(x)
-
+					var xml =
+						try {
+							XML.loadString(x)
+						} 
+						catch {
+							case e : Exception => null
+						}
+					
+					if (xml != null) {
+					
 						xml match {
 							case <iq><bind><resource>{ res @ _ * }</resource></bind></iq> => {
 								session.resource = res(0).toString
 								out.write(XMLStrings.session_bind((xml \ "@id").toString,session.jid))
-								true
 							}
 							case <iq><session /></iq> => {
 								session.makeActive
 								out.write(XMLStrings.session_set((xml \ "@id").toString))
-								true
 							}
 							case <iq><query /></iq> => {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster") {
 									out.write(XMLStrings.roster( (xml \ "@id").toString ))
 								}
-									
-								true
-							}
-							
-							case <iq>{ extra @ _ * }</iq> => {
-								println("WHATS WRONG?")
-								true
-							}
-							
-							
+							}		
 							case <presence>{ content @ _ * }</presence> => {
 								if ( xml.descendant.count( e => e == <priority /> ) > 0 )
-									println( (xml \ "priority").text.toInt )
 									session.setPriority( (xml \ "priority").text.toInt)
-								true
 							}
-							case <message><body>{ body }</body></message> => {
-								println("from: " + xml \ "@from" )
+							case <message>{ content @ _ * }</message> => {
 								println("to: " + xml \ "@to" )
-								println("body: " + body)
-								true
+								println("body: " + content(0).text )
 							}
-							
-						    case _ => false 
+							case _ => {}
+						
 						}
-					} 
-					catch {
-						case e : Exception => { println("not")
-						 false}
-					}
+						true
+					} else false
 				}
 			}
 			
