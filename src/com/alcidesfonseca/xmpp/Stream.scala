@@ -90,7 +90,8 @@ class Stream(out:OutChannel) {
 						}
 					} 
 					catch {
-						case e : Exception => false
+						case e : org.xml.sax.SAXParseException => false
+						case e : parsing.FatalError => false
 					}
 			} else {
 				// logged in
@@ -104,7 +105,8 @@ class Stream(out:OutChannel) {
 							XML.loadString(x)
 						} 
 						catch {
-							case e : Exception => null
+							case e : org.xml.sax.SAXParseException => null
+							case e : parsing.FatalError => null
 						}
 					
 					if (xml != null) {
@@ -120,7 +122,7 @@ class Stream(out:OutChannel) {
 							}
 							case <iq><query /></iq> => {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster") {
-									out.write(XMLStrings.roster( (xml \ "@id").toString ))
+									out.write(XMLStrings.roster( (xml \ "@id").toString,session.user.getFriends ))
 								}
 							}		
 							case <presence>{ content @ _ * }</presence> => {

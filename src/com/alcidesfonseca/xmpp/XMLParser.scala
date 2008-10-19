@@ -1,6 +1,6 @@
 package com.alcidesfonseca.xmpp
 
-class XMLParser(cstream:Stream) {
+class XMLParser(p: String=>Boolean) {
 	var code = ""
 	var data_to_parse = ""
 	
@@ -10,7 +10,7 @@ class XMLParser(cstream:Stream) {
 			data_to_parse += code
 		}
 		if (code == ">") {
-			data_to_parse = cstream.parse(data_to_parse) match {
+			data_to_parse = p(data_to_parse) match {
 			    case true => ""
 				case false => data_to_parse
 			}

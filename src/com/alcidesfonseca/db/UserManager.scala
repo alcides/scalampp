@@ -1,5 +1,7 @@
 package com.alcidesfonseca.db
 
+class Friend(var name:String, val jid:String) {}
+
 class User(val name:String, val pass:String) {
 	
 	var online = false
@@ -12,6 +14,10 @@ class User(val name:String, val pass:String) {
 	
 	def setOnline(b:Boolean) = synchronized {
 		online = b
+	}
+	
+	def getFriends = {
+		Database.getFriends(name)
 	}
 	
 }

@@ -3,7 +3,7 @@ package com.alcidesfonseca.xmpp
 import com.alcidesfonseca.db._
 import java.net.InetAddress
 
-class Session(id:int,outc:OutChannel) {
+class Session(id:int,val out:OutChannel) {
 	
 	var host = "localhost" // InetAddress.getLocalHost.getHostName
 	
@@ -13,7 +13,6 @@ class Session(id:int,outc:OutChannel) {
 	var active = false
 	var user:User = new User("","")
 	var resource = ""
-	var out = outc
 	var priority = 0
 	
 	def getId() = "c2s_"+ id.toString()
