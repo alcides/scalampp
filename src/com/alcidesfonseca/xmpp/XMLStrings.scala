@@ -114,6 +114,8 @@ object XMLStrings {
 		<query xmlns="jabber:iq:roster"/>
 	</iq>
 	
+	def presence() = <presence><priority>5</priority></presence>
+	
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	
 }

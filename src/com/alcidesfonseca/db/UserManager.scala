@@ -20,6 +20,22 @@ class User(val name:String, val pass:String) {
 		Database.getFriends(name)
 	}
 	
+	def insertFriend(f:Friend) = synchronized {
+		if ( getFriends.filter { fr => fr.name == f.name }.length > 0  )
+			false
+		else {
+			Database.update("INSERT INTO friends VALUES (NULL, '"+f.name+"', '"+f.jid+"','"+name+"');")
+			true
+		}	
+	}
+	
+	def removeFriend(f:Friend) = synchronized {
+		if ( getFriends.filter { fr => fr.name == f.name }.length > 0  ) {
+			Database.update("DELETE FROM friends WHERE name='"+f.name+"' AND user_name='"+name+"');")
+			true
+		} else false
+	}
+	
 }
 
 
@@ -43,7 +59,6 @@ object UserManager {
 			users = users.::( new User(us,pw) )
 			true
 		}
-		
 	}
 		
 }

@@ -57,6 +57,7 @@ class TCPClientListener(val s:Socket,val in:DataInputStream, val session:ClientS
 					case <iq><query>{ roster @ _ * }</query></iq> => {
 						roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
 						Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
+						out.write(XMLStrings.presence)
 						true
 					}
 					
