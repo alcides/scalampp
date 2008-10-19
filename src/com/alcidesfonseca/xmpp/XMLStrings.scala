@@ -7,14 +7,30 @@
 package com.alcidesfonseca.xmpp
 
 import java.net.InetAddress;
+import scala.xml._
+import org.publicdomain._
 
 object XMLStrings {
 	
-	val xmlInit = "<?xml version='1.0'?>"
+	val xml_init = "<?xml version='1.0'?>"
 	
-	def stream_start(id:String) = xmlInit + "<stream:stream from='"+InetAddress.getLocalHost.getHostName+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
+	def stream_start(id:String) = xml_init + "<stream:stream from='"+InetAddress.getLocalHost.getHostName+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
+	
+	def stream_start(id:String,host:String) = xml_init + "<stream:stream to='"+host+"' id='"+id+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
 	
 	val stream_end = "</stream:stream>"
+	
+	def check_start(x:String):Boolean = {
+		try {
+			var xml = XML.loadString(x + stream_end)
+			true
+		} 
+		catch {
+			case e : Exception => false
+		}
+	}
+	
+	def stream_auth(user:String,pass:String) = <auth>{ Base64.encodeBytes( new String( "\0" + user + "\0" + pass ).getBytes ) }</auth>
 	
 	val stream_auth_methods = <stream:features>
 			<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">

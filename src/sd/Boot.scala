@@ -10,6 +10,6 @@ import com.alcidesfonseca.db._
 
 object Boot {
 	def main(args: Array[String]) {
-		TCPserver.main(args)
+		TCPServer.main(args)
 	}
 }

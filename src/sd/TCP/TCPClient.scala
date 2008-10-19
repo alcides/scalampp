@@ -1,5 +1,19 @@
 import java.io._
 import java.net._
+import com.alcidesfonseca.xmpp._
+
+class TCPClientListener(val s:Socket,val in:DataInputStream) extends Thread {
+	var txt:String = ""
+	override def run = {
+		while (s.isConnected) {
+			txt += in.read()
+			if (XMLStrings.check_start(txt)) {
+				txt = ""
+				println("started")
+			}
+		}
+	}
+}
 
 object TCPClient {
 	def main(args: Array[String]) = {
@@ -10,12 +24,11 @@ object TCPClient {
 		var port = 5222
 		var host = "localhost"
 		var cycle = true
-		var status = 0
+		var status = 1
 	
 		def connect():Socket = {
 			new Socket(host,port)
 		}
-	
 	
 		while (cycle) {
 			try {
@@ -26,19 +39,26 @@ object TCPClient {
 					in = new DataInputStream( s.getInputStream() )
 					out = new DataOutputStream( s.getOutputStream() )
 					
+					// launch receiver
+					new TCPClientListener(s,in).start
+					
 					while (true) {
-						status match {
-						    case 0 => {
-								out.writeBytes( XMPP.stream_start("1",host) )
+						status = status match {
+						    case 1 => {
+								out.writeBytes( XMLStrings.stream_start("1",host) )
 								println("Connecting...")
-								status = 1
+								0
 							}
-							case 1 => {
-								out.writeBytes( XMPP.auth("alcides","thkhxbq").toString )
+							case 2 => {
+								out.writeBytes( XMLStrings.stream_auth("alcides","thkhxbq").toString )
 								println("Authenticating...")
-								status = 2
+								0
 							}
-							case _ => println("Logged!")
+							case 3 => {
+								println("Logged!")
+								0
+							}
+							case _ => 0
 						}
 					}
 					
@@ -68,7 +88,7 @@ object TCPClient {
 						try {
 							s.close
 							if (out != null)
-								out.writeBytes("</stream:stream>")
+								out.writeBytes(XMLStrings.stream_end)
 							cycle = false
 						} 
 						catch {
@@ -82,5 +102,3 @@ object TCPClient {
 		()
 	}	
 }
-
-TCPClient.main(null)

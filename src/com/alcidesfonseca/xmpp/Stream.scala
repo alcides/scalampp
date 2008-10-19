@@ -13,24 +13,13 @@ import com.alcidesfonseca.db._
 class Stream(out:OutChannel) {
 	
 	var session = SessionManager.createSession(out)
-	
-	
-	def checkStart(x:String):Boolean = {
-		// Verifies if the stream has started
-		try {
-			var xml = XML.loadString(x + XMLStrings.stream_end)
-			true
-		} 
-		catch {
-			case e : Exception => false
-		}
-	}
+
 	
 	
 	def parse(x:String):Boolean = {
 		
 		if (session.init == false) {
-			if (checkStart(x)) {
+			if (XMLStrings.check_start(x)) {
 				out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_auth_methods )
 				session.init = true
 				true
@@ -105,7 +94,7 @@ class Stream(out:OutChannel) {
 					}
 			} else {
 				// logged in
-				if (checkStart(x)) {
+				if (XMLStrings.check_start(x)) {
 					out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_features)
 					true
 				} else {
