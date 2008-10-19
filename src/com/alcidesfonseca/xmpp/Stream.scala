@@ -13,24 +13,13 @@ import com.alcidesfonseca.db._
 class Stream(out:OutChannel) {
 	
 	var session = SessionManager.createSession(out)
-	
-	
-	def checkStart(x:String):Boolean = {
-		// Verifies if the stream has started
-		try {
-			var xml = XML.loadString(x + XMLStrings.stream_end)
-			true
-		} 
-		catch {
-			case e : Exception => false
-		}
-	}
+
 	
 	
 	def parse(x:String):Boolean = {
 		
 		if (session.init == false) {
-			if (checkStart(x)) {
+			if (XMLStrings.check_start(x)) {
 				out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_auth_methods )
 				session.init = true
 				true
@@ -101,11 +90,12 @@ class Stream(out:OutChannel) {
 						}
 					} 
 					catch {
-						case e : Exception => false
+						case e : org.xml.sax.SAXParseException => false
+						case e : parsing.FatalError => false
 					}
 			} else {
 				// logged in
-				if (checkStart(x)) {
+				if (XMLStrings.check_start(x)) {
 					out.write( XMLStrings.stream_start(session.getId) + XMLStrings.stream_features)
 					true
 				} else {
@@ -115,7 +105,8 @@ class Stream(out:OutChannel) {
 							XML.loadString(x)
 						} 
 						catch {
-							case e : Exception => null
+							case e : org.xml.sax.SAXParseException => null
+							case e : parsing.FatalError => null
 						}
 					
 					if (xml != null) {
@@ -131,7 +122,7 @@ class Stream(out:OutChannel) {
 							}
 							case <iq><query /></iq> => {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster") {
-									out.write(XMLStrings.roster( (xml \ "@id").toString ))
+									out.write(XMLStrings.roster( (xml \ "@id").toString,session.user.getFriends ))
 								}
 							}		
 							case <presence>{ content @ _ * }</presence> => {

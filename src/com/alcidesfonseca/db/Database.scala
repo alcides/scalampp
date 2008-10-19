@@ -30,6 +30,20 @@ object Database {
 		(for(i <- 0 until l.size) yield l.get(i)).toList
 	}
 	
+	def getFriends(name:String):List[Friend] = synchronized {
+		var l = new java.util.ArrayList[Friend]
+		
+		val rs = query("SELECT * FROM friends WHERE user_name = '" + name + "'")
+		var u:Friend = null
+		while (rs.next()) {
+			u = new Friend(rs.getString("name"),rs.getString("jid"))
+			l.add(u)
+		}
+		rs.close();
+		
+		(for(i <- 0 until l.size) yield l.get(i)).toList
+	}
+	
 	def close = conn.close
 	
 }
