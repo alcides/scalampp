@@ -12,7 +12,7 @@ class Connection(clientSocket:Socket) extends Thread {
 	
 	override def run = {
 		try {
-			val parser:XMLParser = new XMLParser(cstream)
+			val parser:XMLParser = new XMLParser(cstream.parse)
 
 			while ( clientSocket.isConnected() ) {				
 				
@@ -30,6 +30,9 @@ class Connection(clientSocket:Socket) extends Thread {
 
 object TCPServer {
 	def main(args: Array[String]) {
+		
+		//System.setErr(null)
+			
 		var port:int = if (args.length > 1) Integer.parseInt(args(1)) else 5222;
 		println("A escuta no porto " + port)
 		var listenSocket:ServerSocket = new ServerSocket(port);
