@@ -24,7 +24,7 @@ class User(val name:String, val pass:String) {
 		if ( getFriends.filter { fr => fr.name == f.name }.length > 0  )
 			false
 		else {
-			Database.update("INSERT INTO friends VALUES (NULL, '"+f.name+"', '"+f.jid+"','"+name+"');")
+			Database.update("INSERT INTO friends VALUES (NULL, '"+f.jid+"', '"+f.name+"','"+name+"');")
 			true
 		}	
 	}

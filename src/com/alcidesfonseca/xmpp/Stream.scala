@@ -38,7 +38,6 @@ class Stream(out:OutChannel) {
 					//stream is initialized, so here we should be looking for stanzas
 					try {
 						var xml = XML.loadString(x)
-						println("in: " + x)
 						
 						xml match {
 							
@@ -110,7 +109,7 @@ class Stream(out:OutChannel) {
 						}
 					
 					if (xml != null) {
-					
+						println("in: " + x)
 						xml match {
 							case <iq><bind><resource>{ res @ _ * }</resource></bind></iq> => {
 								session.resource = res(0).toString
@@ -124,7 +123,32 @@ class Stream(out:OutChannel) {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster") {
 									out.write(XMLStrings.roster( (xml \ "@id").toString,session.user.getFriends ))
 								}
-							}		
+							}
+							case <iq><query>{ items @ _ * }</query></iq> => {
+								if ( (xml \ "query").first.namespace == "jabber:iq:roster" && (xml \ "@type").toString == "set") {
+									
+									var f:Friend = null
+									var fname = ""
+									items(0).foreach { i =>
+										
+										fname = (i \ "@name").toString
+										if ( fname.equals("") ) fname = (i \ "@jid").toString
+										
+										f = new Friend(fname, (i \ "@jid").toString)
+										
+										session.user.insertFriend(f) // Inserts in database
+										
+										SessionManager.getOutChannels(session.shortJid()).foreach { 
+											o => o.write( XMLStrings.roster_set(List(f)) ) 
+										} // Broadcasts
+									}
+									
+									// Confirmation
+									out.write(XMLStrings.roster_item_sent( (xml \ "@id").toString,session.jid ))
+										
+								}
+							}
+								
 							case <presence>{ content @ _ * }</presence> => {
 								if ( xml.descendant.count( e => e == <priority /> ) > 0 )
 									session.setPriority( (xml \ "priority").text.toInt)

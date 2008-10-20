@@ -107,8 +107,21 @@ object XMLStrings {
 		<iq type="result" id={ id } ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
 	}
 	
-	def roster_item(f:Friend) = <item jid={ f.jid } name={ f.name } subscription='none'></item>
+	def roster_set(fs:List[Friend]) = {
+		var roster = new Queue[Node]()
+		fs.foreach{ f => roster += roster_item(f) }
+		<iq type="set" ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
+	}
 	
+	def roster_item(f:Friend) = <item jid={ f.jid } name={ f.name } subscription="both"><group>Contacts</group></item>
+	
+	def roster_item_request(id:String,jid:String) = <iq type="set" id={ id }>
+		<query xmlns="jabber:iq:roster">
+			<item jid={ jid }><group>Contacts</group></item>
+		</query>
+	</iq>
+	
+	def roster_item_sent(id:String,jid:String) = <iq to={ jid } type="result" id={ jid } />
 	
 	def roster_request(id:String) = <iq type="get" id={ id } >
 		<query xmlns="jabber:iq:roster"/>
