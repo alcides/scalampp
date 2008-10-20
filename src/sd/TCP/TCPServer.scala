@@ -6,7 +6,7 @@ import com.alcidesfonseca.xmpp._
 
 class Connection(clientSocket:Socket) extends Thread {
 	val in:BufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	var cstream = new Stream(new SocketOutChannel(clientSocket))
+	var cstream = new XMPPServerParser(new SocketOutChannel(clientSocket))
 	val host = clientSocket.getInetAddress()
 	val port = clientSocket.getPort()
 	

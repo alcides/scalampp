@@ -6,7 +6,7 @@ import scala.xml._
 class TCPClientListener(val s:Socket,val in:DataInputStream, val session:ClientSession) extends Thread {
 	var txt:String = ""
 	var out = session.out
-	var cstream = new ClientStream(session)
+	var cstream = new XMPPClientParser(session)
 	
 	override def run = {
 		try {
