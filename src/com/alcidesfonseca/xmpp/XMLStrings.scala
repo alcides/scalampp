@@ -100,25 +100,34 @@ object XMLStrings {
 			<error code="409">Username Not Available</error>
 		</iq>	
 		
-	
+
 	def roster(id:String,fs:List[Friend]) = {
 		var roster = new Queue[Node]()
 		fs.foreach{ f => roster += roster_item(f) }
 		<iq type="result" id={ id } ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
 	}
-	
-	def roster_set(fs:List[Friend]) = {
+
+	def roster_set(fs:List[Friend]):Elem = roster_set(fs,"both")	
+	def roster_set(fs:List[Friend],s:String):Elem = {
 		var roster = new Queue[Node]()
-		fs.foreach{ f => roster += roster_item(f) }
+		fs.foreach{ f => if (s.equals("both")) roster += roster_item(f,s) else roster += roster_item_remove(f) }
 		<iq type="set" ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
 	}
 	
-	def roster_item(f:Friend) = <item jid={ f.jid } name={ f.name } subscription="both"><group>Contacts</group></item>
+	def roster_item(f:Friend,s:String):Elem = <item jid={ f.jid } name={ f.name } subscription={ s }><group>Contacts</group></item>
+	def roster_item(f:Friend):Elem = roster_item(f,"both")
 	
 	def roster_item_request(id:String,jid:String) = <iq type="set" id={ id }>
 		<query xmlns="jabber:iq:roster">
 			<item jid={ jid }><group>Contacts</group></item>
 		</query>
+	</iq>
+	
+	def roster_item_remove(id:String,jid:String):Elem = <iq type="set" id={ id }>
+		<query xmlns="jabber:iq:roster"><item jid={ jid } subscription="remove"/></query>
+	</iq>
+	def roster_item_remove(f:Friend):Elem = <iq type="set">
+		<query xmlns="jabber:iq:roster"><item jid={ f.jid } subscription="remove"/></query>
 	</iq>
 	
 	def roster_item_sent(id:String,jid:String) = <iq to={ jid } type="result" id={ jid } />

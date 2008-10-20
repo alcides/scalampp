@@ -120,15 +120,15 @@ class Stream(out:OutChannel) {
 								out.write(XMLStrings.session_set((xml \ "@id").toString))
 							}
 							case <iq><query /></iq> => {
-								if ( (xml \ "query").first.namespace == "jabber:iq:roster") {
+								if ( (xml \ "query").first.namespace == "jabber:iq:roster" && (xml \ "@type").toString == "get") {
 									out.write(XMLStrings.roster( (xml \ "@id").toString,session.user.getFriends ))
 								}
 							}
 							case <iq><query>{ items @ _ * }</query></iq> => {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster" && (xml \ "@type").toString == "set") {
-									
 									var f:Friend = null
 									var fname = ""
+									var method = ""
 									items(0).foreach { i =>
 										
 										fname = (i \ "@name").toString
@@ -136,10 +136,15 @@ class Stream(out:OutChannel) {
 										
 										f = new Friend(fname, (i \ "@jid").toString)
 										
-										session.user.insertFriend(f) // Inserts in database
-										
+										method = (i \ "@subscription").toString
+										if (method == "remove") {
+											session.user.removeFriend(f) // Deletes from database
+										} else {
+											method = "both"
+											session.user.insertFriend(f) // Inserts in database
+										}
 										SessionManager.getOutChannels(session.shortJid()).foreach { 
-											o => o.write( XMLStrings.roster_set(List(f)) ) 
+											o => o.write( XMLStrings.roster_set(List(f),method) ) 
 										} // Broadcasts
 									}
 									
