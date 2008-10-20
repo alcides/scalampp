@@ -138,6 +138,9 @@ object XMLStrings {
 	
 	def presence() = <presence><priority>5</priority></presence>
 	
+	def presence_subscribe(to:String,from:String) = <presence from={ from } to={ to } type="subscribe" />
+	def presence_subscribed(to:String,from:String) = <presence from={ from } to={ to } type="subscribed" />
+	
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	
 }

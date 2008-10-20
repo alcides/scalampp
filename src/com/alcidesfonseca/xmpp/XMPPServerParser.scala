@@ -140,7 +140,7 @@ class XMPPServerParser(out:OutChannel) {
 										if (method == "remove") {
 											session.user.removeFriend(f) // Deletes from database
 										} else {
-											method = "both"
+											method = "none"
 											session.user.insertFriend(f) // Inserts in database
 										}
 										SessionManager.getOutChannels(session.shortJid()).foreach { 
@@ -158,9 +158,17 @@ class XMPPServerParser(out:OutChannel) {
 								if ( xml.descendant.count( e => e == <priority /> ) > 0 )
 									session.setPriority( (xml \ "priority").text.toInt)
 								if ( xml \ "@type".toString == "subscribe" ) {
-									var to = (content \ "@to").toString
-									println("coiso: " + to)
-								}	
+									var to = (xml \ "@to").toString
+									SessionManager.getOutChannels(to).foreach { 
+										o => o.write(XMLStrings.presence_subscribe(to,session.shortJid))
+									}
+								}
+								if ((xml \ "@type").toString == "subscribed") {
+									var to = (xml \ "@to").toString
+									SessionManager.getOutChannels(to).foreach { 
+										o => o.write(XMLStrings.presence_subscribed(to,session.shortJid))
+									}
+								}
 									
 									
 							}
