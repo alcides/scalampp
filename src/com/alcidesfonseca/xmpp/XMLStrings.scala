@@ -107,15 +107,15 @@ object XMLStrings {
 		<iq type="result" id={ id } ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
 	}
 
-	def roster_set(fs:List[Friend]):Elem = roster_set(fs,"both")	
+	def roster_set(fs:List[Friend]):Elem = roster_set(fs,"none")	
 	def roster_set(fs:List[Friend],s:String):Elem = {
 		var roster = new Queue[Node]()
-		fs.foreach{ f => if (s.equals("both")) roster += roster_item(f,s) else roster += roster_item_remove(f) }
+		fs.foreach{ f => if (s.equals("remove")) roster += roster_item_remove(f) else roster += roster_item(f,s) }
 		<iq type="set" ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
 	}
 	
 	def roster_item(f:Friend,s:String):Elem = <item jid={ f.jid } name={ f.name } subscription={ s }><group>Contacts</group></item>
-	def roster_item(f:Friend):Elem = roster_item(f,"both")
+	def roster_item(f:Friend):Elem = roster_item(f,"none")
 	
 	def roster_item_request(id:String,jid:String) = <iq type="set" id={ id }>
 		<query xmlns="jabber:iq:roster">
