@@ -31,7 +31,7 @@ class User(val name:String, val pass:String) {
 	
 	def removeFriend(f:Friend) = synchronized {
 		if ( getFriends.filter { fr => fr.name == f.name }.length > 0  ) {
-			Database.update("DELETE FROM friends WHERE name='"+f.name+"' AND user_name='"+name+"');")
+			Database.update("DELETE FROM friends WHERE jid='"+f.jid+"' AND user_name='"+name+"';")
 			true
 		} else false
 	}
