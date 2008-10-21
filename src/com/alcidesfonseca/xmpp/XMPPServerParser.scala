@@ -167,7 +167,7 @@ class XMPPServerParser(out:OutChannel) {
 								if ((xml \ "@type").toString == "subscribed") {
 									var to = (xml \ "@to").toString
 									
-									session.user.changeFriend(Friend("",to),"to") // changing in the contact that accepted
+									session.user.changeFriend(new Friend("",to),"to") // changing in the contact that accepted
 									
 									UserManager.users.filter{ us => us.jid == to }.foreach { 
 										// changing in the contact that requested
