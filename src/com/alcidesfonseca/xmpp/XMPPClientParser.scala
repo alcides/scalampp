@@ -25,6 +25,7 @@ class XMPPClientParser(session:ClientSession) {
 	var out = session.out
 	
 	def parse(x:String):Boolean = {
+		println("in: " + x)
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
 			true
@@ -43,7 +44,7 @@ class XMPPClientParser(session:ClientSession) {
 				xml match {
 				    case <stream:features>{ _ * }</stream:features> =>  {
 						if (session.getStatus <= 1) 
-							out.write( XMLStrings.stream_auth("alcides","tkhxbq") )
+							out.write( XMLStrings.stream_auth( session.user, session.pass) )
 						else
 							out.write( XMLStrings.session_bind_request("alcides_client") )
 						true
@@ -71,6 +72,12 @@ class XMPPClientParser(session:ClientSession) {
 						out.write( XMLStrings.stream_start_to(session.getHost) )
 						true
 					}
+					
+					case <message>{ content @ _ * }</message> => {
+						println( "* " + (xml \ "@from").toString + " says: " + content(0).text )
+						true
+					}
+					
 					case _ => true
 				}
 				

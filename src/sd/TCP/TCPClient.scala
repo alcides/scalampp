@@ -2,6 +2,7 @@ import java.io._
 import java.net._
 import com.alcidesfonseca.xmpp._
 import scala.xml._
+import java.util.Scanner
 
 class TCPClientListener(val s:Socket,val in:DataInputStream, val session:ClientSession) extends Thread {
 	var txt:String = ""
@@ -26,7 +27,7 @@ object TCPClient {
 	def main(args: Array[String]) = {
 		
 		//Ignore STDERR
-		System.setErr(null)
+		//System.setErr(null)
 		
 		var s:Socket = null
 		var in:DataInputStream = null
@@ -35,6 +36,8 @@ object TCPClient {
 		var port = 5222
 		var host = "localhost"
 		var cycle = true
+		var kb = new Scanner(System.in)
+		var commands:Array[String] = null
 	
 		def connect():Socket = {
 			new Socket(host,port)
@@ -50,6 +53,9 @@ object TCPClient {
 					out = new SocketOutChannel(s)
 					var session = new ClientSession(host,out)
 					
+					if ( args.length >= 1 ) session.user = args(0)
+					if ( args.length >= 2 ) session.pass = args(1)
+					
 					// launch receiver
 					new TCPClientListener(s,in,session).start
 					
@@ -58,6 +64,11 @@ object TCPClient {
 					
 					
 					while (s.isConnected) {
+						commands = kb.nextLine().split(" ")
+						
+						if ( commands(0).equals("send") ) {
+							out.write(XMLStrings.message_chat(commands(1),commands(2)))
+						}
 					}
 					
 			

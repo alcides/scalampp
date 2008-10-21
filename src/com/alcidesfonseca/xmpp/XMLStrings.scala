@@ -143,5 +143,6 @@ object XMLStrings {
 	def presence_unsubscribed(to:String,from:String) = <presence from={ from } to={ to } type="unsubscribed" />
 	
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
+	def message_chat(to:String,content:String) = <message to={ to } type="chat"><body>{ content }</body></message>
 	
 }

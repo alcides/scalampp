@@ -10,7 +10,8 @@ class ClientSession(var host:String,var out:OutChannel) {
 	var status = 0
 	var priority = 0
 	var jid = ""
-	
+	var user = ""
+	var pass = ""
 	
 	def getStanzaId = synchronized { 
 		stz+=1
