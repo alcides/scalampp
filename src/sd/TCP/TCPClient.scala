@@ -26,7 +26,7 @@ object TCPClient {
 	def main(args: Array[String]) = {
 		
 		//Ignore STDERR
-		//System.setErr(null)
+		System.setErr(null)
 		
 		var s:Socket = null
 		var in:DataInputStream = null

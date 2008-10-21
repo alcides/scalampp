@@ -159,14 +159,35 @@ class XMPPServerParser(out:OutChannel) {
 									session.setPriority( (xml \ "priority").text.toInt)
 								if ( xml \ "@type".toString == "subscribe" ) {
 									var to = (xml \ "@to").toString
+									
 									SessionManager.getOutChannels(to).foreach { 
 										o => o.write(XMLStrings.presence_subscribe(to,session.shortJid))
 									}
 								}
 								if ((xml \ "@type").toString == "subscribed") {
 									var to = (xml \ "@to").toString
+									
+									session.user.changeFriend(Friend("",to),"to") // changing in the contact that accepted
+									
+									UserManager.users.filter{ us => us.jid == to }.foreach { 
+										// changing in the contact that requested
+										u => u.changeFriend(new Friend("",session.shortJid),"from") 
+									}
+									
 									SessionManager.getOutChannels(to).foreach { 
 										o => o.write(XMLStrings.presence_subscribed(to,session.shortJid))
+									}
+								}
+								if ((xml \ "@type").toString == "unsubscribed") {
+									var to = (xml \ "@to").toString
+									
+									UserManager.users.filter{ us => us.jid == to }.foreach { 
+										// changing in the contact that requested
+										u => u.changeFriend(new Friend("",session.shortJid),"none") 
+									}
+									
+									SessionManager.getOutChannels(to).foreach { 
+										o => o.write(XMLStrings.presence_unsubscribed(to,session.shortJid))
 									}
 								}
 									

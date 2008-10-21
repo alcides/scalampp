@@ -115,7 +115,7 @@ object XMLStrings {
 	}
 	
 	def roster_item(f:Friend,s:String):Elem = <item jid={ f.jid } name={ f.name } subscription={ s }><group>Contacts</group></item>
-	def roster_item(f:Friend):Elem = roster_item(f,"none")
+	def roster_item(f:Friend):Elem = roster_item(f,f.subscription)
 	
 	def roster_item_request(id:String,jid:String) = <iq type="set" id={ id }>
 		<query xmlns="jabber:iq:roster">
@@ -140,6 +140,7 @@ object XMLStrings {
 	
 	def presence_subscribe(to:String,from:String) = <presence from={ from } to={ to } type="subscribe" />
 	def presence_subscribed(to:String,from:String) = <presence from={ from } to={ to } type="subscribed" />
+	def presence_unsubscribed(to:String,from:String) = <presence from={ from } to={ to } type="unsubscribed" />
 	
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	

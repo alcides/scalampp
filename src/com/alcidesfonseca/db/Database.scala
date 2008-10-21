@@ -38,6 +38,7 @@ object Database {
 		var u:Friend = null
 		while (rs.next()) {
 			u = new Friend(rs.getString("name"),rs.getString("jid"))
+			u.subscription = rs.getString("subscription")
 			l.add(u)
 		}
 		rs.close();
