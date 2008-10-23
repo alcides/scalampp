@@ -155,16 +155,28 @@ class XMPPServerParser(out:OutChannel) {
 							}
 								
 							case <presence>{ content @ _ * }</presence> => {
-								if ( xml.descendant.count( e => e == <priority /> ) > 0 )
-									session.setPriority( (xml \ "priority").text.toInt)
-								if ( xml \ "@type".toString == "subscribe" ) {
+									
+								if ( (xml \ "@type").length == 0 ) {
+									// general
+									if ( xml.descendant.count( e => e == <priority /> ) > 0 )
+										session.setPriority( (xml \ "priority").text.toInt)
+									
+									session.user.getFriends.filter { f => 
+											f.subscription == "from" || f.subscription == "both"  	
+										}.foreach { f =>
+											println("Vamos avisar o " + f.jid)	
+											SessionManager.sendPresence(session.jid,f.jid, content)
+										}
+									
+									
+									
+								} else if ( (xml \ "@type").toString == "subscribe" ) {
 									var to = (xml \ "@to").toString
 									
 									SessionManager.getOutChannels(to).foreach { 
 										o => o.write(XMLStrings.presence_subscribe(to,session.shortJid))
 									}
-								}
-								if ((xml \ "@type").toString == "subscribed") {
+								} else if ((xml \ "@type").toString == "subscribed") {
 									var to = (xml \ "@to").toString
 									
 									session.user.changeFriend(new Friend("",to),"to") // changing in the contact that accepted
@@ -177,8 +189,7 @@ class XMPPServerParser(out:OutChannel) {
 									SessionManager.getOutChannels(to).foreach { 
 										o => o.write(XMLStrings.presence_subscribed(to,session.shortJid))
 									}
-								}
-								if ((xml \ "@type").toString == "unsubscribed") {
+								} else if ((xml \ "@type").toString == "unsubscribed") {
 									var to = (xml \ "@to").toString
 									
 									UserManager.users.filter{ us => us.jid == to }.foreach { 

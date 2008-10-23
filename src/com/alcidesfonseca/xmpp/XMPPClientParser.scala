@@ -17,6 +17,7 @@ class Contact(var name:String, var jid:String) {
 object Roster {
 	var contacts:List[Contact] = List()
 	def addContact(c:Contact) = {
+		contacts = contacts.remove { c2 => c2.jid == c.jid } // in case of replace
 		contacts = contacts.::(c)
 	}
 }
@@ -75,6 +76,21 @@ class XMPPClientParser(session:ClientSession) {
 					
 					case <message>{ content @ _ * }</message> => {
 						println( "* " + (xml \ "@from").toString + " says: " + content(0).text )
+						true
+					}
+					
+					case <presence/> => {
+						
+						if ( (xml \ "@type").length == 0 )
+							Roster.contacts.filter { c => c.jid == (xml \ "@from") }.foreach { c =>
+								c.status == "online"
+							}
+						else if ( (xml \ "@type").text == "unavailable"){
+							Roster.contacts.filter { c => c.jid == (xml \ "@from") }.foreach { c =>
+								c.status == "offline"
+							}
+						}
+						
 						true
 					}
 					

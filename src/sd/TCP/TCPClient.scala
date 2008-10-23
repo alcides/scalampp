@@ -66,9 +66,10 @@ object TCPClient {
 					while (s.isConnected) {
 						commands = kb.nextLine().split(" ")
 						
-						if ( commands(0).equals("send") ) {
+						if ( commands(0).equals("send") )
 							out.write(XMLStrings.message_chat(commands(1),commands(2)))
-						}
+						else if ( commands(0).equals("add") )
+							out.write(XMLStrings.roster_item_request( session.getStanzaId ,commands(1)) )
 					}
 					
 			
