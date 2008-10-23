@@ -122,15 +122,6 @@ class XMPPServerParser(out:OutChannel) {
 							case <iq><query /></iq> => {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster" && (xml \ "@type").toString == "get") {
 									out.write(XMLStrings.roster( (xml \ "@id").toString,session.user.getFriends ))
-									
-									session.user.getFriends.filter { j => 
-											j.subscription.equals("both") || j.subscription.equals("to")  
-										}.foreach { j =>
-											if ( SessionManager.getOutChannels(j.jid).length > 0 ) {
-												
-											}
-										}
-									
 								}
 							}
 							case <iq><query>{ items @ _ * }</query></iq> => {
@@ -167,6 +158,20 @@ class XMPPServerParser(out:OutChannel) {
 									
 								if ( (xml \ "@type").length == 0 ) {
 									// general
+									
+									if (session.priority == 0) {
+										// initial session probing
+										session.user.getFriends.filter { j => 
+												j.subscription.equals("both") || j.subscription.equals("to")  
+											}.foreach { j =>
+												// Commented to be implemented with multiple servers
+												//SessionManager.sendProbePresence(session.jid,j.jid)
+												if ( SessionManager.count(j.jid) > 0)
+													SessionManager.sendPresence(j.jid,session.jid, <status>online</status>)
+												
+											}
+									}
+									
 									if ( xml.descendant.count( e => e == <priority /> ) > 0 )
 										session.setPriority( (xml \ "priority").text.toInt)
 									
@@ -179,11 +184,7 @@ class XMPPServerParser(out:OutChannel) {
 											}	
 									} else {
 										SessionManager.sendPresence(session.jid,( xml \ "@to" ).toString,content)
-										
 									}
-									
-									
-									
 									
 									
 								} else if ( (xml \ "@type").toString == "subscribe" ) {
