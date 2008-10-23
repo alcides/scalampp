@@ -25,7 +25,7 @@ class User(val name:String, val pass:String) {
 	}
 	
 	def changeFriend(f:Friend,sub:String) = synchronized {
-		if ( getFriends.filter { fr => fr.jid == f.jid }.length > 0  ) {
+		if ( getFriends.exists { fr => fr.jid == f.jid }  ) {
 			
 			var s = Database.getFriends(name).filter { fri => fri.jid == f.jid }.first.subscription match {
 			    case "none" => sub
@@ -43,7 +43,7 @@ class User(val name:String, val pass:String) {
 	}
 	
 	def insertFriend(f:Friend) = synchronized {
-		if ( getFriends.filter { fr => fr.jid == f.jid }.length > 0  )
+		if ( getFriends.exists { fr => fr.jid == f.jid }  )
 			false
 		else {
 			Database.update("INSERT INTO friends VALUES (NULL, '"+f.jid+"', '"+f.name+"','"+name+"','none');")
@@ -52,7 +52,7 @@ class User(val name:String, val pass:String) {
 	}
 	
 	def removeFriend(f:Friend) = synchronized {
-		if ( getFriends.filter { fr => fr.jid == f.jid }.length > 0  ) {
+		if ( getFriends.exists { fr => fr.jid == f.jid }   ) {
 			Database.update("DELETE FROM friends WHERE jid='"+f.jid+"' AND user_name='"+name+"';")
 			true
 		} else false
@@ -74,7 +74,7 @@ object UserManager {
 	}
 	
 	def createUser(us:String,pw:String) = synchronized {
-		if ( users.filter { u => u.name == us }.length > 0  )
+		if ( users.exists { u => u.name == us }  )
 			false
 		else {
 			Database.update("INSERT INTO users VALUES (NULL, '"+us+"', '"+pw+"');")

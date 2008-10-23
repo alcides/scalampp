@@ -162,7 +162,7 @@ class XMPPServerParser(out:OutChannel) {
 										session.setPriority( (xml \ "priority").text.toInt)
 									
 									session.user.getFriends.filter { f => 
-											f.subscription == "from" || f.subscription == "both"  	
+											f.subscription.equals("from") || f.subscription.equals("both")
 										}.foreach { f =>
 											println("Vamos avisar o " + f.jid)	
 											SessionManager.sendPresence(session.jid,f.jid, content)
