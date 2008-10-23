@@ -122,6 +122,15 @@ class XMPPServerParser(out:OutChannel) {
 							case <iq><query /></iq> => {
 								if ( (xml \ "query").first.namespace == "jabber:iq:roster" && (xml \ "@type").toString == "get") {
 									out.write(XMLStrings.roster( (xml \ "@id").toString,session.user.getFriends ))
+									
+									session.user.getFriends.filter { j => 
+											j.subscription.equals("both") || j.subscription.equals("to")  
+										}.foreach { j =>
+											if ( SessionManager.getOutChannels(j.jid).length > 0 ) {
+												
+											}
+										}
+									
 								}
 							}
 							case <iq><query>{ items @ _ * }</query></iq> => {
@@ -161,12 +170,19 @@ class XMPPServerParser(out:OutChannel) {
 									if ( xml.descendant.count( e => e == <priority /> ) > 0 )
 										session.setPriority( (xml \ "priority").text.toInt)
 									
-									session.user.getFriends.filter { f => 
-											f.subscription.equals("from") || f.subscription.equals("both")
-										}.foreach { f =>
-											println("Vamos avisar o " + f.jid)	
-											SessionManager.sendPresence(session.jid,f.jid, content)
-										}
+									if ((xml \ "@to").length == 0) {
+										// Broadcasts
+										session.user.getFriends.filter { f => 
+												f.subscription.equals("from") || f.subscription.equals("both")
+											}.foreach { f =>
+												SessionManager.sendPresence(session.jid,f.jid, content)
+											}	
+									} else {
+										SessionManager.sendPresence(session.jid,( xml \ "@to" ).toString,content)
+										
+									}
+									
+									
 									
 									
 									

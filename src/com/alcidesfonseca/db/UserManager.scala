@@ -29,8 +29,8 @@ class User(val name:String, val pass:String) {
 			
 			var s = Database.getFriends(name).filter { fri => fri.jid == f.jid }.first.subscription match {
 			    case "none" => sub
-			 	case "from" => if ( sub == "to" ) "both" else sub
-			  	case "to" => if ( sub == "from" ) "both" else sub
+			 	case "from" => if ( sub.equals("to") ) "both" else sub
+			  	case "to" => if ( sub.equals("from") ) "both" else sub
 				case _ => sub
 			}
 			
