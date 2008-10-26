@@ -227,7 +227,9 @@ class XMPPServerParser(out:OutChannel) {
 									(xml \ "@to").toString,
 									content(0).text)
 							}
-							case _ => {}
+							case _ => {
+								println("ignored")
+							}
 						}
 						true
 					} else false

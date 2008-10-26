@@ -88,7 +88,7 @@ just one file at a time.
 	 	<fsc srcdir="${src.dir}"
 	            destdir="${build.dir}"
 	            classpathref="build.classpath"
-	            force="changed">
+	            force="changed" deprecation="yes">
 	      <include name="${src.includes}"/>
 	      <exclude name="${src.excludes}"/>
 	    </fsc>	

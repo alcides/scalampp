@@ -6,46 +6,20 @@ import java.nio.charset._
 
 
 import com.alcidesfonseca.xmpp._
+import scala.collection.mutable.HashMap
 
-
-
-
-
-/*
-class Connection(clientSocket:Socket) extends Thread {
-	val in:BufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	var cstream = new XMPPServerParser(new SocketOutChannel(clientSocket))
-	val host = clientSocket.getInetAddress()
-	val port = clientSocket.getPort()
-	
-	override def run = {
-		try {
-			val parser:XMLParser = new XMLParser(cstream.parse)
-
-			while ( clientSocket.isConnected() ) {				
-				
-				parser.parse(in.read)
-			}
-		} 
-		catch {
-			case e : EOFException => println("EOF: " + e)
-			case e : IOException => println("IO: " + e)
-		}
-	}
-	println("Received connection from: " + host  + ":" + port )
-	start()
-}
-*/
-object TCPServer {
+object NioServer {
 	def main(args: Array[String]) {
+		var port:int = if (args.length > 1) Integer.parseInt(args(1)) else 5222;
+
+		var parsers = new HashMap[SocketChannel,XMLParser]
 		
 		//System.setErr(null)
 		
 		var server:ServerSocketChannel = ServerSocketChannel.open()
 		server.configureBlocking(false)
 
-		server.socket().bind(new InetSocketAddress("localhost",8000))
-		println("Server a correr na porta 8000")
+		server.socket().bind(new InetSocketAddress("localhost",port))
 
 		var selector = Selector.open(); 
 		server.register(selector,SelectionKey.OP_ACCEPT)
@@ -65,11 +39,13 @@ object TCPServer {
 						var client:SocketChannel = server.accept
 						client.configureBlocking(false)
 						client.register(selector,SelectionKey.OP_READ)
+						parsers.put(client, new XMLParser(new XMPPServerParser(new NioOutChannel(client)).parse))
+						
 					} else if ( key.isReadable ) {
 
 						var client:SocketChannel = key.channel.asInstanceOf[SocketChannel]
 
-						var buffer = ByteBuffer.allocate(32)
+						var buffer = ByteBuffer.allocate(256)
 						var nread = 
 							try {
 								client.read(buffer)
@@ -79,12 +55,12 @@ object TCPServer {
 							}
 						if (nread == -1) {
 						    client.close()
-							println("Cliente desligou")
 						} else {
 							buffer.flip
 
-							var s = convertToPrintable(buffer)
-							println(s)
+							var s = convertToString(buffer)
+							
+							parsers(client).parse(s)
 						}
 
 

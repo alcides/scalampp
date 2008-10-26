@@ -11,5 +11,6 @@ import com.alcidesfonseca.db._
 object Boot {
 	def main(args: Array[String]) {
 		TCPServer.main(args)
+		//NioServer.main(args)
 	}
 }

@@ -8,12 +8,13 @@ class TCPClientListener(val s:Socket,val in:DataInputStream, val session:ClientS
 	var txt:String = ""
 	var out = session.out
 	var cstream = new XMPPClientParser(session)
-	
+	var r:Int = 0
 	override def run = {
 		try {
 			val parser:XMLParser = new XMLParser(cstream.parse)
-			while ( s.isConnected ) {				
-				parser.parse(in.read)
+			while ( s.isConnected ) {
+				r = in.read			
+				parser.parse(r)
 			}
 		} 
 		catch {

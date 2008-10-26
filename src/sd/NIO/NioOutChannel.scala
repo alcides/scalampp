@@ -1,16 +1,18 @@
+//
+//  SocketOutChannel
+//
+//  Created by  on 2008-10-05.
+//  Copyright (c) 2008 Alcides Fonseca. All rights reserved.
+//
+
 import com.alcidesfonseca.xmpp._
-import java.io.DataOutputStream
 import java.net.Socket
 import java.nio._
+import java.nio.channels._
 
-class SocketOutChannel(socket:Socket) extends OutChannel {
-	
-	val out:DataOutputStream = new DataOutputStream(socket.getOutputStream())
-	
-	def write(s:String):Unit = synchronized {
-		out.writeBytes(s)
-		println("out: " + s)
-		()
+class NioOutChannel(var socket:SocketChannel) extends OutChannel {
+	def write(x:String) = {
+		println("out: " + x)
+		socket.write(ByteBuffer.wrap(x.getBytes))
 	}
-
 }
