@@ -39,7 +39,7 @@ object NioServer {
 						var client:SocketChannel = server.accept
 						client.configureBlocking(false)
 						client.register(selector,SelectionKey.OP_READ)
-						parsers.put(client, new XMLParser(new XMPPServerParser(new NioOutChannel(client)).parse))
+						parsers.put(client, new XMLParser(new XMPPServerParser(new NioOutChannel(client))))
 						
 					} else if ( key.isReadable ) {
 
@@ -60,7 +60,7 @@ object NioServer {
 
 							var s = convertToString(buffer)
 							
-							parsers(client).parse(s)
+							parsers(client).parseString(s)
 						}
 
 

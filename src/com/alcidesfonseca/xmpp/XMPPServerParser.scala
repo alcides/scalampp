@@ -10,13 +10,13 @@ import scala.xml._
 import org.publicdomain._
 import com.alcidesfonseca.db._
 
-class XMPPServerParser(out:OutChannel) {
+class XMPPServerParser(out:OutChannel) extends XMPPParser {
 	
 	var session = SessionManager.createSession(out)
 
 	
 	
-	def parse(x:String):Boolean = {
+	def parseXML(x:String):Boolean = {
 		
 		if (session.init == false) {
 			if (XMLStrings.check_start(x)) {

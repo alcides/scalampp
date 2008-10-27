@@ -4,22 +4,25 @@ import com.alcidesfonseca.xmpp._
 import scala.xml._
 import java.util.Scanner
 
-class TCPClientListener(val s:Socket,val in:DataInputStream, val session:ClientSession) extends Thread {
+class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread {
 	var txt:String = ""
 	var out = session.out
+	var in = new BufferedReader( new InputStreamReader( s.getInputStream() ))
 	var cstream = new XMPPClientParser(session)
 	var r:Int = 0
+	
 	override def run = {
 		try {
-			val parser:XMLParser = new XMLParser(cstream.parse)
+			val parser:XMLParser = new XMLParser(cstream)
 			while ( s.isConnected ) {
-				r = in.read			
-				parser.parse(r)
+				r = in.read	
+				parser.parseInt(r)
 			}
 		} 
 		catch {
 			case e : EOFException => println("EOF: " + e)
 			case e : IOException => println("IO: " + e)
+			case _ => println("wtf?")
 		}
 	}
 }
@@ -31,14 +34,12 @@ object TCPClient {
 		//System.setErr(null)
 		
 		var s:Socket = null
-		var in:DataInputStream = null
 		var out:SocketOutChannel = null
 		
 		var port = 5222
 		var host = "localhost"
 		var cycle = true
 		var kb = new Scanner(System.in)
-		var commands:Array[String] = null
 	
 		def connect():Socket = {
 			new Socket(host,port)
@@ -50,7 +51,6 @@ object TCPClient {
 				if (s == null)
 					cycle = false
 				else {
-					in = new DataInputStream( s.getInputStream() )
 					out = new SocketOutChannel(s)
 					var session = new ClientSession(host,out)
 					
@@ -58,27 +58,17 @@ object TCPClient {
 					if ( args.length >= 2 ) session.pass = args(1)
 					
 					// launch receiver
-					new TCPClientListener(s,in,session).start
-					
-					// start stream
-					out.write( XMLStrings.stream_start_to(host) )
-					
-					
-					while (s.isConnected) {
-						commands = kb.nextLine().split(" ")
-						
-						if ( commands(0).equals("send") )
-							out.write(XMLStrings.message_chat(commands(1),commands(2)))
-						else if ( commands(0).equals("add") )
-							out.write(XMLStrings.roster_item_request( session.getStanzaId ,commands(1)) )
-					}
-					
+					new TCPClientListener(s,session).start
+					var cli = new XMPPClientCLI(out,session)
+					cli.begin(host)
+					while (s.isConnected) cli.parseInput(kb.nextLine)
 			
 				}
-			} 
+			 } 
 			catch {
 				case e : UnknownHostException => println("Some problems finding that host...")
 				case e : EOFException => {
+					println("error")
 					if (out != null)
 						out.write("</stream:stream>")
 					if (s != null)
@@ -94,21 +84,7 @@ object TCPClient {
 						case e : InterruptedException => {}
 					}
 				}
-				case _ => {
-					if ( s != null ) {
-						try {
-							s.close
-							if (out != null)
-								out.write(XMLStrings.stream_end)
-							cycle = false
-						} 
-						catch {
-							case e : Exception => {}
-						}
-
-					}
-				}
-			}
+			} 
 		}
 		()
 	}	

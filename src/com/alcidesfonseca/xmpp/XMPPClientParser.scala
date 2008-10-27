@@ -11,7 +11,7 @@ import org.publicdomain._
 import com.alcidesfonseca.db._
 
 class Contact(var name:String, var jid:String) {
-	val status = "offline"
+	var status = "offline"
 }
 
 object Roster {
@@ -22,10 +22,10 @@ object Roster {
 	}
 }
 
-class XMPPClientParser(session:ClientSession) {
+class XMPPClientParser(session:ClientSession) extends XMPPParser {
 	var out = session.out
 	
-	def parse(x:String):Boolean = {
+	def parseXML(x:String):Boolean = {
 		println("in: " + x)
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
@@ -48,54 +48,52 @@ class XMPPClientParser(session:ClientSession) {
 							out.write( XMLStrings.stream_auth( session.user, session.pass) )
 						else
 							out.write( XMLStrings.session_bind_request("alcides_client") )
-						true
 					}
 					
 					case <iq><bind><jid>{  jid @ _ * }</jid></bind></iq> => {
 						session.setJID(jid(0).toString)
 						out.write( XMLStrings.session_request(session.getStanzaId) )
-						true
 					}
 					
 					case <iq><session/></iq> => {
 						out.write( XMLStrings.roster_request(session.getStanzaId) )
-						true
 					}
 					
 					case <iq><query>{ roster @ _ * }</query></iq> => {
 						roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
 						Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
 						out.write(XMLStrings.presence)
-						true
 					}
 					
 					case <success/> => {
 						out.write( XMLStrings.stream_start_to(session.getHost) )
-						true
 					}
 					
 					case <message>{ content @ _ * }</message> => {
 						println( "* " + (xml \ "@from").toString + " says: " + content(0).text )
-						true
 					}
 					
-					case <presence/> => {
+					case <presence>{ content @ _ * }</presence> => {
 						
-						if ( (xml \ "@type").length == 0 )
-							Roster.contacts.filter { c => c.jid == (xml \ "@from") }.foreach { c =>
-								c.status == "online"
-							}
-						else if ( (xml \ "@type").text == "unavailable"){
-							Roster.contacts.filter { c => c.jid == (xml \ "@from") }.foreach { c =>
-								c.status == "offline"
-							}
-						}
+						var from = (xml \ "@from").text
 						
-						true
+						if ( (xml \ "@type").length == 0 ) {
+							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
+								c.status = "online"
+							}
+						} else  if ( (xml \ "@type").text == "unavailable") {
+							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
+								c.status = "offline"
+							}
+						} 
+						
+						Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
+						
 					}
 					
-					case _ => true
+					case _ => ()
 				}
+				true
 				
 			} else false
 			
