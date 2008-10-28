@@ -10,7 +10,8 @@ import com.alcidesfonseca.db._
 
 object Boot {
 	def main(args: Array[String]) {
-		TCPServer.main(args)
+		//TCPServer.main(args)
 		//NioServer.main(args)
+		UDPServer.main(args)
 	}
 }
