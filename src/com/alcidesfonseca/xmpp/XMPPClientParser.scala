@@ -31,16 +31,12 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 			session.setStatus(  session.getStatus + 1 )
 			true
 		} else {
-			var xml =
-				try {
-					XML.loadString(x)
-				} 
-				catch {
-					case e : org.xml.sax.SAXParseException => null
-					case e : parsing.FatalError => null
-				}
 			
-			if (xml != null) {
+			if ( !XMLValidator.validate(x) ) {
+				false
+			} else {
+				var xml = XML.loadString(x)
+			
 				println("in: " + xml)
 				xml match {
 				    case <stream:features>{ _ * }</stream:features> =>  {
@@ -95,7 +91,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 				}
 				true
 				
-			} else false
+			}
 			
 		}
 	}

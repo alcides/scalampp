@@ -23,13 +23,7 @@ object XMLStrings {
 	val stream_end = "</stream:stream>"
 	
 	def check_start(x:String):Boolean = {
-		try {
-			var xml = XML.loadString(x + stream_end)
-			true
-		} 
-		catch {
-			case e : Exception => false
-		}
+		XMLValidator.validate(x + stream_end)
 	}
 	
 	def stream_auth(user:String,pass:String) = <auth>{ Base64.encodeBytes( ( '\0' + user + '\0' + pass ).getBytes("ISO-8859-1") ) }</auth>
