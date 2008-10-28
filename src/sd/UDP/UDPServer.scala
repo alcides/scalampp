@@ -20,7 +20,13 @@ object UDPServer {
 			
 			if ( !parsers.contains(request.getSocketAddress) ) {
 				// first connection
-				parsers.put( request.getSocketAddress,  new XMLParser(new XMPPServerParser(new DatagramOutChannel(aSocket,request))) )
+				parsers.put( request.getSocketAddress,  
+					new XMLParser(
+						new XMPPServerParser(
+							new DatagramOutChannel(aSocket,request.getAddress, request.getPort)
+						)
+					)
+				)
 			}
 			
 			var s:String = new String(b)

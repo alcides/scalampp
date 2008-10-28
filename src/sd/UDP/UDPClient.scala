@@ -3,26 +3,66 @@ import java.io._
 import java.net._
 
 import com.alcidesfonseca.xmpp._
+import scala.xml._
+import java.util.Scanner
+
+class UDPClientListener(val s:DatagramSocket, val session:ClientSession) extends Thread {
+	var out = session.out
+	
+	var b = new Array[Byte](1023)
+	var cstream = new XMPPClientParser(session)
+	
+	override def run = {
+		try {
+			val parser:XMLParser = new XMLParser(cstream)
+			while ( true ) {
+				var reply = new DatagramPacket(b,b.length)
+				s.receive(reply)
+				parser.parseString(new String(b))
+			}
+		} 
+		catch {
+			case e : EOFException => println("EOF: " + e)
+			case e : IOException => println("IO: " + e)
+			case _ => println("wtf?")
+		}
+	}
+}
 
 object UDPClient {
-	
 	val port = 5222
-	val host = InetAddress.getByName("localhost");
+	val host = "localhost"
+	val hostaddress = InetAddress.getByName(host);
 	
 	def main(args: Array[String]) {
-		println("Hello, world!")
-	
+		
+		//Ignore STDERR
+		//System.setErr(null)
+		
+		var cycle = true
+		var kb = new Scanner(System.in)
+		
 		var aSocket = new DatagramSocket()
-
-		var buf = "teste".getBytes
-		var request = new DatagramPacket(buf,buf.length,host,port)
-		aSocket.send(request)
-		println("sent")
 		
-		var b = new Array[Byte](1023)
-		var reply = new DatagramPacket(b,b.length)
-		aSocket.receive(reply)
-		
-		println(new String(reply.getData).trim())
-	}
+	
+		while (cycle) {
+			try {
+				var out = new DatagramOutChannel(aSocket,hostaddress,port)
+				var session = new ClientSession(host,out)
+				
+				if ( args.length >= 1 ) session.user = args(0)
+				if ( args.length >= 2 ) session.pass = args(1)
+				
+				// launch receiver
+				new UDPClientListener(aSocket,session).start
+				var cli = new XMPPClientCLI(out,session)
+				cli.begin(host)
+				while (true) cli.parseInput(kb.nextLine)
+			 } 
+			catch {
+				case e : UnknownHostException => println("Some problems finding that host...")
+			} 
+		}
+		()
+	}	
 }
