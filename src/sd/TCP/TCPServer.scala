@@ -10,6 +10,10 @@ class Connection(clientSocket:Socket) extends Thread {
 	val host = clientSocket.getInetAddress()
 	val port = clientSocket.getPort()
 	
+	def shutdown = {
+		SessionManager.destroySession(cstream.session)
+	}
+	
 	override def run = {
 		try {
 			val parser:XMLParser = new XMLParser(cstream)
@@ -20,8 +24,12 @@ class Connection(clientSocket:Socket) extends Thread {
 			}
 		} 
 		catch {
-			case e : EOFException => println("EOF: " + e)
-			case e : IOException => println("IO: " + e)
+			case e : EOFException => {
+				println("EOF: " + e)
+			}
+			case e : IOException => {
+				println("IO: " + e)
+			 }
 		}
 	}
 	println("Received connection from: " + host  + ":" + port )

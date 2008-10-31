@@ -19,7 +19,7 @@ object XMLValidator {
 	var reader = parser.getXMLReader()
 	reader.setErrorHandler(null)
 	
-	def validate(x:String):Boolean = {
+	def validate(x:String):Boolean = synchronized {
 
 		var s = new InputSource(new StringReader(x))
 		try {

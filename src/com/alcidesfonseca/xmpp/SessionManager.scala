@@ -12,7 +12,25 @@ object SessionManager {
 	}
 	
 	def destroySession(s:Session) = synchronized {
+		
+		// send  presence as offline
+		println("removing user "+ s.jid)
+		
+		
+		if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {
+			s.user.getFriends.foreach { f =>
+				try {
+					sendOfflinePresence(s.jid,f.jid)
+				} 
+				catch {
+					case e : Exception => // expression
+				}
+			}
+		}
+		
+		// remove
 		sessions.remove { ses => (ses == s) }
+		
 	}
 	
 	def count(jid:String):int = synchronized {
@@ -29,6 +47,10 @@ object SessionManager {
 	
 	def sendPresence(from:String,to:String,content:Any) = synchronized {
 		getOutChannels(to).foreach { c => c.write( XMLStrings.presence(from,to,content) ) }
+	}
+	
+	def sendOfflinePresence(from:String,to:String) = synchronized {
+		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_unavailable(from,to) ) }
 	}
 	def sendProbePresence(from:String,to:String) = synchronized {
 		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_probe(from,to) ) }
