@@ -138,6 +138,7 @@ object XMLStrings {
 
 	
 	def presence_subscribe(to:String,from:String) = <presence from={ from } to={ to } type="subscribe" />
+	def presence_unsubscribe(to:String,from:String) = <presence from={ from } to={ to } type="unsubscribe" />
 	def presence_subscribed(to:String,from:String) = <presence from={ from } to={ to } type="subscribed" />
 	def presence_unsubscribed(to:String,from:String) = <presence from={ from } to={ to } type="unsubscribed" />
 	

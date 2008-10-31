@@ -31,6 +31,15 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 					}
 				} 
 
+				// Remove Contact
+				if ( commands(0).equals("del") ) {
+					if (commands.length < 2) println("Erro: numero errado de parametros")
+					else {
+						out.write( XMLStrings.roster_item_remove( session.getStanzaId ,commands(1)) )
+						out.write( XMLStrings.presence_unsubscribe( commands(1), session.getJID) )
+					}
+				}
+
 				// Set status
 				if ( commands(0).equals("set") ) {
 					if (commands.length < 2) println("Erro: numero errado de parametros")

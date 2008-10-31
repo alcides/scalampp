@@ -34,7 +34,7 @@ class User(val name:String, val pass:String) {
 				case _ => sub
 			}
 			
-			Database.update("UPDATE friends SET subscription='"+sub+"' where jid='"+f.jid+"'")
+			Database.update("UPDATE friends SET subscription='"+s+"' where jid='"+f.jid+"'")
 			true
 		} else {
 			Database.update("INSERT INTO friends VALUES (NULL, '"+f.jid+"', '"+f.name+"','"+name+"','"+sub+"');")
