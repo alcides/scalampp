@@ -53,9 +53,11 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 					}
 					
 					case <iq><query>{ roster @ _ * }</query></iq> => {
-						roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
-						Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
-						out.write(XMLStrings.presence)
+						if ( roster.length > 0 ) {
+							roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
+							Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
+							out.write(XMLStrings.presence)
+						}
 					}
 					
 					case <success/> => {
@@ -90,7 +92,9 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 								
 						}
 						
-						Roster.contacts.foreach{ c => println( "+" + c.name + ":" + c.status ) }
+						println("-----------")						
+						Roster.contacts.foreach{ c => println( "+" + c.jid + ":" + c.status ) }
+						println("-----------")
 						
 					}
 					

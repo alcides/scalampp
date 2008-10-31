@@ -1,4 +1,4 @@
 object Config {
-	var vers = "udp"
+	var vers = "tcp"
 	var debug = true
 }

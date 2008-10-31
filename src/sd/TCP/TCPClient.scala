@@ -22,7 +22,7 @@ class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread 
 		catch {
 			case e : EOFException => println("EOF: " + e)
 			case e : IOException => println("IO: " + e)
-			case _ => println("wtf?")
+			// case _ => println("wtf?")
 		}
 	}
 }
