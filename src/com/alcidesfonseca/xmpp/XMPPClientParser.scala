@@ -26,7 +26,6 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 	var out = session.out
 	
 	def parseXML(x:String):Boolean = {
-		println("in: " + x)
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
 			true
