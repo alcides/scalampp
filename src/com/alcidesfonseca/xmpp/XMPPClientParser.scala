@@ -69,23 +69,32 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 					case <presence>{ content @ _ * }</presence> => {
 						
 						var from = (xml \ "@from").text
-						
-						if ( (xml \ "@type").length == 0 ) {
-							
-							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
-								c.status = if ( (xml \ "show").text == "" ) "online" else (xml \ "show").text
-							}
-							
-							
-						} else  if ( (xml \ "@type").text == "unavailable") {
+
+
+						if ( (xml \ "@type").text == "unavailable") {
 							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
 								c.status = "offline"
 							}
 						} 
 						
+						if ( (xml \ "@type").text == "subscribe" ) {
+							session.requests = session.requests.::(from)
+							println("Subscribe received")
+						}
+
+						if ( (xml \ "@type").length == 0 ) {
+							
+							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
+								c.status = if ( (xml \ "show").text == "" ) "online" else (xml \ "show").text
+							}
+								
+						}
+						
 						Roster.contacts.foreach{ c => println( "+" + c.name + ":" + c.status ) }
 						
 					}
+					
+					<presence to="alcides@localhost" type="subscribe" from="qwerty@localhost"></presence>
 					
 					case _ => ()
 				}

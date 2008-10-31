@@ -134,6 +134,7 @@ object XMLStrings {
 	def presence(from:String,to:String,content:Any) = <presence from={ from } to={ to }>{ content }</presence>
 	def presence_probe(from:String,to:String) = <presence type="probe" from={ from } to={ to }></presence>
 	def presence_set(status:String) = <presence><show>{ status }</show></presence>
+	def presence_unavailable(from:String) = <presence from={ from } type="unavailable"></presence>
 
 	
 	def presence_subscribe(to:String,from:String) = <presence from={ from } to={ to } type="subscribe" />

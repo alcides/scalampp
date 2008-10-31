@@ -2,18 +2,59 @@ package com.alcidesfonseca.xmpp
 
 class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 	
+	var mode = 0
+	var u:String = ""
+	
 	def begin(host:String) = {
 		out.write( XMLStrings.stream_start_to(host) )
 	}
 	
 	def parseInput(in:String) = {
-		var commands = in.split(" ")
 		
-		if ( commands(0).equals("send") )
-			out.write( XMLStrings.message_chat(commands(1),commands(2)) )
-		else if ( commands(0).equals("add") )
-			out.write( XMLStrings.roster_item_request( session.getStanzaId ,commands(1)) )
-		else if ( commands(0).equals("set") )
-			out.write( XMLStrings.presence_set(commands(1)) )
+		mode match {
+		    case 0 => {
+
+				var commands = in.split(" ")
+
+				// Send message
+				if ( commands(0).equals("send") ) {
+					if (commands.length < 3) println("Erro: numero errado de parametros")
+					else out.write( XMLStrings.message_chat(commands(1),commands(2)) )
+				}
+				
+				// Add Contact
+				if ( commands(0).equals("add") ) {
+					if (commands.length < 2) println("Erro: numero errado de parametros")
+					else {
+						out.write( XMLStrings.roster_item_request( session.getStanzaId ,commands(1)) )
+						out.write( XMLStrings.presence_subscribe( commands(1), session.getJID) )
+					}
+				} 
+
+				// Set status
+				if ( commands(0).equals("set") ) {
+					if (commands.length < 2) println("Erro: numero errado de parametros")
+					else out.write( XMLStrings.presence_set(commands(1)) )
+				}
+			}
+			case 1 => {
+				if ( in.equals("sim") ) {
+					out.write(XMLStrings.presence_subscribed(u,session.getJID))
+				} else {
+					out.write(XMLStrings.presence_unsubscribed(u,session.getJID))					
+				}
+				u = ""
+				mode = 0
+			}	
+		}
+		
+		if ( session.requests.length > 0 ) {
+			u = session.requests.head
+			session.requests = session.requests.drop(1)
+			println( "O utilizador " + u + " deseja adiciona-lo. Quer aceita-lo?" )
+			mode = 1
+		}
+		
+		
 	}
 }
