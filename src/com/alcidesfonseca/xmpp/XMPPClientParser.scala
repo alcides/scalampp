@@ -30,17 +30,12 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 			session.setStatus(  session.getStatus + 1 )
 			true
 		} else {
-			var xml =
-				try {
-					XML.loadString(x)
-				} 
-				catch {
-					case e : org.xml.sax.SAXParseException => null
-					case e : parsing.FatalError => null
-				}
 			
-			if (xml != null) {
-				println("in: " + xml)
+			if ( !XMLValidator.validate(x) ) {
+				false
+			} else {
+				var xml = XML.loadString(x)
+				println("in" + x)
 				xml match {
 				    case <stream:features>{ _ * }</stream:features> =>  {
 						if (session.getStatus <= 1) 
@@ -77,16 +72,19 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 						var from = (xml \ "@from").text
 						
 						if ( (xml \ "@type").length == 0 ) {
-							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
-								c.status = "online"
+							
+							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
+								c.status = if ( (xml \ "show").text == "" ) "online" else (xml \ "show").text
 							}
+							
+							
 						} else  if ( (xml \ "@type").text == "unavailable") {
 							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
 								c.status = "offline"
 							}
 						} 
 						
-						Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
+						Roster.contacts.foreach{ c => println( "+" + c.name + ":" + c.status ) }
 						
 					}
 					
@@ -94,7 +92,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 				}
 				true
 				
-			} else false
+			}
 			
 		}
 	}

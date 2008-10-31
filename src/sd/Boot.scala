@@ -10,7 +10,12 @@ import com.alcidesfonseca.db._
 
 object Boot {
 	def main(args: Array[String]) {
-		TCPServer.main(args)
-		//NioServer.main(args)
+		
+		if ( Config.vers.equals("tcp") )
+			TCPServer.main(args)
+		if ( Config.vers.equals("nio") )
+			NioServer.main(args)
+		if ( Config.vers.equals("udp") )
+			UDPServer.main(args)
 	}
 }

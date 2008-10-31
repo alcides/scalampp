@@ -30,9 +30,6 @@ class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread 
 object TCPClient {
 	def main(args: Array[String]) = {
 		
-		//Ignore STDERR
-		//System.setErr(null)
-		
 		var s:Socket = null
 		var out:SocketOutChannel = null
 		
