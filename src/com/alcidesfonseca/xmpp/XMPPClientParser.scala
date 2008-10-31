@@ -35,7 +35,6 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 				false
 			} else {
 				var xml = XML.loadString(x)
-				println("in" + x)
 				xml match {
 				    case <stream:features>{ _ * }</stream:features> =>  {
 						if (session.getStatus <= 1) 
