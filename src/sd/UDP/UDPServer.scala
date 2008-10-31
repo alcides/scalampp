@@ -14,7 +14,7 @@ object UDPServer {
 	
 		var aSocket = new DatagramSocket(port)
 		while (true) {
-			var b = new Array[Byte](4096)
+			var b = new Array[Byte](100000)
 			var request = new DatagramPacket(b,b.length)
 			aSocket.receive(request)
 			

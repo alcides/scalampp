@@ -9,16 +9,19 @@ import java.util.Scanner
 class UDPClientListener(val s:DatagramSocket, val session:ClientSession) extends Thread {
 	var out = session.out
 	
-	var b = new Array[Byte](1023)
 	var cstream = new XMPPClientParser(session)
 	
 	override def run = {
 		try {
 			val parser:XMLParser = new XMLParser(cstream)
 			while ( true ) {
+				var b = new Array[Byte](100000)
 				var reply = new DatagramPacket(b,b.length)
 				s.receive(reply)
-				parser.parseString(new String(b))
+				
+				var content = (new String(b)).trim
+				
+				parser.parseString(content)
 			}
 		} 
 		catch {
