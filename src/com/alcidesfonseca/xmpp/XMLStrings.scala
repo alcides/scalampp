@@ -133,6 +133,7 @@ object XMLStrings {
 	def presence() = <presence><priority>5</priority></presence>
 	def presence(from:String,to:String,content:Any) = <presence from={ from } to={ to }>{ content }</presence>
 	def presence_probe(from:String,to:String) = <presence type="probe" from={ from } to={ to }></presence>
+	def presence_set(status:String) = <presence><show>{ status }</show></presence>
 
 	
 	def presence_subscribe(to:String,from:String) = <presence from={ from } to={ to } type="subscribe" />

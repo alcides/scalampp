@@ -12,7 +12,7 @@ import org.xml.sax._
 object XMLValidator {
 	var factory = SAXParserFactory.newInstance()
 	factory.setValidating(true)
-	factory.setNamespaceAware(true)
+	factory.setNamespaceAware(false)
 
 	var parser = factory.newSAXParser()
 
@@ -20,6 +20,7 @@ object XMLValidator {
 	reader.setErrorHandler(null)
 	
 	def validate(x:String):Boolean = {
+
 		var s = new InputSource(new StringReader(x))
 		try {
 			reader.parse(s)

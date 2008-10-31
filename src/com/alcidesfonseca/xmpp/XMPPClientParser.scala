@@ -26,7 +26,6 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 	var out = session.out
 	
 	def parseXML(x:String):Boolean = {
-		println("in: " + x)
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
 			true
@@ -36,8 +35,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 				false
 			} else {
 				var xml = XML.loadString(x)
-			
-				println("in: " + xml)
+				println("in" + x)
 				xml match {
 				    case <stream:features>{ _ * }</stream:features> =>  {
 						if (session.getStatus <= 1) 
@@ -74,16 +72,19 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 						var from = (xml \ "@from").text
 						
 						if ( (xml \ "@type").length == 0 ) {
-							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
-								c.status = "online"
+							
+							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
+								c.status = if ( (xml \ "show").text == "" ) "online" else (xml \ "show").text
 							}
+							
+							
 						} else  if ( (xml \ "@type").text == "unavailable") {
 							Roster.contacts.filter { c => c.jid == from }.foreach { c =>
 								c.status = "offline"
 							}
 						} 
 						
-						Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
+						Roster.contacts.foreach{ c => println( "+" + c.name + ":" + c.status ) }
 						
 					}
 					

@@ -11,7 +11,9 @@ import java.io._
 
 class DatagramOutChannel(var sock:DatagramSocket,address:InetAddress,port:int) extends OutChannel {
 	def write(x:String) = synchronized {
-		println("out: " + x)
+		
+		if (Config.debug) println("out: " + x)
+		
 		var m = x.getBytes()
 		
 		var reply = new DatagramPacket(m,m.length,address,port)

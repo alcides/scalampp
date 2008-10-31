@@ -14,8 +14,9 @@ class SocketOutChannel(socket:Socket) extends OutChannel {
 	val out:DataOutputStream = new DataOutputStream(socket.getOutputStream())
 	
 	def write(s:String):Unit = synchronized {
+		if (Config.debug)  println("out: " + s)
+		
 		out.writeBytes(s)
-		println("out: " + s)
 		()
 	}
 

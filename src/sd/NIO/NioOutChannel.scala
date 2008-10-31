@@ -12,7 +12,7 @@ import java.nio.channels._
 
 class NioOutChannel(var socket:SocketChannel) extends OutChannel {
 	def write(x:String) = synchronized {
-		println("out: " + x)
+		if (Config.debug)  println("out: " + x)
 		socket.write(ByteBuffer.wrap(x.getBytes))
 	}
 }
