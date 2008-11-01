@@ -20,6 +20,12 @@ object Roster {
 		contacts = contacts.remove { c2 => c2.jid == c.jid } // in case of replace
 		contacts = contacts.::(c)
 	}
+	
+	def print = {
+		println("-----------")						
+		contacts.foreach{ c => println( "+" + c.jid + ":" + c.status ) }
+		println("-----------")
+	}
 }
 
 class XMPPClientParser(session:ClientSession) extends XMPPParser {
@@ -55,7 +61,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 					case <iq><query>{ roster @ _ * }</query></iq> => {
 						if ( roster.length > 0 ) {
 							roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
-							Roster.contacts.foreach{ c => println( c.name + ":" + c.status ) }
+							Roster.print
 							out.write(XMLStrings.presence)
 						}
 					}
@@ -92,9 +98,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 								
 						}
 						
-						println("-----------")						
-						Roster.contacts.foreach{ c => println( "+" + c.jid + ":" + c.status ) }
-						println("-----------")
+						Roster.print
 						
 					}
 					
