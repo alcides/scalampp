@@ -19,5 +19,6 @@ class SocketOutChannel(socket:Socket) extends OutChannel {
 		out.writeBytes(s)
 		()
 	}
+	def close = socket.close
 
 }

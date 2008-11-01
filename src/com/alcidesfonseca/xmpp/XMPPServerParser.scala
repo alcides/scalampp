@@ -221,6 +221,20 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 										SessionManager.getOutChannels(to).foreach { 
 											o => o.write(XMLStrings.presence_unsubscribed(to,session.shortJid))
 										}
+									} else if ((xml \ "@type").toString == "unavailable") {
+										if ((xml \ "@to").length == 0) {
+											// Broadcasts
+											session.user.getFriends.filter { f => 
+													f.subscription.equals("from") || f.subscription.equals("both")
+												}.foreach { f =>
+													SessionManager.sendOfflinePresence(session.jid,f.jid, content)
+												}	
+										} else {
+											SessionManager.sendOfflinePresence(session.jid,( xml \ "@to" ).toString,content)
+										}
+										
+										// Removes the session from the server
+										SessionManager.destroySession(session)
 									}
 									
 									

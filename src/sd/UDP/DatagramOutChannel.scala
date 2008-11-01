@@ -20,4 +20,5 @@ class DatagramOutChannel(var sock:DatagramSocket,address:InetAddress,port:int) e
 		sock.send(reply)
 		
 	}
+	def close = sock.close
 }

@@ -17,7 +17,7 @@ object SessionManager {
 		println("removing user "+ s.jid)
 		
 		
-		if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {
+		/*if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {
 			s.user.getFriends.foreach { f =>
 				try {
 					sendOfflinePresence(s.jid,f.jid)
@@ -26,7 +26,9 @@ object SessionManager {
 					case e : Exception => // expression
 				}
 			}
-		}
+		}*/
+		
+		s.out.close
 		
 		// remove
 		sessions.remove { ses => (ses == s) }
@@ -49,8 +51,11 @@ object SessionManager {
 		getOutChannels(to).foreach { c => c.write( XMLStrings.presence(from,to,content) ) }
 	}
 	
-	def sendOfflinePresence(from:String,to:String) = synchronized {
+	def sendOfflinePresence(from:String,to:String):Unit = synchronized {
 		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_unavailable(from,to) ) }
+	}
+	def sendOfflinePresence(from:String,to:String,content:Any):Unit = synchronized {
+		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_unavailable(from,to,content) ) }
 	}
 	def sendProbePresence(from:String,to:String) = synchronized {
 		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_probe(from,to) ) }

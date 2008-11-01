@@ -11,4 +11,5 @@ abstract class OutChannel {
 	def write(s:Any):Unit = synchronized {
 		write(s.toString)
 	}
+	def close():Unit
 }

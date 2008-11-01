@@ -16,6 +16,12 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 
 				var commands = in.split(" ")
 
+				// Set status
+				if ( commands(0).equals("quit") ) {
+					out.write( XMLStrings.presence_unavailable(session.getJID))
+					println("Press ctrl+c to exit.")
+				}
+
 				// Send message
 				if ( commands(0).equals("send") ) {
 					if (commands.length < 3) println("Erro: numero errado de parametros")

@@ -15,4 +15,5 @@ class NioOutChannel(var socket:SocketChannel) extends OutChannel {
 		if (Config.debug)  println("out: " + x)
 		socket.write(ByteBuffer.wrap(x.getBytes))
 	}
+	def close = socket.close
 }
