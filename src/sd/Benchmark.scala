@@ -6,7 +6,7 @@ class Client(var args:Array[String]) extends Thread {
 
 object Benchmark {
 	def main(args: Array[String]) = {
-		for (i <- 1 to 10)
+		for (i <- 1 to Config.bench_clients)
 			(new Client(args)).start	
 	}
 }

@@ -113,7 +113,6 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 							}
 					
 						if (xml != null) {
-							println("in" + xml)
 							xml match {
 								case <iq><bind><resource>{ res @ _ * }</resource></bind></iq> => {
 									session.resource = res(0).toString

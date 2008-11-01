@@ -6,7 +6,10 @@ class XMLParser(var s:XMPPParser) {
 	
 	def doParse() {
 		data_to_parse = s.parseXML(data_to_parse) match {
-		    case true => ""
+		    case true => {
+				BenchmarkManager.request
+				""
+			}
 			case false => data_to_parse
 		}
 	}
