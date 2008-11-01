@@ -30,6 +30,7 @@ object Roster {
 
 class XMPPClientParser(session:ClientSession) extends XMPPParser {
 	var out = session.out
+	var bench = new Benchmark()
 	
 	def parseXML(x:String):Boolean = {
 		if (XMLStrings.check_start(x)) {
@@ -55,10 +56,12 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 					}
 					
 					case <iq><session/></iq> => {
+						bench.start
 						out.write( XMLStrings.roster_request(session.getStanzaId) )
 					}
 					
 					case <iq><query>{ roster @ _ * }</query></iq> => {
+						bench.stop
 						if ( roster.length > 0 ) {
 							roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
 							Roster.print
