@@ -4,10 +4,14 @@ import com.alcidesfonseca.db._
 object BootClient {
 	def main(args: Array[String]) {
 		
-		if ( Config.vers.equals("udp") )
-			UDPClient.main(args)
-		else 
-			TCPClient.main(args)
+		if ( args.length == 2) {		
+			if ( Config.vers.equals("udp") )
+				UDPClient.main(args)
+			else 
+				TCPClient.main(args)
+		} else {
+			println("Usage: java -jar <jarfile> <username> <password>")
+		}
 
 	}
 }

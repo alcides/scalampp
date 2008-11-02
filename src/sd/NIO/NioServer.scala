@@ -11,7 +11,8 @@ import scala.collection.mutable.HashMap
 object NioServer {
 	def main(args: Array[String]) {
 		var port:int = if (args.length > 1) Integer.parseInt(args(1)) else 5222;
-
+		println("A escuta no porto " + port)
+		
 		var parsers = new HashMap[SocketChannel,XMLParser]
 		
 		//System.setErr(null)

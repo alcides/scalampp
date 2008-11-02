@@ -16,21 +16,27 @@ object UDPServer {
 		while (true) {
 			var b = new Array[Byte](100000)
 			var request = new DatagramPacket(b,b.length)
-			aSocket.receive(request)
 			
-			if ( !parsers.contains(request.getSocketAddress) ) {
-				// first connection
-				parsers.put( request.getSocketAddress,  
-					new XMLParser(
-						new XMPPServerParser(
-							new DatagramOutChannel(aSocket,request.getAddress, request.getPort)
+			try {
+				aSocket.receive(request)
+				if ( !parsers.contains(request.getSocketAddress) ) {
+					// first connection
+					parsers.put( request.getSocketAddress,  
+						new XMLParser(
+							new XMPPServerParser(
+								new DatagramOutChannel(aSocket,request.getAddress, request.getPort)
+							)
 						)
 					)
-				)
+				}
+
+				var s:String = new String(b)
+				parsers(request.getSocketAddress).parseString(s)
+			} 
+			catch {
+				case e : Exception => {}
 			}
-			
-			var s:String = new String(b)
-			parsers(request.getSocketAddress).parseString(s)
+
 			
 		}
 			

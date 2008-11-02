@@ -9,6 +9,7 @@
 
   <property name="scala.home"        value="/opt/local/share/scala/"/>	
   <property name="main.class"        value="Boot"/>	
+  <property name="main.class2"        value="BootClient"/>	
 	
   <property name="src.dir"           value="./src"/>
   <property name="build.dir"         value="./build"/>
@@ -117,9 +118,9 @@ just one file at a time.
   </target>
 	
   <target name="dist" depends="clean,compile">
-		<jar jarfile="${dist.dir}/${project.name}-${project.version}.jar" basedir="${build.dir}">
+		<jar jarfile="${dist.dir}/${project.name}-server.jar" basedir="${build.dir}">
 			<zipfileset dir="${build.dir}" prefix="" />
-			<zipfileset dir="${db.dir}" />
+			<!--<zipfileset dir="${db.dir}" />-->
 			<zipfileset src="${scala-library.jar}" />
 			<zipfileset src="${sqlite.jar}" />
 			<manifest>
@@ -130,6 +131,18 @@ just one file at a time.
 				<attribute name="Implementation-Version" value="${project.version}"/>
 		    </manifest>
 		</jar>
+		<jar jarfile="${dist.dir}/${project.name}-client.jar" basedir="${build.dir}">
+			<zipfileset dir="${build.dir}" prefix="" />
+			<zipfileset src="${scala-library.jar}" />
+			<manifest>
+				<attribute name="Main-Class" value="${main.class2}"/>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Implementation-Vendor" value="${user.name}"/>
+				<attribute name="Implementation-Title" value="${project.name}"/>
+				<attribute name="Implementation-Version" value="${project.version}"/>
+		    </manifest>
+		</jar>
+		
 		<!-- <jar jarfile="${dist.dir}/${project.name}-${project.version}.doc.jar" basedir="${docs.dir}"/>		-->
   </target>
 
