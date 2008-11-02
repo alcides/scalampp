@@ -25,8 +25,8 @@ class UDPClientListener(val s:DatagramSocket, val session:ClientSession) extends
 			}
 		} 
 		catch {
-			case e : EOFException => println("EOF: " + e)
-			case e : IOException => println("IO: " + e)
+			case e : EOFException => {} //println("EOF: " + e)
+			case e : IOException => {} //println("IO: " + e)
 			case _ => println("wtf?")
 		}
 	}

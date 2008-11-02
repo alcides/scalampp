@@ -20,8 +20,8 @@ class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread 
 			}
 		} 
 		catch {
-			case e : EOFException => println("EOF: " + e)
-			case e : IOException => println("IO: " + e)
+			case e : EOFException => {} //println("EOF: " + e)
+			case e : IOException => {} //println("IO: " + e)
 			// case _ => println("wtf?")
 		}
 	}
@@ -65,7 +65,7 @@ object TCPClient {
 			catch {
 				case e : UnknownHostException => println("Some problems finding that host...")
 				case e : EOFException => {
-					println("error")
+					//println("error")
 					if (out != null)
 						out.write("</stream:stream>")
 					if (s != null)

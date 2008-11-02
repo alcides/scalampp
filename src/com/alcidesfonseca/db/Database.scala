@@ -14,7 +14,7 @@ object Database {
 	}
 	
 	def update(sql:String) = synchronized {
-		println("SQL: " + sql)
+		//println("SQL: " + sql)
 		val stat = conn.createStatement()
 		stat.executeUpdate(sql);
 	}

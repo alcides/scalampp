@@ -14,7 +14,7 @@ object SessionManager {
 	def destroySession(s:Session) = synchronized {
 		
 		// send  presence as offline
-		println("removing user "+ s.jid)
+		//println("removing user "+ s.jid)
 		
 		
 		/*if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {

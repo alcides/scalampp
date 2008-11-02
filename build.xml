@@ -116,7 +116,7 @@ just one file at a time.
     </scaladoc>
   </target>
 	
-  <target name="dist" depends="clean,compile,docs">
+  <target name="dist" depends="clean,compile">
 		<jar jarfile="${dist.dir}/${project.name}-${project.version}.jar" basedir="${build.dir}">
 			<zipfileset dir="${build.dir}" prefix="" />
 			<zipfileset dir="${db.dir}" />
@@ -130,7 +130,7 @@ just one file at a time.
 				<attribute name="Implementation-Version" value="${project.version}"/>
 		    </manifest>
 		</jar>
-		<jar jarfile="${dist.dir}/${project.name}-${project.version}.doc.jar" basedir="${docs.dir}"/>		
+		<!-- <jar jarfile="${dist.dir}/${project.name}-${project.version}.doc.jar" basedir="${docs.dir}"/>		-->
   </target>
 
 </project>
