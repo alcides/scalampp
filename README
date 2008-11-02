@@ -2,3 +2,20 @@ Trabalho de SD
 
 Alcides Fonseca
 amaf@student.dei.uc.pt
+
+1. Firing up the server
+
+(Make sure the db/dev.db is writable)
+
+
+java -jar release/tcp_mt_server.jar
+OR
+java -jar release/tcp_nio_server.jar
+OR
+java -jar release/udp_server.jar
+
+2. Firing up a client
+
+java -jar release/tcp_client.jar qwerty qwerty
+OR
+java -jar release/udp_client.jar teste teste
