@@ -8,8 +8,9 @@
   <property name="project.version"   value="0.1.0"/>	
 
   <property name="scala.home"        value="/opt/local/share/scala/"/>	
-  <property name="main.class"        value="Boot"/>	
-  <property name="main.class2"        value="BootClient"/>	
+  <property name="server.class"        value="Boot"/>	
+  <property name="client.class"        value="BootClient"/>	
+  <property name="ns.class"        value="BootNS"/>	
 	
   <property name="src.dir"           value="./src"/>
   <property name="build.dir"         value="./build"/>
@@ -95,8 +96,23 @@ just one file at a time.
 	    </fsc>	
     </target>
 
-  <target name="run" depends="compile">
-    <java fork="true" classname="${main.class}" classpathref="build.classpath">
+  <target name="server" depends="compile">
+    <java fork="true" classname="${server.class}" classpathref="build.classpath">
+		<jvmarg value="-Dfile.encoding=utf-8" />
+		<jvmarg value="-Djava.library.path=${library.path}" />
+		<classpath refid="library.classpath"/>
+    </java>
+  </target>
+  <target name="client" depends="compile">
+    <java fork="true" classname="${client.class}" classpathref="build.classpath">
+		<jvmarg value="-Dfile.encoding=utf-8" />
+		<jvmarg value="-Djava.library.path=${library.path}" />
+		<classpath refid="library.classpath"/>
+		<arg line="${args}"/>
+    </java>
+  </target>
+  <target name="ns" depends="compile">
+    <java fork="true" classname="${ns.class}" classpathref="build.classpath">
 		<jvmarg value="-Dfile.encoding=utf-8" />
 		<jvmarg value="-Djava.library.path=${library.path}" />
 		<classpath refid="library.classpath"/>
@@ -120,11 +136,10 @@ just one file at a time.
   <target name="dist" depends="clean,compile">
 		<jar jarfile="${dist.dir}/${project.name}-server.jar" basedir="${build.dir}">
 			<zipfileset dir="${build.dir}" prefix="" />
-			<!--<zipfileset dir="${db.dir}" />-->
 			<zipfileset src="${scala-library.jar}" />
 			<zipfileset src="${sqlite.jar}" />
 			<manifest>
-				<attribute name="Main-Class" value="${main.class}"/>
+				<attribute name="Main-Class" value="${server.class}"/>
 				<attribute name="Built-By" value="${user.name}"/>
 				<attribute name="Implementation-Vendor" value="${user.name}"/>
 				<attribute name="Implementation-Title" value="${project.name}"/>
@@ -135,14 +150,24 @@ just one file at a time.
 			<zipfileset dir="${build.dir}" prefix="" />
 			<zipfileset src="${scala-library.jar}" />
 			<manifest>
-				<attribute name="Main-Class" value="${main.class2}"/>
+				<attribute name="Main-Class" value="$client.class}"/>
 				<attribute name="Built-By" value="${user.name}"/>
 				<attribute name="Implementation-Vendor" value="${user.name}"/>
 				<attribute name="Implementation-Title" value="${project.name}"/>
 				<attribute name="Implementation-Version" value="${project.version}"/>
 		    </manifest>
 		</jar>
-		
+		<jar jarfile="${dist.dir}/${project.name}-ns.jar" basedir="${build.dir}">
+			<zipfileset dir="${build.dir}" prefix="" />
+			<zipfileset src="${scala-library.jar}" />
+			<manifest>
+				<attribute name="Main-Class" value="$ns.class}"/>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Implementation-Vendor" value="${user.name}"/>
+				<attribute name="Implementation-Title" value="${project.name}"/>
+				<attribute name="Implementation-Version" value="${project.version}"/>
+		    </manifest>
+		</jar>		
 		<!-- <jar jarfile="${dist.dir}/${project.name}-${project.version}.doc.jar" basedir="${docs.dir}"/>		-->
   </target>
 
