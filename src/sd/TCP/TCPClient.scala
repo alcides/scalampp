@@ -28,13 +28,11 @@ class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread 
 }
 
 object TCPClient {
-	def main(args: Array[String]) = {
-		
+	def main(host:String,port:Int,username:String,password:String) = {
+				
 		var s:Socket = null
 		var out:SocketOutChannel = null
 		
-		var port = 5222
-		var host = "localhost"
 		var cycle = true
 		var kb = new Scanner(System.in)
 	
@@ -51,8 +49,8 @@ object TCPClient {
 					out = new SocketOutChannel(s)
 					var session = new ClientSession(host,out)
 					
-					if ( args.length >= 1 ) session.user = args(0)
-					if ( args.length >= 2 ) session.pass = args(1)
+					session.user = username
+					session.pass = password
 					
 					// launch receiver
 					new TCPClientListener(s,session).start

@@ -33,11 +33,8 @@ class UDPClientListener(val s:DatagramSocket, val session:ClientSession) extends
 }
 
 object UDPClient {
-	val port = 5222
-	val host = "localhost"
-	val hostaddress = InetAddress.getByName(host);
 	
-	def main(args: Array[String]) {
+	def main(host:String,port:Int,username:String,password:String) = {
 		
 		//Ignore STDERR
 		//System.setErr(null)
@@ -46,15 +43,15 @@ object UDPClient {
 		var kb = new Scanner(System.in)
 		
 		var aSocket = new DatagramSocket()
-		
+		val hostaddress = InetAddress.getByName(host);
 	
 		while (cycle) {
 			try {
 				var out = new DatagramOutChannel(aSocket,hostaddress,port)
 				var session = new ClientSession(host,out)
 				
-				if ( args.length >= 1 ) session.user = args(0)
-				if ( args.length >= 2 ) session.pass = args(1)
+				session.user = username
+				session.pass = password
 				
 				// launch receiver
 				new UDPClientListener(aSocket,session).start

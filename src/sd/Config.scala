@@ -1,4 +1,4 @@
 object Config {
-	var vers = "nio"
+	var vers = "tcp"
 	var debug = false
 }
