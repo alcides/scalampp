@@ -5,6 +5,8 @@
 //  Copyright (c) 2008 Alcides Fonseca. All rights reserved.
 //
 
+package sd.NIO
+
 import com.alcidesfonseca.xmpp._
 import java.net.Socket
 import java.nio._

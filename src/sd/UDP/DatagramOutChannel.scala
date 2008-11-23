@@ -5,6 +5,8 @@
 //  Copyright (c) 2008 Alcides Fonseca. All rights reserved.
 //
 
+package sd.UDP
+
 import com.alcidesfonseca.xmpp._
 import java.net._
 import java.io._

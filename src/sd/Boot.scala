@@ -8,6 +8,11 @@
 import com.alcidesfonseca.xmpp._
 import com.alcidesfonseca.db._
 
+import sd._
+import sd.NIO._
+import sd.TCP._
+import sd.UDP._
+
 object Boot {
 	def main(args: Array[String]) {
 		

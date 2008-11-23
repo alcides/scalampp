@@ -1,7 +1,10 @@
+package sd.TCP
+
 import java.lang.{Runnable,Thread}
 import java.io._
 import java.net._
 
+import sd._
 import com.alcidesfonseca.xmpp._
 
 class Connection(clientSocket:Socket) extends Thread {

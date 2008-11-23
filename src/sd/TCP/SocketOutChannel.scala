@@ -5,6 +5,8 @@
 //  Copyright (c) 2008 Alcides Fonseca. All rights reserved.
 //
 
+package sd.TCP
+
 import com.alcidesfonseca.xmpp._
 import java.io.DataOutputStream
 import java.net.Socket

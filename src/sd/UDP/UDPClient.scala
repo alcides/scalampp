@@ -1,7 +1,10 @@
+package sd.UDP
+
 import java.lang.{Runnable,Thread}
 import java.io._
 import java.net._
 
+import sd._
 import com.alcidesfonseca.xmpp._
 import scala.xml._
 import java.util.Scanner

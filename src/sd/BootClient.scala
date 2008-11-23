@@ -1,6 +1,10 @@
 import com.alcidesfonseca.xmpp._
 import com.alcidesfonseca.db._
 
+import sd._
+import sd.TCP._
+import sd.UDP._
+
 object BootClient {
 	
 	def requestData(s:String,d:String):String = {

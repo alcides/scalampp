@@ -1,8 +1,11 @@
+package sd.UDP
+
 import java.lang.{Runnable,Thread}
 import java.io._
 import java.net._
 import scala.collection.mutable.HashMap
 
+import sd._
 import com.alcidesfonseca.xmpp._
 
 object UDPServer {
