@@ -7,4 +7,8 @@ import java.net._
 trait ILoadBalancer extends Remote
 {
      def getServer:InetSocketAddress
+
+     def join(w:InetSocketAddress):Unit
+     def withdraw(w:InetSocketAddress):Unit
+     def keepAlive(w:InetSocketAddress):Unit
 }
