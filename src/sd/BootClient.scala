@@ -4,6 +4,10 @@ import com.alcidesfonseca.db._
 import sd._
 import sd.TCP._
 import sd.UDP._
+import sd.NS._
+
+import java.rmi._
+import java.rmi.registry._
 
 object BootClient {
 	
@@ -14,14 +18,37 @@ object BootClient {
 	}
 	
 	def main(args: Array[String]) {
- 		var host = requestData("Enter the host:","localhost")
- 		var port = requestData("Enter the port:","5222").toInt
- 		var username = requestData("Enter your username:","teste")
- 		var password = requestData("Enter your username:","teste")
+		var lb:ILoadBalancer = null
 		
-		if ( Config.vers.equals("udp") )
-			UDPClient.main(host,port,username,password)
-		else 
-			TCPClient.main(host,port,username,password)
+		var reCount = 0;
+		
+		while (true) {
+			try {
+				lb = Naming.lookup("//localhost/lb1").asInstanceOf[ILoadBalancer]
+				reCount = 0
+				var address = lb.getServer
+
+		 		var host = address.getHostName
+		 		var port = address.getPort
+		 		var username = requestData("Enter your username:","teste")
+		 		var password = requestData("Enter your username:","teste")
+
+				if ( Config.vers.equals("udp") )
+					UDPClient.main(host,port,username,password)
+				else 
+					TCPClient.main(host,port,username,password)
+			} 
+			catch {
+				case e : java.rmi.NotBoundException => {
+					println("Connection failed")
+					if (reCount > 10) {
+						System.exit(0)	
+					} else {
+						reCount += 1
+						Thread.sleep(5000)
+					}
+				}
+			}
+		}
 	}
 }
