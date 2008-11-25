@@ -17,6 +17,16 @@ object BootClient {
 		if ( v.trim.isEmpty ) d else v
 	}
 	
+	def fail(c:Int):Int = {
+		if (c > 10) {
+			System.exit(0)
+			0
+		} else {
+			Thread.sleep(5000)
+			c+1
+		}
+	}
+	
 	def main(args: Array[String]) {
 		var lb:ILoadBalancer = null
 		
@@ -25,28 +35,33 @@ object BootClient {
 		while (true) {
 			try {
 				lb = Naming.lookup("//localhost/lb1").asInstanceOf[ILoadBalancer]
-				reCount = 0
-				var address = lb.getServer
+				var address = try {
+								lb.getServer
+							} 
+							catch {
+								case e : NoServerAvailableException => null
+							}
+				if (address == null) {
+					println("No server available at this time...")
+					reCount = fail(reCount)
+				} else {
+					reCount = 0
+					println("Connecting to " + address.toString)
+					var host = address.getHostName
+			 		var port = address.getPort
+			 		var username = requestData("Enter your username:","teste")
+			 		var password = requestData("Enter your username:","teste")
 
-		 		var host = address.getHostName
-		 		var port = address.getPort
-		 		var username = requestData("Enter your username:","teste")
-		 		var password = requestData("Enter your username:","teste")
-
-				if ( Config.vers.equals("udp") )
-					UDPClient.main(host,port,username,password)
-				else 
-					TCPClient.main(host,port,username,password)
+					if ( Config.vers.equals("udp") )
+						UDPClient.main(host,port,username,password)
+					else 
+						TCPClient.main(host,port,username,password)
+				}
 			} 
 			catch {
 				case e : java.rmi.NotBoundException => {
 					println("Connection failed")
-					if (reCount > 10) {
-						System.exit(0)	
-					} else {
-						reCount += 1
-						Thread.sleep(5000)
-					}
+					reCount = fail(reCount)
 				}
 			}
 		}

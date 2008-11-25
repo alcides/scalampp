@@ -12,6 +12,8 @@ class LoadBalancer extends ILoadBalancer
 	var serverList:List[OnlineServer] = List()
 	
 	override def getServer:InetSocketAddress = {
+		if (serverList.isEmpty)
+			throw new NoServerAvailableException;
 		serverList.first.serverAddress
 	}
 	
