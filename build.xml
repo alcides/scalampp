@@ -8,7 +8,7 @@
   <property name="project.version"   value="0.1.0"/>	
 
   <property name="scala.home"        value="/opt/local/share/scala/"/>	
-  <property name="server.class"        value="Boot"/>	
+  <property name="server.class"        value="BootServer"/>	
   <property name="client.class"        value="BootClient"/>	
   <property name="ns.class"        value="BootNS"/>	
 	

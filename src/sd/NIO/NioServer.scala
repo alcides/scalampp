@@ -11,8 +11,7 @@ import com.alcidesfonseca.xmpp._
 import scala.collection.mutable.HashMap
 
 object NioServer {
-	def main(args: Array[String]) {
-		var port:int = if (args.length > 1) Integer.parseInt(args(1)) else 5222;
+	def main(host:String, port:Int) {
 		println("A escuta no porto " + port)
 		
 		var parsers = new HashMap[SocketChannel,XMLParser]
@@ -22,7 +21,7 @@ object NioServer {
 		var server:ServerSocketChannel = ServerSocketChannel.open()
 		server.configureBlocking(false)
 
-		server.socket().bind(new InetSocketAddress("localhost",port))
+		server.socket().bind(new InetSocketAddress(host,port))
 
 		var selector = Selector.open(); 
 		server.register(selector,SelectionKey.OP_ACCEPT)

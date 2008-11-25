@@ -9,8 +9,8 @@ import sd._
 import com.alcidesfonseca.xmpp._
 
 object UDPServer {
-	def main(args: Array[String]) {
-		var port:int = if (args.length > 1) Integer.parseInt(args(1)) else 5222;
+	def main(host:String, port:Int) {
+		
 		println("A escuta no porto " + port)
 	
 		var parsers = new HashMap[SocketAddress,XMLParser]

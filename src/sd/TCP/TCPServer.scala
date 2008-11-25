@@ -40,11 +40,10 @@ class Connection(clientSocket:Socket) extends Thread {
 }
 
 object TCPServer {
-	def main(args: Array[String]) {
+	def main(host:String,port:Int) {
 		
 		//System.setErr(null)
 			
-		var port:int = if (args.length > 1) Integer.parseInt(args(1)) else 5222;
 		println("A escuta no porto " + port)
 		var listenSocket:ServerSocket = new ServerSocket(port);
 		while (true) {
