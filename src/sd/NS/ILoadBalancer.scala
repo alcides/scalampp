@@ -1,14 +1,20 @@
 package sd.NS;
 
+import sd.NS.server._
+
 import java.rmi._
 import java.net._
+
 
 @remote
 trait ILoadBalancer extends Remote
 {
-     def getServer:InetSocketAddress
+	
+	var serverList:List[OnlineServer]
+	
+	def getServer:InetSocketAddress
 
-     def join(w:InetSocketAddress):Unit
-     def withdraw(w:InetSocketAddress):Unit
-     def keepAlive(w:InetSocketAddress):Unit
+	def join(w:InetSocketAddress,pb:IPingBack):Unit
+	def withdraw(w:InetSocketAddress):Unit
+	def keepAlive(w:InetSocketAddress):Boolean
 }

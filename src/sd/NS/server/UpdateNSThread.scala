@@ -14,8 +14,13 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 	
 	override def run() = {
 		getLoadBalancer
-		lb.join(socketAddress)
-		println("Server registered in NamingService: " + socketAddress.toString)
+		lb.join(socketAddress, new PingBack)
+		while (true) {
+			Thread.sleep(sd.Config.updateRate*1000)
+			if (!lb.keepAlive(socketAddress)) {
+				lb.join(socketAddress, new PingBack)
+			}
+		}
 	}
 	
 	def getLoadBalancer() = {
