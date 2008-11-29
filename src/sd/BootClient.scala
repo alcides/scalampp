@@ -52,10 +52,11 @@ object BootClient {
 			 		var username = requestData("Enter your username:","teste")
 			 		var password = requestData("Enter your username:","teste")
 
-					if ( Config.vers.equals("udp") )
-						UDPClient.main(host,port,username,password)
-					else 
-						TCPClient.main(host,port,username,password)
+					Config.vers match {
+					    case "udp" => UDPClient.main(host,port,username,password)
+						case _ => TCPClient.main(host,port,username,password)
+					}
+						
 				}
 			} 
 			catch {

@@ -23,11 +23,11 @@ object BootServer {
 		var nsUpdateThread = new UpdateNSThread(host,port)
 		nsUpdateThread.start
 		
-		if ( Config.vers.equals("tcp") )
-			TCPServer.main(host,port)
-		if ( Config.vers.equals("nio") )
-			NioServer.main(host,port)
-		if ( Config.vers.equals("udp") )
-			UDPServer.main(host,port)
+		
+		Config.vers match {
+		    case "tcp" => TCPServer.main(host,port)
+		    case "nio" => NioServer.main(host,port)
+		    case "udp" => UDPServer.main(host,port)
+		}
 	}
 }
