@@ -37,5 +37,7 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 		serverList.count { server => (server.serverAddress == w) } > 0
 	}
 	
-	private def getAvailableServer = serverList.first.serverAddress
+	private def getAvailableServer = {
+		serverList.first.serverAddress
+	}
 }

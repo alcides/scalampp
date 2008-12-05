@@ -13,14 +13,24 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 	var socketAddress = new InetSocketAddress(host,port)
 	
 	override def run() = {
-		getLoadBalancer
-		lb.join(socketAddress, new PingBack, getInfo)
 		while (true) {
-			Thread.sleep(sd.Config.updateRate*1000)
-			if (!lb.keepAlive(socketAddress,getInfo)) {
+			try {
+				getLoadBalancer
 				lb.join(socketAddress, new PingBack, getInfo)
+				while (true) {
+					Thread.sleep(sd.Config.updateRate*1000)
+					if (!lb.keepAlive(socketAddress,getInfo)) {
+						lb.join(socketAddress, new PingBack, getInfo)
+					}
+				}
+			} 
+			catch {
+				case e : java.rmi.ConnectException => {
+					Thread.sleep(5000)
+				}
 			}
 		}
+		
 	}
 	
 	def getLoadBalancer = {

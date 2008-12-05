@@ -64,6 +64,9 @@ object BootClient {
 					println("Connection failed")
 					reCount = fail(reCount)
 				}
+				case e : java.rmi.ConnectException => {
+					println("Connection failed")					
+				}
 			}
 		}
 	}
