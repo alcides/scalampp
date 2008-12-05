@@ -14,16 +14,16 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 	
 	override def run() = {
 		getLoadBalancer
-		lb.join(socketAddress, new PingBack)
+		lb.join(socketAddress, new PingBack, getInfo)
 		while (true) {
 			Thread.sleep(sd.Config.updateRate*1000)
-			if (!lb.keepAlive(socketAddress)) {
-				lb.join(socketAddress, new PingBack)
+			if (!lb.keepAlive(socketAddress,getInfo)) {
+				lb.join(socketAddress, new PingBack, getInfo)
 			}
 		}
 	}
 	
-	def getLoadBalancer() = {
+	def getLoadBalancer = {
 		while( lb == null) {
 			try {
 				lb = Naming.lookup("//localhost/lb1").asInstanceOf[ILoadBalancer]
@@ -33,5 +33,7 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 			}	
 		}	
 	}
+	
+	def getInfo = new ServerData(100,Runtime.getRuntime.freeMemory.asInstanceOf[Int],50)
 	
 }

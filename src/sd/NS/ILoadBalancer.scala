@@ -14,7 +14,7 @@ trait ILoadBalancer extends Remote
 	
 	def getServer:InetSocketAddress
 
-	def join(w:InetSocketAddress,pb:IPingBack):Unit
+	def join(w:InetSocketAddress,pb:IPingBack,sData:ServerData):Unit
 	def withdraw(w:InetSocketAddress):Unit
-	def keepAlive(w:InetSocketAddress):Boolean
+	def keepAlive(w:InetSocketAddress,sData:ServerData):Boolean
 }

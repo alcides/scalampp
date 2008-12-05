@@ -19,9 +19,9 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 		serverList.first.serverAddress
 	}
 	
-	override def join(w:InetSocketAddress,pb:IPingBack):Unit = {
+	override def join(w:InetSocketAddress,pb:IPingBack,sData:ServerData):Unit = {
 		if ( serverList.count( s => s.serverAddress == w) == 0 ) {
-			serverList = serverList.::( new OnlineServer(w,pb) )
+			serverList = serverList.::( new OnlineServer(w,pb,sData) )
 			println("Servidor " + w.toString + " juntou-se.")
 		}
 	}
@@ -29,7 +29,7 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 		serverList = serverList.remove { server => (server.serverAddress == w) }
 		println("Servidor " + w.toString + " saiu.")
 	}
-    override def keepAlive(w:InetSocketAddress):Boolean = {
+    override def keepAlive(w:InetSocketAddress,sData:ServerData):Boolean = {
 		println("Servidor " + w.toString + " actualizou.")
 		serverList.filter { server => (server.serverAddress == w) }.foreach { server =>
 			server.updateAlive
