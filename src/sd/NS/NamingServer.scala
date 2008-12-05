@@ -25,7 +25,8 @@ class ServerChecker(var lb:ILoadBalancer) extends Thread {
 		while (true) {
 			Thread.sleep( sd.Config.checkServerRate * 1000 )
 			var acceptableTime = new GregorianCalendar()
-			acceptableTime.add(Calendar.SECOND, -2 * sd.Config.checkServerRate)
+			acceptableTime.add(Calendar.SECOND, -2 * sd.Config.checkServerRate) 
+			// Maximum of 2 times the refresh rate if assynch.
 			
 			lb.serverList = lb.serverList.remove { s => s.lastSeen.compareTo(acceptableTime.getTime) < 0 && !s.ping }
 			
