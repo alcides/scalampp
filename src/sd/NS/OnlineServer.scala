@@ -6,7 +6,7 @@ import java.util.GregorianCalendar
 import java.net._
 import java.rmi._
 
-class OnlineServer(var serverAddress:InetSocketAddress,var pb:IPingBack, var sData:ServerData) {
+class OnlineServer(var serverAddress:InetSocketAddress,var pb:IPingBack, var serverData:ServerData) {
 	
 	override def toString = serverAddress.toString
 	

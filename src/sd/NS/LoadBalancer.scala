@@ -38,6 +38,14 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	}
 	
 	private def getAvailableServer = {
-		serverList.first.serverAddress
+		serverList.reduceLeft {
+			(x:OnlineServer,y:OnlineServer) => if (calcLoad(x) < calcLoad(y) ) x else y
+		}.serverAddress
 	}
+	
+	private def calcLoad(os:OnlineServer):Double = {
+		(os.serverData.cpuLoad + os.serverData.networkLoad + os.serverData.memoryLoad)/3
+	}
+	
+	
 }
