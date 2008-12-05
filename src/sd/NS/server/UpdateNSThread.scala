@@ -35,6 +35,6 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 	}
 	
 	def getInfo = new ServerData(100,Runtime.getRuntime.freeMemory.asInstanceOf[Int],50)
-	# Dummy data!
+	// Dummy data!
 	
 }
