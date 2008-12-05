@@ -1,6 +1,8 @@
 package sd.NS;
 
 import sd.NS.server._
+import com.alcidesfonseca.db._
+
 
 import java.rmi._
 import java.rmi.registry._
@@ -47,5 +49,7 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 		(os.serverData.cpuLoad + os.serverData.networkLoad + os.serverData.memoryLoad)/3
 	}
 	
-	
+	def database_update(sql:String) = Database.update(sql)
+	def database_getUsers:List[User] = Database.getUsers 
+	def database_getFriends(name:String):List[Friend] = Database.getFriends(name)
 }

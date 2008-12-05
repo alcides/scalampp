@@ -22,6 +22,8 @@ object NamingServer {
 
 class ServerChecker(var lb:ILoadBalancer) extends Thread {
 	override def run = {
+		java.rmi.registry.LocateRegistry.createRegistry(1099);
+		
 		while (true) {
 			Thread.sleep( sd.Config.checkServerRate * 1000 )
 			var acceptableTime = new GregorianCalendar()

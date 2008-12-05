@@ -1,6 +1,7 @@
 package sd.NS.server;
 
 import sd.NS._;
+import com.alcidesfonseca.db._
 
 import java.lang.{Runnable,Thread}
 import java.rmi._
@@ -37,6 +38,7 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 		while( lb == null) {
 			try {
 				lb = Naming.lookup("//localhost/lb1").asInstanceOf[ILoadBalancer]
+				RemoteDatabase.lb = lb
 			} 
 			catch {
 				case e : java.rmi.NotBoundException => {}

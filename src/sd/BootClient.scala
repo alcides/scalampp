@@ -50,7 +50,7 @@ object BootClient {
 					var host = address.getHostName
 			 		var port = address.getPort
 			 		var username = requestData("Enter your username:","teste")
-			 		var password = requestData("Enter your username:","teste")
+			 		var password = requestData("Enter your password:","teste")
 
 					Config.vers match {
 					    case "udp" => UDPClient.main(host,port,username,password)
