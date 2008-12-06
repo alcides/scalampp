@@ -2,6 +2,7 @@ package sd.NS.server;
 
 import sd.NS._;
 import com.alcidesfonseca.db._
+import com.alcidesfonseca.xmpp._
 
 import java.lang.{Runnable,Thread}
 import java.rmi._
@@ -20,7 +21,7 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 				lb.join(socketAddress, new PingBack, getInfo)
 				while (true) {
 					Thread.sleep(sd.Config.updateRate*1000)
-					if (!lb.keepAlive(socketAddress,getInfo)) {
+					if (!lb.keepAlive(socketAddress,getInfo,getSessions)) {
 						lb.join(socketAddress, new PingBack, getInfo)
 					}
 				}
@@ -46,9 +47,11 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 		}	
 	}
 	
-	def getInfo = new ServerData(0.6,
+	def getInfo = new ServerData(1,
 		Runtime.getRuntime.freeMemory.asInstanceOf[Double] / Runtime.getRuntime.totalMemory.asInstanceOf[Double],
-		0.9)
+		1)
 	// Dummy data!
+	
+	def getSessions = SessionManager.exportSessions
 	
 }

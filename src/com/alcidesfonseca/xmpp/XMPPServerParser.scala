@@ -146,9 +146,8 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 												method = "none"
 												session.user.insertFriend(f) // Inserts in database
 											}
-											SessionManager.getOutChannels(session.shortJid()).foreach { 
-												o => o.write( XMLStrings.roster_set(List(f),method) ) 
-											} // Broadcasts
+											// Broadcasts
+											SessionManager.send(session.shortJid,XMLStrings.roster_set(List(f),method))
 										}
 									
 										// Confirmation
@@ -191,11 +190,10 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 									
 									
 									} else if ( (xml \ "@type").toString == "subscribe" ) {
+										
 										var to = (xml \ "@to").toString
-									
-										SessionManager.getOutChannels(to).foreach { 
-											o => o.write(XMLStrings.presence_subscribe(to,session.shortJid))
-										}
+										SessionManager.send(to,XMLStrings.presence_subscribe(to,session.shortJid))
+										
 									} else if ((xml \ "@type").toString == "subscribed") {
 										var to = (xml \ "@to").toString
 									
@@ -206,9 +204,8 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 											u => u.changeFriend(new Friend("",session.shortJid),"from") 
 										}
 									
-										SessionManager.getOutChannels(to).foreach { 
-											o => o.write(XMLStrings.presence_subscribed(to,session.shortJid))
-										}
+										SessionManager.send(to,XMLStrings.presence_subscribed(to,session.shortJid))
+
 									} else if ((xml \ "@type").toString == "unsubscribed") {
 										var to = (xml \ "@to").toString
 									
@@ -217,9 +214,8 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 											u => u.changeFriend(new Friend("",session.shortJid),"none") 
 										}
 									
-										SessionManager.getOutChannels(to).foreach { 
-											o => o.write(XMLStrings.presence_unsubscribed(to,session.shortJid))
-										}
+										SessionManager.send(to,XMLStrings.presence_unsubscribed(to,session.shortJid))
+
 									} else if ((xml \ "@type").toString == "unavailable") {
 										if ((xml \ "@to").length == 0) {
 											// Broadcasts

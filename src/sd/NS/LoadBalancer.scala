@@ -9,6 +9,8 @@ import java.rmi.registry._
 import java.rmi.server._
 
 import java.net._
+import scala.collection.mutable.HashMap
+
 
 @serializable
 class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
@@ -18,6 +20,7 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	override def getServer:InetSocketAddress = {
 		if (serverList.isEmpty)
 			throw new NoServerAvailableException;
+		println(getAvailableServer + " given")
 		getAvailableServer
 	}
 	
@@ -31,10 +34,15 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 		serverList = serverList.remove { server => (server.serverAddress == w) }
 		println("Servidor " + w.toString + " saiu.")
 	}
-    override def keepAlive(w:InetSocketAddress,sData:ServerData):Boolean = {
+    override def keepAlive(w:InetSocketAddress,sData:ServerData,sessions:List[String]):Boolean = {
 		println("Servidor " + w.toString + " actualizou.")
+		var status = false
 		serverList.filter { server => (server.serverAddress == w) }.foreach { server =>
-			server.updateAlive
+			status = server.updateAlive(sData,sessions)
+		}
+		if (status) {
+			println("new user list")
+			updateSessions
 		}
 		serverList.count { server => (server.serverAddress == w) } > 0
 	}
@@ -47,6 +55,19 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	
 	private def calcLoad(os:OnlineServer):Double = {
 		Math.max(os.serverData.cpuLoad,Math.max(os.serverData.networkLoad,os.serverData.memoryLoad))
+		os.sessions.length.toDouble
+	}
+	
+	private def updateSessions = {
+		serverList.foreach { s =>
+			var h = HashMap[String,IPingBack]()
+			serverList.filter{ s2 => s2 != s }.foreach { s2 =>
+				s2.sessions.foreach { jid =>
+					h.update( jid, s2.pb )
+				}
+			}
+			s.pb.updateSessions(h)
+		}
 	}
 	
 	def database_update(sql:String) = Database.update(sql)

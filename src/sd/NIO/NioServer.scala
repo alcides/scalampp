@@ -56,6 +56,7 @@ object NioServer {
 								case e : Exception => -1
 							}
 						if (nread == -1) {
+							SessionManager.closeSession(new NioOutChannel(client))
 						    client.close()
 						} else {
 							buffer.flip

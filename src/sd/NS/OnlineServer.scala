@@ -11,9 +11,15 @@ class OnlineServer(var serverAddress:InetSocketAddress,var pb:IPingBack, var ser
 	override def toString = serverAddress.toString
 	
 	var lastSeen = new GregorianCalendar().getTime
+	var sessions = List[String]()
 	
-	def updateAlive = {
+	def updateAlive(sData:ServerData,ses:List[String]) = {
 		lastSeen = new GregorianCalendar().getTime
+		serverData = sData
+		if (sessions != ses) {
+			sessions = ses
+			true
+		} else false
 	}
 	
 	def ping = {	

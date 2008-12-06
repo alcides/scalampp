@@ -1,8 +1,14 @@
 package com.alcidesfonseca.xmpp
 
+import scala.collection.mutable.HashMap
+import sd.NS.server.IPingBack
+
 object SessionManager {
 	var sessions:List[Session] = List()
+	var remoteSessions = HashMap[String, IPingBack]()
 	var cid = 0
+	
+	def exportSessions:List[String] = sessions.filter { s => s.logged }.map { s => s.jid }
 	
 	def createSession(out:OutChannel) = synchronized {
 		var n = new Session(cid,out)
@@ -11,28 +17,28 @@ object SessionManager {
 		n
 	}
 	
+	def closeSession(out:OutChannel) = synchronized {
+		sessions.filter { s => s.out == out }.foreach {
+			s => destroySession(s)
+		}
+	}
+	
 	def destroySession(s:Session) = synchronized {
 		
-		// send  presence as offline
-		//println("removing user "+ s.jid)
-		
-		
-		/*if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {
+		if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {
 			s.user.getFriends.foreach { f =>
 				try {
 					sendOfflinePresence(s.jid,f.jid)
 				} 
 				catch {
-					case e : Exception => // expression
+					case e : Exception => ()
 				}
 			}
-		}*/
+		}
 		
 		s.out.close
-		
-		// remove
 		sessions.remove { ses => (ses == s) }
-		
+				
 	}
 	
 	def count(jid:String):int = synchronized {
@@ -43,22 +49,40 @@ object SessionManager {
 		sessions.filter { s => s.jid().startsWith(jid) }.map{i => i.out}
 	}
 	
+	def getForeignChannels(jid:String):List[IPingBack] = synchronized {
+		remoteSessions.filterKeys { j => j.startsWith(jid) }.values.toList
+	}
+	
+	def send(jid:String,content:Any):Unit = send(jid,content.toString)
+	
+	def send(jid:String,content:String):Unit = synchronized {
+		getOutChannels(jid).foreach { o => o.write(content) }
+		getForeignChannels(jid).foreach { pb => 
+			try {
+				pb.deliver(jid,content)
+			} 
+			catch {
+				case e : java.rmi.UnexpectedException => println("jid "+jid+" offline")
+			}
+		}
+	}
+	
 	def sendMessage(from:String,to:String,content:String) = synchronized {
-		getOutChannels(to).foreach { c => c.write( XMLStrings.message_chat(from,to,content) ) }
+		send(to,XMLStrings.message_chat(from,to,content))
 	}
 	
 	def sendPresence(from:String,to:String,content:Any) = synchronized {
-		getOutChannels(to).foreach { c => c.write( XMLStrings.presence(from,to,content) ) }
+		send(to,XMLStrings.presence(from,to,content))
 	}
 	
 	def sendOfflinePresence(from:String,to:String):Unit = synchronized {
-		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_unavailable(from,to) ) }
+		send(to,XMLStrings.presence_unavailable(from,to))
 	}
 	def sendOfflinePresence(from:String,to:String,content:Any):Unit = synchronized {
-		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_unavailable(from,to,content) ) }
+		send(to,XMLStrings.presence_unavailable(from,to,content))
 	}
 	def sendProbePresence(from:String,to:String) = synchronized {
-		getOutChannels(to).foreach { c => c.write( XMLStrings.presence_probe(from,to) ) }
+		send(to,XMLStrings.presence_probe(from,to))
 	}
 	
 }

@@ -17,7 +17,7 @@ object BootServer {
 	def main(args: Array[String]) {
 		
 		var host = InetAddress.getByName("localhost").getHostAddress()
-		var port:Int = if (args.length > 1) Integer.parseInt(args(0)) else 5222;
+		var port:Int = if (args.length >= 1) Integer.parseInt(args(0)) else 5222;
 		
 		
 		var nsUpdateThread = new UpdateNSThread(host,port)

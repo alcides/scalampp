@@ -34,7 +34,7 @@ class ServerChecker(var lb:ILoadBalancer) extends Thread {
 			
 			println("---")
 			lb.serverList.foreach {
-				s => println("> " + s + ":" + s.serverData.memoryLoad)
+				s => println("> " + s + ":" + s.sessions.length)
 			}
 			
 		}
