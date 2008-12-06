@@ -46,7 +46,7 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	}
 	
 	private def calcLoad(os:OnlineServer):Double = {
-		(os.serverData.cpuLoad + os.serverData.networkLoad + os.serverData.memoryLoad)/3
+		Math.min(os.serverData.cpuLoad,Math.min(os.serverData.networkLoad,os.serverData.memoryLoad))
 	}
 	
 	def database_update(sql:String) = Database.update(sql)
