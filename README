@@ -1,21 +1,20 @@
-Trabalho de SD
+h1. Projecto de SD
 
 Alcides Fonseca
 amaf@student.dei.uc.pt
 
-1. Firing up the server
+h2. Compiling
+
+@ant compile@
+
+h2. Running
 
 (Make sure the db/dev.db is writable)
 
+@ant ns@
 
-java -jar release/tcp_mt_server.jar
-OR
-java -jar release/tcp_nio_server.jar
-OR
-java -jar release/udp_server.jar
+In the build folder:
 
-2. Firing up a client
+@scala BootServer 5222@ - Starts the XMPP server in the port 5222
 
-java -jar release/tcp_client.jar qwerty qwerty
-OR
-java -jar release/udp_client.jar teste teste
+@scala BootClient@ - Starts a XMPP client
