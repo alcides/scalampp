@@ -1,9 +1,11 @@
 package sd;
 
 object Config {
-	var vers = "nio"
-	var debug = false
+	val vers = "nio"
+	val debug = false
 	
-	var checkServerRate = 5 // seconds 
-	var updateRate = 5 // seconds 	
+	val checkServerRate = 5 // seconds 
+	val updateRate = 5 // seconds 	
+	
+	val retryTimeOut = 10
 }

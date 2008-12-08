@@ -78,8 +78,8 @@ object TCPClient {
 				case e : IOException => {
 					try {
 						if (fails < 2) {
-							println("Reconnecting in 10 seconds...")
-							Thread.sleep(10 * 1000)
+							println("Reconnecting in "+Config.retryTimeOut+" seconds...")
+							Thread.sleep(Config.retryTimeOut * 1000)
 							fails += 1
 						} else {
 							cycle = false
