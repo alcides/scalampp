@@ -9,7 +9,7 @@ package com.alcidesfonseca.xmpp
 import scala.xml._
 import org.publicdomain._
 import com.alcidesfonseca.db._
-import java.lang._;
+import java.lang.Long;
 
 class Contact(var name:String, var jid:String) {
 	var status = "offline"
