@@ -22,7 +22,7 @@ object BootClient {
 			System.exit(0)
 			0
 		} else {
-			Thread.sleep(5000)
+			Thread.sleep( Config.retryNSTimeOut * 1000)
 			c+1
 		}
 	}
