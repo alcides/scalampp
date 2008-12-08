@@ -32,6 +32,12 @@ object Roster {
 class XMPPClientParser(session:ClientSession) extends XMPPParser {
 	var out = session.out
 	
+	
+	def clientResource = {
+		var r = new Random()
+		Long.toString(Math.abs(r.nextLong()), 36)
+	}
+	
 	def parseXML(x:String):Boolean = {
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
@@ -47,7 +53,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 						if (session.getStatus <= 1) 
 							out.write( XMLStrings.stream_auth( session.user, session.pass) )
 						else
-							out.write( XMLStrings.session_bind_request("a")) //clientResource) )
+							out.write( XMLStrings.session_bind_request(clientResource) )
 					}
 					
 					case <iq><bind><jid>{  jid @ _ * }</jid></bind></iq> => {
@@ -79,6 +85,9 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 						
 						var from = (xml \ "@from").text
 
+						if ( (xml \ "@type").text == "probe") {
+							out.write(XMLStrings.presence(session.jid,from))
+						}
 
 						if ( (xml \ "@type").text == "unavailable") {
 							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
@@ -97,14 +106,10 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
 								c.status = if ( (xml \ "show").text == "" ) "online" else (xml \ "show").text
 							}
-								
+							Roster.print
 						}
 						
-						Roster.print
-						
 					}
-					
-					<presence to="alcides@localhost" type="subscribe" from="qwerty@localhost"></presence>
 					
 					case _ => ()
 				}

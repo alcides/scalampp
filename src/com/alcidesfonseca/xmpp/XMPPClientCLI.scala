@@ -51,6 +51,11 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 					if (commands.length < 2) println("Erro: numero errado de parametros")
 					else out.write( XMLStrings.presence_set(commands(1)) )
 				}
+				
+				// Refresh
+				if ( commands(0).equals("refresh") ) {
+					Roster.print
+				}
 			}
 			case 1 => {
 				if ( in.equals("sim") ) {
