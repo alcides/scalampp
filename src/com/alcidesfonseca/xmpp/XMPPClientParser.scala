@@ -9,6 +9,7 @@ package com.alcidesfonseca.xmpp
 import scala.xml._
 import org.publicdomain._
 import com.alcidesfonseca.db._
+import java.lang._;
 
 class Contact(var name:String, var jid:String) {
 	var status = "offline"
@@ -46,7 +47,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 						if (session.getStatus <= 1) 
 							out.write( XMLStrings.stream_auth( session.user, session.pass) )
 						else
-							out.write( XMLStrings.session_bind_request("alcides_client") )
+							out.write( XMLStrings.session_bind_request("a")) //clientResource) )
 					}
 					
 					case <iq><bind><jid>{  jid @ _ * }</jid></bind></iq> => {
@@ -110,7 +111,6 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 				true
 				
 			}
-			
 		}
 	}
 }
