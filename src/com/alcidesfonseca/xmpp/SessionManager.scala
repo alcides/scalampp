@@ -56,13 +56,20 @@ object SessionManager {
 	def send(jid:String,content:Any):Unit = send(jid,content.toString)
 	
 	def send(jid:String,content:String):Unit = synchronized {
-		getOutChannels(jid).foreach { o => o.write(content) }
+		getOutChannels(jid).foreach { o => 
+			try {
+				o.write(content) 
+			} 
+			catch {
+				case e : Exception => closeSession(o)
+			}
+		}
 		getForeignChannels(jid).foreach { pb => 
 			try {
 				pb.deliver(jid,content)
 			} 
 			catch {
-				case e : java.rmi.UnexpectedException => println("jid "+jid+" offline")
+				case e : java.rmi.UnexpectedException => ()
 			}
 		}
 	}
