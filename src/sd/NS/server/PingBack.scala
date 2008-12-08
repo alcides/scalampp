@@ -16,7 +16,7 @@ class PingBack extends UnicastRemoteObject with IPingBack
 		true
 	}
 	
-	def deliver(jid:String,what:String) = {
+	def deliver(jid:String,what:String):Boolean = {
 		SessionManager.send(jid,what)
 	}
 	

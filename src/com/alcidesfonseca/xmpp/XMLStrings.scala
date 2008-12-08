@@ -6,7 +6,7 @@
 //
 package com.alcidesfonseca.xmpp
 
-import java.net.InetAddress;
+import java.net.InetAddress
 import scala.xml._
 import org.publicdomain._
 import com.alcidesfonseca.db._

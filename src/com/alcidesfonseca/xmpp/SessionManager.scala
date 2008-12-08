@@ -53,25 +53,35 @@ object SessionManager {
 		remoteSessions.filterKeys { j => j.startsWith(jid) }.values.toList
 	}
 	
-	def send(jid:String,content:Any):Unit = send(jid,content.toString)
+	def send(jid:String,content:Any):Boolean = send(jid,content.toString)
 	
-	def send(jid:String,content:String):Unit = synchronized {
+	def send(jid:String,content:String):Boolean = synchronized {
+		var sent = 0
+		var errors = 0
 		getOutChannels(jid).foreach { o => 
 			try {
 				o.write(content) 
+			 	sent += 1
 			} 
 			catch {
-				case e : Exception => closeSession(o)
+				case e : Exception => {
+					closeSession(o)
+			 		errors += 1
+				}
 			}
 		}
 		getForeignChannels(jid).foreach { pb => 
 			try {
 				pb.deliver(jid,content)
+				sent += 1
 			} 
 			catch {
-				case e : java.rmi.UnexpectedException => ()
+				case e : Exception => {
+			 		errors += 1
+				}
 			}
 		}
+		return sent > 0
 	}
 	
 	def sendMessage(from:String,to:String,content:String) = synchronized {

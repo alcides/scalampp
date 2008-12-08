@@ -43,7 +43,8 @@ object TCPClient {
 		def connect():Socket = {
 			new Socket(host,port)
 		}
-	
+		var fails = 0
+
 		while (cycle) {
 			try {
 				s = connect()
@@ -76,8 +77,13 @@ object TCPClient {
 				}
 				case e : IOException => {
 					try {
-						println("Reconnecting in 10 seconds...")
-						Thread.sleep(10 * 1000)
+						if (fails < 2) {
+							println("Reconnecting in 10 seconds...")
+							Thread.sleep(10 * 1000)
+							fails += 1
+						} else {
+							cycle = false
+						}
 					} 
 					catch {
 						case e : InterruptedException => {}

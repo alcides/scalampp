@@ -38,6 +38,7 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 					//stream is initialized, so here we should be looking for stanzas
 					
 					if ( XMLValidator.validate(x) ) {
+
 						try {
 							var xml = XML.loadString(x)
 					

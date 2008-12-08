@@ -9,6 +9,6 @@ import scala.collection.mutable.{HashMap,Map}
 trait IPingBack extends Remote
 {
     def ping:Boolean
-	def deliver(jid:String,what:String)
+	def deliver(jid:String,what:String):Boolean
 	def updateSessions(foreignSession:Map[String,IPingBack])
 }
