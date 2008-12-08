@@ -28,7 +28,7 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 			} 
 			catch {
 				case e : java.rmi.ConnectException => {
-					Thread.sleep(5000)
+					Thread.sleep(sd.Config.updateRate * 1000)
 				}
 			}
 		}
