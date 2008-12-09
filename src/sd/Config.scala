@@ -9,4 +9,7 @@ object Config {
 	
 	val retryTimeOut = 10 // seconds
 	val retryNSTimeOut = 5 // seconds
+	
+	val registryURL = "//localhost/"
+	val namingServerPrefix = "ns"
 }
