@@ -22,7 +22,7 @@ object NamingServer {
 
 	def getOrder = {
 		val results = List.fromArray(Naming.list(Config.registryURL)).map{ x => Integer.parseInt(x.split('_')(1)) }
-		if (results.length == 0) 1
+		if (results.length == 0) 0
 		else results.reduceLeft{
 				(x:Int,y:Int) => if (x < y) y else x
 			} + 1

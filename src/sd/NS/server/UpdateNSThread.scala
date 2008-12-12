@@ -13,7 +13,7 @@ import java.net._
 class UpdateNSThread(var host:String, var port:Int) extends Thread {
 	var lb:ILoadBalancer = null
 	var socketAddress = new InetSocketAddress(host,port)
-	
+	var nsCounter = -1	
 	override def run() = {
 		while (true) {
 			try {
@@ -28,21 +28,37 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 			} 
 			catch {
 				case e : java.rmi.ConnectException => {
+					lb = null
 					Thread.sleep(sd.Config.updateRate * 1000)
 				}
 			}
 		}
 		
 	}
-	
+	def makeUrl:String = {
+		nsCounter += 1
+		var list = List.fromArray(Naming.list(Config.registryURL)).filter {
+			 s => s.contains( Config.namingServerPrefix + "_" )
+		}
+		if (list.isEmpty) null
+		else {
+			list( nsCounter  )
+		}
+	}	
+
 	def getLoadBalancer = {
-		while( lb == null) {
+
+		while( lb == null || RemoteDatabase.lb == null ) {
 			try {
-				lb = Naming.lookup("//localhost/lb1").asInstanceOf[ILoadBalancer]
-				RemoteDatabase.lb = lb
+				var url = makeUrl
+				if ( url != null) {
+					println("Trying to connect to " + url)
+					lb = Naming.lookup(url).asInstanceOf[ILoadBalancer]
+					RemoteDatabase.lb = lb
+				}
 			} 
 			catch {
-				case e : java.rmi.NotBoundException => {}
+				case e : java.rmi.NotBoundException => ()
 			}	
 		}	
 	}

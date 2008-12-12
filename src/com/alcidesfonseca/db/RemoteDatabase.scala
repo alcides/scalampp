@@ -13,7 +13,10 @@ object RemoteDatabase {
 				lb.database_update(sql)
 			} 
 			catch {
-				case e : RemoteException => false
+				case e : RemoteException => {
+					lb = null
+					false
+				}
 			}
 		else false
 	}
@@ -24,7 +27,10 @@ object RemoteDatabase {
 				lb.database_getUsers
 			} 
 			catch {
-				case e : RemoteException => List()
+				case e : RemoteException => {
+					lb = null
+					List()
+				} 
 			}
 		else List()
 	}
@@ -35,7 +41,10 @@ object RemoteDatabase {
 				lb.database_getFriends(name)
 			} 
 			catch {
-				case e : RemoteException => List()
+				case e : RemoteException => {
+					lb = null
+					List()
+				}
 			}
 		else List()
 	}	

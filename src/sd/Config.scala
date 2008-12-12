@@ -12,4 +12,6 @@ object Config {
 	
 	val registryURL = "//localhost/"
 	val namingServerPrefix = "ns"
+	
+	val nsNumber = 3
 }

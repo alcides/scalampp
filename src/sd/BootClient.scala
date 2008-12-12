@@ -10,7 +10,7 @@ import java.rmi._
 import java.rmi.registry._
 
 object BootClient {
-	
+	var ns = 1	
 	def requestData(s:String,d:String):String = {
 		println(s)
 		var v:String = Console.readLine
@@ -19,7 +19,7 @@ object BootClient {
 	
 	def fail(c:Int):Int = {
 		if (c > 10) {
-			System.exit(0)
+			ns = (ns + 1) % Config.nsNumber
 			0
 		} else {
 			Thread.sleep( Config.retryNSTimeOut * 1000)
@@ -27,14 +27,15 @@ object BootClient {
 		}
 	}
 	
+	def makeUrl(i:Int):String = Config.registryURL + Config.namingServerPrefix + "_" + i.toString
+	
 	def main(args: Array[String]) {
 		var lb:ILoadBalancer = null
 		
 		var reCount = 0;
-		
 		while (true) {
 			try {
-				lb = Naming.lookup("//localhost/lb1").asInstanceOf[ILoadBalancer]
+				lb = Naming.lookup(makeUrl(ns)).asInstanceOf[ILoadBalancer]
 				var address = try {
 								lb.getServer
 							} 
