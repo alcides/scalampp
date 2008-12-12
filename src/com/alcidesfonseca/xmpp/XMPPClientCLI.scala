@@ -18,8 +18,10 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 
 				// Set status
 				if ( commands(0).equals("quit") ) {
-					out.write( XMLStrings.presence_unavailable(session.getJID))
-					println("Press ctrl+c to exit.")
+					out.write( XMLStrings.presence_unavailable(session.getJID) )
+					out.write(XMLStrings.stream_end)
+					out.close
+					System.exit(0)
 				}
 
 				// Send message
@@ -54,7 +56,7 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 				
 				// Refresh
 				if ( commands(0).equals("refresh") ) {
-					Roster.print
+					out.write(XMLStrings.roster_request(session.getStanzaId))
 				}
 			}
 			case 1 => {

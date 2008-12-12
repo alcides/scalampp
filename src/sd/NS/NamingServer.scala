@@ -11,11 +11,19 @@ object NamingServer {
      def main(args: Array[String])
     {
 		var lb = new LoadBalancer
-
 		new ServerChecker(lb).start
-		val url = getURL
-		Naming.rebind(url, lb)
-		println("Server Ready on " + url )
+
+		try {
+			val url = getURL
+			Naming.rebind(url, lb)
+			println("Server Ready on " + url )
+		} 
+		catch {
+			case e : java.rmi.ConnectException => {
+				println("No registry at this time...")
+				System.exit(1)
+			}
+		}
     }
 
 	def getURL = Config.registryURL + Config.namingServerPrefix + "_" + getOrder

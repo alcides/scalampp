@@ -27,7 +27,15 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 				}
 			} 
 			catch {
-				case e : java.rmi.ConnectException => {
+				case e :java.rmi.ConnectException => {
+					lb = null
+					Thread.sleep(sd.Config.updateRate * 1000)
+				}
+				case e: RemoteException => {
+					lb = null
+					Thread.sleep(sd.Config.updateRate * 1000)
+				}
+				case e : NotBoundException => {
 					lb = null
 					Thread.sleep(sd.Config.updateRate * 1000)
 				}
@@ -58,7 +66,7 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 				}
 			} 
 			catch {
-				case e : java.rmi.NotBoundException => ()
+				case e : NotBoundException => ()
 			}	
 		}	
 	}

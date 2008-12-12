@@ -149,4 +149,18 @@ object XMLStrings {
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	def message_chat(to:String,content:String) = <message to={ to } type="chat"><body>{ content }</body></message>
 	
+	def message_error_body(target:String) = "Unable to devier your message to " + target + "as this mailbox does not exist."
+	
+	def message_error(to:String, target:String) = <message from={ InetAddress.getLocalHost.getHostName } to={ to } type="error">
+		<body>{ message_error_body(target) }</body>
+		<semantics xmlns="http://jabber.org/protocol/msg-delivery" status="error">
+			<rule action="error" condition="match-resource" value="exact"/>
+		</semantics>
+		<error code="500" type="cancel">
+			<internal-server-error xmlns="urn:ietf:params:xml:ns:xmpp-stanzas" />
+			<condition xmlns="http://jabber.org/protocol/msg-delivery" >
+				<rule action="error" condition="match-resource" value="exact" />
+			</condition>
+		</error>
+	</message>
 }

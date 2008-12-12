@@ -7,10 +7,11 @@
 package com.alcidesfonseca.xmpp
 
 import scala.xml._
+import java.io.IOException
 import org.publicdomain._
 import com.alcidesfonseca.db._
 
-class XMPPServerParser(out:OutChannel) extends XMPPParser {
+class XMPPServerParser(val out:OutChannel) extends XMPPParser {
 	
 	var session = SessionManager.createSession(out)
 
@@ -30,8 +31,8 @@ class XMPPServerParser(out:OutChannel) extends XMPPParser {
 		} else {
 			
 			if (x == XMLStrings.stream_end) {
-				session.close
-				false
+				SessionManager.destroySession(session)
+				true
 			}
 
 			if (session.logged == false) {

@@ -42,8 +42,11 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
 			true
+		} else if ( x == XMLStrings.stream_end ) {
+			println("Stream closed by remote server.")
+			System.exit(0)
+			true
 		} else {
-			
 			if ( !XMLValidator.validate(x) ) {
 				false
 			} else {

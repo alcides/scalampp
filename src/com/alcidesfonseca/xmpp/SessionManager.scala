@@ -3,6 +3,8 @@ package com.alcidesfonseca.xmpp
 import scala.collection.mutable.HashMap
 import sd.NS.server.IPingBack
 
+import java.net.InetAddress
+
 object SessionManager {
 	var sessions:List[Session] = List()
 	var remoteSessions = HashMap[String, IPingBack]()
@@ -25,6 +27,7 @@ object SessionManager {
 	
 	def destroySession(s:Session) = synchronized {
 		
+		sessions = sessions.remove { ses => (ses == s) }
 		if ( sessions.count { ses => ses.jid.startsWith(s.shortJid)} == 1) {
 			s.user.getFriends.foreach { f =>
 				try {
@@ -35,9 +38,7 @@ object SessionManager {
 				}
 			}
 		}
-		
 		s.out.close
-		sessions.remove { ses => (ses == s) }
 				
 	}
 	
@@ -55,7 +56,11 @@ object SessionManager {
 	
 	def send(jid:String,content:Any):Boolean = send(jid,content.toString)
 	
-	def send(jid:String,content:String):Boolean = synchronized {
+	def send(jid:String,content:String):Boolean = send(jid,content,false,"")
+		
+	def send(jid:String,content:Any,errorNotification:Boolean,from:String):Boolean = send(jid,content.toString,errorNotification,from)
+		
+	def send(jid:String,content:String,errorNotification:Boolean,from:String):Boolean = synchronized {
 		var sent = 0
 		var errors = 0
 		getOutChannels(jid).foreach { o => 
@@ -66,6 +71,7 @@ object SessionManager {
 			catch {
 				case e : Exception => {
 					closeSession(o)
+					if (errorNotification) send(from, XMLStrings.message_error(from, jid).toString ,false,"")
 			 		errors += 1
 				}
 			}
@@ -77,6 +83,7 @@ object SessionManager {
 			} 
 			catch {
 				case e : Exception => {
+					if (errorNotification) send(from, XMLStrings.message_error(from, jid).toString ,false,"")					
 			 		errors += 1
 				}
 			}
@@ -85,7 +92,7 @@ object SessionManager {
 	}
 	
 	def sendMessage(from:String,to:String,content:String) = synchronized {
-		send(to,XMLStrings.message_chat(from,to,content))
+		send(to,XMLStrings.message_chat(from,to,content),true,from)
 	}
 	
 	def sendPresence(from:String,to:String,content:Any) = synchronized {

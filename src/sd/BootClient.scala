@@ -49,6 +49,7 @@ object BootClient {
 							} 
 							catch {
 								case e : NoServerAvailableException => null
+								case e : UnexpectedException => null
 							}
 				if (address == null) {
 					println("No server available at this time...")
