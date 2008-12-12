@@ -42,7 +42,7 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 		}
 		if (list.isEmpty) null
 		else {
-			list( nsCounter  )
+			list( nsCounter % list.length )
 		}
 	}	
 
