@@ -13,6 +13,7 @@ trait ILoadBalancer extends Remote
 	
 	var serverList:List[OnlineServer]
 	
+	def ping:Boolean
 	def getServer:InetSocketAddress
 
 	def join(w:InetSocketAddress,pb:IPingBack,sData:ServerData):Unit

@@ -17,6 +17,8 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 {
 	var serverList:List[OnlineServer] = List()
 	
+	override def ping:Boolean = true
+	
 	override def getServer:InetSocketAddress = {
 		if (serverList.isEmpty)
 			throw new NoServerAvailableException;

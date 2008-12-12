@@ -25,17 +25,7 @@ object BootClient {
 			c+1
 		}
 	}
-	
-	def makeUrl:String = {
-		nsCounter += 1
-		var list = List.fromArray(Naming.list(Config.registryURL)).filter {
-			 s => s.contains( Config.namingServerPrefix + "_" )
-		}
-		if (list.isEmpty) null
-		else {
-			list( nsCounter % list.length )
-		}
-	}
+
 	
 	def main(args: Array[String]) {
 		var lb:ILoadBalancer = null
@@ -43,7 +33,9 @@ object BootClient {
 		var reCount = 0;
 		while (true) {
 			try {
-				lb = Naming.lookup(makeUrl).asInstanceOf[ILoadBalancer]
+			 	while( lb == null ) {
+					lb = Connector.getLoadBalancer
+				}
 				var address = try {
 								lb.getServer
 							} 
