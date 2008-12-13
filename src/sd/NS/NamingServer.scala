@@ -7,7 +7,6 @@ import java.rmi.server._
 import java.util.{Calendar,GregorianCalendar}
 import java.lang.{Runnable,Thread}
 import java.util.Scanner
-import java.lang.InterruptedException
 
 object NamingServer {
 	var lb = new LoadBalancer
@@ -21,14 +20,22 @@ object NamingServer {
 		
 		var kb = new Scanner(System.in)
 		while (true) {
-			kb.nextLine match {
-			    case "halt" => unregister
-				case "restart" => register
-				case "exit" => {
-					unregister
-					System.exit(0)
+			try {
+				kb.nextLine match {
+				    case "halt" => unregister
+					case "restart" => register
+					case "exit" => {
+						unregister
+						System.exit(0)
+					}
+					case _ => println("Invalid command.")
 				}
+			} 
+			catch {
+				case e : java.io.EOFException => System.exit(0)
+				case e : java.util.NoSuchElementException => System.exit(0)
 			}
+			
 		}
 		
 		

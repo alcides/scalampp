@@ -23,6 +23,8 @@ object BootServer {
 		var nsUpdateThread = new UpdateNSThread(host,port)
 		nsUpdateThread.start
 		
+		var console = new ServerConsole(nsUpdateThread)
+		console.start
 		
 		Config.vers match {
 		    case "tcp" => TCPServer.main(host,port)

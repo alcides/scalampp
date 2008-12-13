@@ -13,7 +13,7 @@ import java.net._
 class UpdateNSThread(var host:String, var port:Int) extends Thread {
 	var lb:ILoadBalancer = null
 	var socketAddress = new InetSocketAddress(host,port)
-	
+	var updating = true
 	
 	override def run() = {
 		while (true) {
@@ -22,29 +22,34 @@ class UpdateNSThread(var host:String, var port:Int) extends Thread {
 				lb.join(socketAddress, new PingBack, getInfo)
 				while (true) {
 					Thread.sleep(sd.Config.updateRate*1000)
-					if (!lb.keepAlive(socketAddress,getInfo,getSessions)) {
-						lb.join(socketAddress, new PingBack, getInfo)
+					synchronized {
+						if (updating) {
+							if (!lb.keepAlive(socketAddress,getInfo,getSessions)) {
+								lb.join(socketAddress, new PingBack, getInfo)
+							}
+						}
 					}
 				}
 			} 
 			catch {
 				case e :java.rmi.ConnectException => {
-					println("conexp out")
 					lb = null
 					Thread.sleep(sd.Config.updateRate * 1000)
 				}
 				case e: RemoteException => {
-					println("remote out")
 					lb = null
 					Thread.sleep(sd.Config.updateRate * 1000)
 				}
 				case e : NotBoundException => {
-					println("not out")					
 					lb = null
 				}
 			}
 		}
 		
+	}
+	
+	def pauseOrResume = synchronized {
+		updating = !updating
 	}
 
 	def getLoadBalancer = {
