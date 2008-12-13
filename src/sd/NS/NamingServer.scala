@@ -6,15 +6,34 @@ import java.rmi.server._
 
 import java.util.{Calendar,GregorianCalendar}
 import java.lang.{Runnable,Thread}
+import java.util.Scanner
+import java.lang.InterruptedException
 
 object NamingServer {
-     def main(args: Array[String])
+	var lb = new LoadBalancer
+	var url:String = null
+	
+    def main(args: Array[String])
     {
-		var lb = new LoadBalancer
-		new ServerChecker(lb).start
+		var sc = new ServerChecker(lb)
+		sc.start
+		register
+		
+		var kb = new Scanner(System.in)
+		while (true) {
+			kb.nextLine match {
+			    case "halt" => unregister
+				case "restart" => register
+				case "exit" => System.exit(0)
+			}
+		}
+		
+		
+    }
 
+	def register = {
 		try {
-			val url = getURL
+			url = getURL
 			Naming.rebind(url, lb)
 			println("Server Ready on " + url )
 		} 
@@ -24,7 +43,12 @@ object NamingServer {
 				System.exit(1)
 			}
 		}
-    }
+	}
+	
+	def unregister = {
+		println("unregister")
+		if (url != null) Naming.unbind(url)
+	}
 
 	def getURL = Config.registryURL + Config.namingServerPrefix + "_" + getOrder
 
@@ -40,8 +64,6 @@ object NamingServer {
 
 class ServerChecker(var lb:ILoadBalancer) extends Thread {
 	override def run = {
-		//java.rmi.registry.LocateRegistry.createRegistry(1099);
-		
 		while (true) {
 			Thread.sleep( sd.Config.checkServerRate * 1000 )
 			var acceptableTime = new GregorianCalendar()
