@@ -24,7 +24,10 @@ object NamingServer {
 			kb.nextLine match {
 			    case "halt" => unregister
 				case "restart" => register
-				case "exit" => System.exit(0)
+				case "exit" => {
+					unregister
+					System.exit(0)
+				}
 			}
 		}
 		
@@ -46,7 +49,6 @@ object NamingServer {
 	}
 	
 	def unregister = {
-		println("unregister")
 		if (url != null) Naming.unbind(url)
 	}
 
