@@ -5,6 +5,8 @@ import java.net._
 
 import sd._
 import com.alcidesfonseca.xmpp._
+import pt.uc.dei.sd.SecurityHelper
+
 import scala.xml._
 import java.util.Scanner
 
@@ -29,6 +31,10 @@ class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread 
 			// case _ => println("wtf?")
 		}
 	}
+	
+	def rebuildInput(newSocket:Socket) = {
+		in = new BufferedReader( new InputStreamReader(newSocket.getInputStream()))
+	}
 }
 
 object TCPClient {
@@ -48,6 +54,8 @@ object TCPClient {
 		while (cycle) {
 			try {
 				s = connect()
+				s = changeToTLS(s,host,port)
+				
 				if (s == null)
 					cycle = false
 				else {
@@ -75,7 +83,7 @@ object TCPClient {
 						s.close
 					println("Connection terminated...")
 				}
-				case e : IOException => {
+				/*case e : IOException => {
 					try {
 						if (fails < 2) {
 							println("Reconnecting in "+Config.retryTimeOut+" seconds...")
@@ -88,9 +96,29 @@ object TCPClient {
 					catch {
 						case e : InterruptedException => {}
 					}
-				}
+				} */
 			} 
 		}
 		()
-	}	
+	}
+	
+	
+	def changeToTLS(s:Socket,host:String,port:Int):Socket = {
+		var	out = new SocketOutChannel(s)
+		var in = new BufferedReader( new InputStreamReader( s.getInputStream() ))
+		var r:Int = 0
+		
+		out.write(XMLStrings.stream_start_to(host))
+		out.write(XMLStrings.start_tls)
+		
+		val parser:XMLParser = new XMLParser(new XMPPEmptyParser)
+		
+		while ( !parser.data_to_parse.contains("<proceed") ) {
+			r = in.read	
+			parser.parseInt(r)
+		}
+		
+		SecurityHelper.executeTLSNegotiation(s,host,port)
+	}
+	
 }

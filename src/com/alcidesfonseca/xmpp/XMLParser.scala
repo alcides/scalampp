@@ -5,6 +5,7 @@ class XMLParser(var s:XMPPParser) {
 	var data_to_parse = ""
 	
 	def doParse() {
+		if (sd.Config.debug) println("in: " + data_to_parse)
 		data_to_parse = s.parseXML(data_to_parse) match {
 		    case true => ""
 			case false => data_to_parse

@@ -13,7 +13,7 @@ import java.net.Socket
 
 class SocketOutChannel(socket:Socket) extends OutChannel {
 	
-	val out:DataOutputStream = new DataOutputStream(socket.getOutputStream())
+	var out:DataOutputStream = new DataOutputStream(socket.getOutputStream())
 	
 	def write(s:String):Unit = synchronized {
 		if (Config.debug)  println("out: " + s)
@@ -23,4 +23,7 @@ class SocketOutChannel(socket:Socket) extends OutChannel {
 	}
 	def close = socket.close
 
+	def rebuildOutput(newSocket:Socket) = {
+		out = new DataOutputStream(newSocket.getOutputStream())
+	}
 }
