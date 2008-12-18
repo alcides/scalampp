@@ -18,3 +18,5 @@ In the build folder:
 @scala BootServer 5222@ - Starts the XMPP server in the port 5222
 
 @scala BootClient@ - Starts a XMPP client
+
+@scala BootClient --jabber@ - Starts a XMPP client connecting to Jabber.org
