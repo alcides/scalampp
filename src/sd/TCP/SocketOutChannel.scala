@@ -22,8 +22,4 @@ class SocketOutChannel(socket:Socket) extends OutChannel {
 		()
 	}
 	def close = socket.close
-
-	def rebuildOutput(newSocket:Socket) = {
-		out = new DataOutputStream(newSocket.getOutputStream())
-	}
 }

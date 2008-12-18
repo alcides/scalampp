@@ -30,7 +30,7 @@ object BootClient {
 	
 	def main(args: Array[String]) {
 		
-		if (args(0) == "--jabber") {
+		if (List.fromArray(args).count { s => s == "--jabber" } > 0) {
 			
 	 		var username = requestData("Enter your username:","teste")
 	 		var password = requestData("Enter your password:","teste")

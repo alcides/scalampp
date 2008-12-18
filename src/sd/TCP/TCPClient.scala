@@ -31,10 +31,6 @@ class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread 
 			// case _ => println("wtf?")
 		}
 	}
-	
-	def rebuildInput(newSocket:Socket) = {
-		in = new BufferedReader( new InputStreamReader(newSocket.getInputStream()))
-	}
 }
 
 object TCPClient {
@@ -54,7 +50,7 @@ object TCPClient {
 		while (cycle) {
 			try {
 				s = connect()
-				s = changeToTLS(s,host,port)
+				if (host == "jabber.org") s = changeToTLS(s,host,port)
 				
 				if (s == null)
 					cycle = false
