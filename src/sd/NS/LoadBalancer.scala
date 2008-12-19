@@ -22,28 +22,28 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	override def getServer:InetSocketAddress = {
 		if (serverList.isEmpty)
 			throw new NoServerAvailableException;
-		println(getAvailableServer + " given")
+		if (sd.Config.debug) println(getAvailableServer + " given")
 		getAvailableServer
 	}
 	
 	override def join(w:InetSocketAddress,pb:IPingBack,sData:ServerData):Unit = {
 		if ( serverList.count( s => s.serverAddress == w) == 0 ) {
 			serverList = serverList.::( new OnlineServer(w,pb,sData) )
-			println("Servidor " + w.toString + " juntou-se.")
+			if (sd.Config.debug) println("Servidor " + w.toString + " juntou-se.")
 		}
 	}
     override def withdraw(w:InetSocketAddress):Unit = {
 		serverList = serverList.remove { server => (server.serverAddress == w) }
-		println("Servidor " + w.toString + " saiu.")
+		if (sd.Config.debug) println("Servidor " + w.toString + " saiu.")
 	}
     override def keepAlive(w:InetSocketAddress,sData:ServerData,sessions:List[String]):Boolean = {
-		println("Servidor " + w.toString + " actualizou.")
+		if (sd.Config.debug) println("Servidor " + w.toString + " actualizou.")
 		var status = false
 		serverList.filter { server => (server.serverAddress == w) }.foreach { server =>
 			status = server.updateAlive(sData,sessions)
 		}
 		if (status) {
-			println("new user list")
+			if (sd.Config.debug) println("new user list")
 			updateSessions
 		}
 		serverList.count { server => (server.serverAddress == w) } > 0
