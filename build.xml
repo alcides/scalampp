@@ -137,7 +137,6 @@ just one file at a time.
 		<jar jarfile="${dist.dir}/${project.name}-server.jar" basedir="${build.dir}">
 			<zipfileset dir="${build.dir}" prefix="" />
 			<zipfileset src="${scala-library.jar}" />
-			<zipfileset src="${sqlite.jar}" />
 			<manifest>
 				<attribute name="Main-Class" value="${server.class}"/>
 				<attribute name="Built-By" value="${user.name}"/>
@@ -150,7 +149,7 @@ just one file at a time.
 			<zipfileset dir="${build.dir}" prefix="" />
 			<zipfileset src="${scala-library.jar}" />
 			<manifest>
-				<attribute name="Main-Class" value="$client.class}"/>
+				<attribute name="Main-Class" value="${client.class}"/>
 				<attribute name="Built-By" value="${user.name}"/>
 				<attribute name="Implementation-Vendor" value="${user.name}"/>
 				<attribute name="Implementation-Title" value="${project.name}"/>
@@ -160,8 +159,9 @@ just one file at a time.
 		<jar jarfile="${dist.dir}/${project.name}-ns.jar" basedir="${build.dir}">
 			<zipfileset dir="${build.dir}" prefix="" />
 			<zipfileset src="${scala-library.jar}" />
+			<zipfileset src="${sqlite.jar}" />
 			<manifest>
-				<attribute name="Main-Class" value="$ns.class}"/>
+				<attribute name="Main-Class" value="${ns.class}"/>
 				<attribute name="Built-By" value="${user.name}"/>
 				<attribute name="Implementation-Vendor" value="${user.name}"/>
 				<attribute name="Implementation-Title" value="${project.name}"/>
