@@ -49,6 +49,7 @@ public class ChatConnection extends Object{
 	}
 	
 	public boolean checkLogin() {
+		if (hc == null || session == null) return false;
 		return hc.isOpen() && session.isLogged();
 	}
 	
