@@ -41,20 +41,15 @@ public class ChatConnection extends Object{
 
 		// starts to send		
 		out.write( XMLStrings.stream_start_to(host) );
-		
-		
-		int i = 0;
-		while ( hc.isOpen() && !session.isLogged() && i < 100 ) {
-			try {
-				Thread.sleep(100);
-				i++;
-			} catch (java.lang.InterruptedException e) {}
-		}
-		if (session.isLogged()) {
-			return true;
-		}
-		return false;
-		
+		return true;
+	}
+	
+	public int checkMessages() {
+		return hc.messageNumber();
+	}
+	
+	public boolean checkLogin() {
+		return hc.isOpen() && session.isLogged();
 	}
 	
 }

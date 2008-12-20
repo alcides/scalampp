@@ -19,7 +19,7 @@ class WebHumanChannel extends HumanChannel {
 	}
 	
 	def isOpen = open
-
+	def messageNumber = messages.length
 	def close = {
 		open = false
 	}

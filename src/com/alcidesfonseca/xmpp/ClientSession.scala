@@ -33,5 +33,7 @@ class ClientSession(var host:String,var out:OutChannel) {
 		pass = p;
 	}
 
-	def isLogged = (jid != "")
+	def isLogged = {
+		status > 1
+	}
 }
