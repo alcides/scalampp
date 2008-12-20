@@ -1,7 +1,7 @@
 package com.alcidesfonseca.db
 
 import java.rmi._
-import sd.NS._
+import sd.ns._
 
 object RemoteDatabase {
 

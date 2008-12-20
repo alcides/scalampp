@@ -6,10 +6,10 @@
 //
 
 import sd._
-import sd.NIO._
-import sd.TCP._
-import sd.UDP._
-import sd.NS.server._
+import sd.nio._
+import sd.tcp._
+import sd.udp._
+import sd.ns.server._
 
 import java.net._
 

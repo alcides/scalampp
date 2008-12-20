@@ -1,4 +1,4 @@
-package sd.WEB;
+package sd.web;
 
 import java.io.*;
 import java.text.*;
@@ -7,6 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.naming.*;
 import javax.rmi.*;
+import sd.ns.Connector;
 
 
 public class RootServlet extends HttpServlet {
@@ -29,7 +30,7 @@ public class RootServlet extends HttpServlet {
         out.println("<body bgcolor=\"white\">");
 
         out.println("<h1> HelloWorldEJB Says: </h1>");
-
+		out.println("coiso");
         out.println("</body>");
         out.println("</html>");
     }

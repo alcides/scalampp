@@ -1,7 +1,7 @@
 package com.alcidesfonseca.xmpp
 
 import scala.collection.mutable.HashMap
-import sd.NS.server.IPingBack
+import sd.ns.server.IPingBack
 
 import java.net.InetAddress
 

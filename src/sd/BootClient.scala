@@ -2,9 +2,9 @@ import com.alcidesfonseca.xmpp._
 import com.alcidesfonseca.db._
 
 import sd._
-import sd.TCP._
-import sd.UDP._
-import sd.NS._
+import sd.tcp._
+import sd.udp._
+import sd.ns._
 
 
 import java.rmi._

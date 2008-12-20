@@ -21,9 +21,35 @@
    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
    version="2.5">
 
-  <display-name>Calculator</display-name>
+  <display-name>WebClient</display-name>
   <description>
-	Teste
+	WebClient
   </description>
+
+   <servlet>
+      <servlet-name>RootServlet</servlet-name>
+      <description>
+		Home for out app
+      </description>
+      <servlet-class>sd.web.RootServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+       <servlet-name>RootServlet</servlet-name>
+        <url-pattern>/root</url-pattern>
+    </servlet-mapping>
+
+   <servlet>
+      <servlet-name>CometChat</servlet-name>
+      <description>
+		Home for out app
+      </description>
+      <servlet-class>sd.web.CometChat</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+       <servlet-name>CometChat</servlet-name>
+        <url-pattern>/chat</url-pattern>
+    </servlet-mapping>
 
 </web-app>

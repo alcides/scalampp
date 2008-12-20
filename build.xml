@@ -8,6 +8,8 @@
   <property name="project.version"   value="0.1.0"/>	
 
   <property name="scala.home"        value="/opt/local/share/scala/"/>	
+  <property name="tomcat.home"        value="/Users/alcides/Documents/Code/Support/tomcat"/>	
+
   <property name="server.class"        value="BootServer"/>	
   <property name="client.class"        value="BootClient"/>	
   <property name="ns.class"        value="BootNS"/>	
@@ -20,8 +22,8 @@
   <property name="db.dir"           value="./db"/>
 
   <property name="src.includes"      value="**/*.scala"/>
-  <property name="src.includes-java"      value="**/*.java"/>	
-  <property name="src.excludes"      value="**/*.class"/>	
+  <property name="src.excludes"      value="**/*.class"/>
+  <property name="src.java2.includes" value="**sd/web/*.java"/>
 
   <property name="sqlite.jar" value="./lib/sqlitejdbc.jar"/>
   <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar"/>
@@ -29,6 +31,8 @@
   <path id="library.classpath">
   	<pathelement location="${scala.home}/lib/scala-decoder.jar" />
 	<pathelement location="${scala.home}/lib/scala-dbc.jar"     />
+	<pathelement location="${scala.home}/lib/scala-dbc.jar"     />
+	<pathelement location="${tomcat.home}/lib/catalina.jar"     />
 	<fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
@@ -81,12 +85,13 @@ just one file at a time.
 	     <javac srcdir="${src.dir}" 
 	            destdir="${build.dir}"
 	            debug="${compile.debug}"
+				excludes="${src.java2.includes}"
 	            source="1.5">
 	        <classpath refid="library.classpath"/>
 	     </javac>
 	 </target>
 
-    <target name="compile" depends="compile-java">
+    <target name="compile-scala" depends="compile-java">
 	 	<fsc srcdir="${src.dir}"
 	            destdir="${build.dir}"
 	            classpathref="build.classpath"
@@ -95,6 +100,16 @@ just one file at a time.
 	      <exclude name="${src.excludes}"/>
 	    </fsc>	
     </target>
+
+	<target name="compile" depends="compile-scala">
+	     <javac srcdir="${src.dir}" 
+	            destdir="${build.dir}"
+	            debug="${compile.debug}"
+				includes="${src.java2.includes}"
+	            source="1.5">
+	        <classpath refid="library.classpath"/>
+	     </javac>
+	 </target>
 
   <target name="server" depends="compile">
     <java fork="true" classname="${server.class}" classpathref="build.classpath">
