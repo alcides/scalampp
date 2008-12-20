@@ -4,17 +4,18 @@ import java.io._
 import java.net._
 
 import sd._
+import sd.cli._
 import com.alcidesfonseca.xmpp._
 import pt.uc.dei.sd.SecurityHelper
 
 import scala.xml._
 import java.util.Scanner
 
-class TCPClientListener(val s:Socket, val session:ClientSession) extends Thread {
+class TCPClientListener(val s:Socket, val session:ClientSession,val hc:HumanChannel) extends Thread {
 	var txt:String = ""
 	var out = session.out
 	var in = new BufferedReader( new InputStreamReader( s.getInputStream() ))
-	var cstream = new XMPPClientParser(session)
+	var cstream = new XMPPClientParser(session,hc)
 	var r:Int = 0
 	
 	override def run = {
@@ -62,7 +63,7 @@ object TCPClient {
 					session.pass = password
 					
 					// launch receiver
-					new TCPClientListener(s,session).start
+					new TCPClientListener(s,session,new CLIHumanChannel()).start
 					var cli = new XMPPClientCLI(out,session)
 					cli.begin(host)
 					while (s.isConnected) cli.parseInput(kb.nextLine)

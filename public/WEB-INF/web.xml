@@ -36,7 +36,7 @@
 
     <servlet-mapping>
        <servlet-name>RootServlet</servlet-name>
-        <url-pattern>/root/*</url-pattern>
+        <url-pattern>/chat/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

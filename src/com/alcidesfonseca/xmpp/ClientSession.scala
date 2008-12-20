@@ -28,4 +28,10 @@ class ClientSession(var host:String,var out:OutChannel) {
 	def getJID = synchronized { jid }
 	def setJID(s:String) = synchronized { jid=s }
 
+	def setLogin(u:String,p:String) = {
+		user = u;
+		pass = p;
+	}
+
+	def isLogged = (jid != "")
 }

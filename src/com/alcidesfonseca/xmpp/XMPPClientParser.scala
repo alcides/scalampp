@@ -21,15 +21,9 @@ object Roster {
 		contacts = contacts.remove { c2 => c2.jid == c.jid } // in case of replace
 		contacts = contacts.::(c)
 	}
-	
-	def print = {
-		println("-----------")						
-		contacts.foreach{ c => println( "+" + c.jid + ":" + c.status ) }
-		println("-----------")
-	}
 }
 
-class XMPPClientParser(session:ClientSession) extends XMPPParser {
+class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser {
 	var out = session.out
 	
 	
@@ -38,13 +32,19 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 		Long.toString(Math.abs(r.nextLong()), 36)
 	}
 	
+	
+	def printRoster = hc.updateContacts(Roster.contacts)
+	def printMessage(m:Message) = hc.insertMessage(m)
+	
+	def exit = hc.close
+	
 	def parseXML(x:String):Boolean = {
 		if (XMLStrings.check_start(x)) {
 			session.setStatus(  session.getStatus + 1 )
 			true
 		} else if ( x == XMLStrings.stream_end ) {
 			println("Stream closed by remote server.")
-			System.exit(0)
+			exit
 			true
 		} else {
 			if ( !XMLValidator.validate(x) ) {
@@ -71,8 +71,8 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 					case <iq><query>{ roster @ _ * }</query></iq> => {
 						if ( roster.length > 0 ) {
 							roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
-							Roster.print	
 							out.write(XMLStrings.presence(session.jid))
+							printRoster
 						}
 					}
 					
@@ -81,7 +81,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 					}
 					
 					case <message>{ content @ _ * }</message> => {
-						println( "* " + (xml \ "@from").toString + " says: " + content(0).text )
+						printMessage(new Message((xml \ "@from").toString,content(0).text.toString))
 					}
 					
 					case <presence>{ content @ _ * }</presence> => {
@@ -96,12 +96,11 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
 								c.status = "offline"
 							}
-							Roster.print
+							printRoster
 						} 
 						
 						if ( (xml \ "@type").text == "subscribe" ) {
 							session.requests = session.requests.::(from)
-							println("Subscribe received")
 						}
 
 						if ( (xml \ "@type").length == 0 ) {
@@ -109,7 +108,7 @@ class XMPPClientParser(session:ClientSession) extends XMPPParser {
 							Roster.contacts.filter { c => from.startsWith(c.jid) }.foreach { c =>
 								c.status = if ( (xml \ "show").text == "" ) "online" else (xml \ "show").text
 							}
-							Roster.print
+							printRoster
 						}
 						
 					}

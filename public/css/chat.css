@@ -1,0 +1,22 @@
+#login {
+	margin: auto;
+	margin-top: 30px;
+	width: 320px;
+	border: solid black 1px;
+	padding: 20px;
+}
+
+#login label {
+	width: 100px;
+	display: block;
+	float: left;
+	text-align: left;
+}
+
+#login input {
+	width: 200px;
+}
+
+.align-center {
+	text-align: center;
+}
