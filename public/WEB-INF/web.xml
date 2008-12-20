@@ -36,20 +36,7 @@
 
     <servlet-mapping>
        <servlet-name>RootServlet</servlet-name>
-        <url-pattern>/root</url-pattern>
-    </servlet-mapping>
-
-   <servlet>
-      <servlet-name>CometChat</servlet-name>
-      <description>
-		Home for out app
-      </description>
-      <servlet-class>sd.web.CometChat</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-       <servlet-name>CometChat</servlet-name>
-        <url-pattern>/chat</url-pattern>
+        <url-pattern>/root/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -33,6 +33,7 @@
 	<pathelement location="${scala.home}/lib/scala-dbc.jar"     />
 	<pathelement location="${scala.home}/lib/scala-dbc.jar"     />
 	<pathelement location="${tomcat.home}/lib/catalina.jar"     />
+	<pathelement location="${tomcat.home}/lib/catalina-tribes.jar"     />
 	<fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
