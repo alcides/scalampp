@@ -21,36 +21,40 @@ public class ChatConnection extends Object{
 	}
 	
 	public boolean connect(String u, String p) throws java.rmi.RemoteException, sd.ns.NoServerAvailableException {
-		ILoadBalancer lb = Connector.getLoadBalancer();
-		InetSocketAddress sa = lb.getServer();
-		port = sa.getPort();
-		host = sa.getHostName();
-		try {
-			s = new Socket(host,port);
-		} catch (java.net.UnknownHostException e) {
-			return false;
-		} catch (java.io.IOException e) {
-			return false;
-		}
-		out = new SocketOutChannel(s);
-		session = new ClientSession(host,out);	
-		session.setLogin(u,p);
+		if (session != null) {
+			return true;
+		} else {
+			ILoadBalancer lb = Connector.getLoadBalancer();
+			InetSocketAddress sa = lb.getServer();
+			port = sa.getPort();
+			host = sa.getHostName();
+			try {
+				s = new Socket(host,port);
+			} catch (java.net.UnknownHostException e) {
+				return false;
+			} catch (java.io.IOException e) {
+				return false;
+			}
+			out = new SocketOutChannel(s);
+			session = new ClientSession(host,out);	
+			session.setLogin(u,p);
 		
-		listener = new TCPClientListener(s,session,hc);
-		listener.start();
+			listener = new TCPClientListener(s,session,hc);
+			listener.start();
 
-		// starts to send		
-		out.write( XMLStrings.stream_start_to(host) );
-		return true;
+			// starts to send		
+			out.write( XMLStrings.stream_start_to(host) );
+			return true;
+		}
 	}
 	
 	public int checkMessages() {
 		return hc.messageNumber();
 	}
 	
-	public boolean checkLogin() {
-		if (hc == null || session == null) return false;
-		return hc.isOpen() && session.isLogged();
+	public int checkLogin() {
+		if (hc == null || session == null) return 0;
+		return session.isLogged();
 	}
 	
 }

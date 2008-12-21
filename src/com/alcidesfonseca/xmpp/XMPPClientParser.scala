@@ -59,6 +59,16 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 							out.write( XMLStrings.session_bind_request(clientResource) )
 					}
 					
+					case <success/> => {
+						session.logged = 1
+						out.write( XMLStrings.stream_start_to(session.getHost) )
+					}
+					
+					case <failure><not-authorized/></failure> => {
+						session.logged = -1
+						exit
+					}
+					
 					case <iq><bind><jid>{  jid @ _ * }</jid></bind></iq> => {
 						session.setJID(jid(0).toString)
 						out.write( XMLStrings.session_request(session.getStanzaId) )
@@ -74,10 +84,6 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 							out.write(XMLStrings.presence(session.jid))
 							printRoster
 						}
-					}
-					
-					case <success/> => {
-						out.write( XMLStrings.stream_start_to(session.getHost) )
 					}
 					
 					case <message>{ content @ _ * }</message> => {

@@ -12,6 +12,7 @@ class ClientSession(var host:String,var out:OutChannel) {
 	var jid = ""
 	var user = ""
 	var pass = ""
+	var logged = 0
 	
 	var requests:List[String] = List()
 	
@@ -33,7 +34,5 @@ class ClientSession(var host:String,var out:OutChannel) {
 		pass = p;
 	}
 
-	def isLogged = {
-		status > 1
-	}
+	def isLogged = logged
 }

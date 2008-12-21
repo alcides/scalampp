@@ -37,8 +37,8 @@ public class RootServlet extends HttpServlet {
 
 		String req = request.getRequestURI().replaceAll(prefix + "/","");
 		if ( req.equals("login") ) login(request,out,conn);
-		else if ( req.equals("check") ) checkMessages(request,out,conn);
-		else if ( req.equals("check_login") ) checkLogin(request,out,conn);
+		else if ( req.equals("login/check") ) checkLogin(request,out,conn);
+		else if ( req.equals("messages/check") ) checkMessages(request,out,conn);
 		else out.println("Hello");
     }
 
@@ -54,14 +54,14 @@ public class RootServlet extends HttpServlet {
 		
 		try	{
 			if (con.connect(u,p)) {
-				out.println("{ status:'ok', message:'Connection started.'}");
+				out.println(new JsonMessage("ok","Connection started"));
 			} else {
-				out.println("{ status:'error', message:'Error in connection.' }");
+				out.println(new JsonMessage("error","Error in connection"));
 			}
 		} catch (sd.ns.NoServerAvailableException e) {
-			out.println("{ status:'error', message:'No server available' }");
+			out.println(new JsonMessage("error","No Server Available"));
 		} catch (java.rmi.RemoteException e) {
-			out.println("{ status:'error', message:'Error in connection' }");
+			out.println(new JsonMessage("error","Error in connection"));
 		}		
 
 	}
