@@ -50,6 +50,10 @@ public class ChatConnection extends Object{
 		return true;
 	}
 	
+	public void sendMessage(String to, String content) {
+		out.write(XMLStrings.message_chat(to,content));
+	}
+	
 	public JSONArray retrieveMessages() {
 		return hc.retrieveMessages();
 	}
@@ -61,6 +65,10 @@ public class ChatConnection extends Object{
 	public int checkLogin() {
 		if (hc == null || session == null) return 0;
 		return session.isLogged();
+	}
+	
+	public String getJid() {
+		return session.getJID();
 	}
 	
 }
