@@ -2,6 +2,7 @@ package sd.web
 
 import com.alcidesfonseca.xmpp._
 import java.io.PrintStream
+import org.json._
 
 class WebHumanChannel extends HumanChannel {
 	
@@ -18,12 +19,21 @@ class WebHumanChannel extends HumanChannel {
 		messages=messages.::(m)
 	}
 	
-	def isOpen = open
 	def retrieveMessages = {
 		var ms = messages
 		messages = List()
-		ms.toArray
+		var arr = new JSONArray()
+		for ( m <- ms ) {
+			var o = new JSONObject()
+			o.put("from",m.from)
+			o.put("content",m.content)
+			arr.put(o)
+		}
+		arr
 	}
+	
+	
+	def isOpen = open
 	def close = {
 		open = false
 	}

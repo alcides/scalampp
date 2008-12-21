@@ -5,6 +5,7 @@ import sd.ns.ILoadBalancer;
 import sd.tcp.*;
 import com.alcidesfonseca.xmpp.*;
 import java.net.*;
+import org.json.*;
 
 public class ChatConnection extends Object{
 	
@@ -49,7 +50,7 @@ public class ChatConnection extends Object{
 		return true;
 	}
 	
-	public Message[] retrieveMessages() {
+	public JSONArray retrieveMessages() {
 		return hc.retrieveMessages();
 	}
 	
