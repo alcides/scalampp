@@ -19,7 +19,11 @@ class WebHumanChannel extends HumanChannel {
 	}
 	
 	def isOpen = open
-	def messageNumber = messages.length
+	def retrieveMessages = {
+		var ms = messages
+		messages = List()
+		ms.toArray
+	}
 	def close = {
 		open = false
 	}

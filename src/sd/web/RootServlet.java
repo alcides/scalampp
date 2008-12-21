@@ -9,6 +9,7 @@ import javax.naming.*;
 import javax.rmi.*;
 
 import java.util.Hashtable;
+import org.json.*;
 
 public class RootServlet extends HttpServlet {
 	
@@ -78,10 +79,12 @@ public class RootServlet extends HttpServlet {
 
 
 	public void checkMessages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
-		Json j = new Json();
-		j.update("status","ok");
-		j.update("message",con.checkMessages());
-		out.println(j);
+		try {
+			JSONObject j = new JSONObject();
+			j.accumulate("status","ok");
+			j.accumulate("messages",con.retrieveMessages());
+			out.println(j);
+		} catch (JSONException e) {}
 	}
 	
 	public void checkLogin(HttpServletRequest request, PrintWriter out, ChatConnection con) {

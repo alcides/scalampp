@@ -29,7 +29,9 @@ var get_roster = function() {
 
 var get_messages = function() {
 	$get("messages",function(m) {
-		$('messages').update(m.message)
+		m.messages.each(function(i) {
+			$('messages').innerHTML += i + "<br />"
+		})
 	});
 }
 
