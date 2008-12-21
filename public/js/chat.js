@@ -23,7 +23,12 @@ var $post = function(url,pars,callback) {
 
 var get_roster = function() {
 	$get("roster",function(m) {
-		$('messages').update(m.message)
+		var r = "<ul>";
+		m.roster.each(function(c) {
+			r += "<li class='" + c.status + "'>" + c.jid + "</li>"
+		});
+		r += "</ul>";
+		$("roster").innerHTML = r;
 	});
 }
 
@@ -54,7 +59,7 @@ var wait_for_login = function() {
 var switch_to_chat = function() {
 	$('login').hide();
 	$('chat').show();
-	//new PeriodicalExecuter(get_roster, 5);
+	new PeriodicalExecuter(get_roster, 5);
 	new PeriodicalExecuter(get_messages, 3);
 }
 

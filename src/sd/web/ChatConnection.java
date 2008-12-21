@@ -54,6 +54,10 @@ public class ChatConnection extends Object{
 		return hc.retrieveMessages();
 	}
 	
+	public JSONArray retrieveRoster() {
+		return hc.retrieveRoster();
+	}
+	
 	public int checkLogin() {
 		if (hc == null || session == null) return 0;
 		return session.isLogged();

@@ -1,3 +1,10 @@
+* {
+	padding: 0;
+	margin: 0;
+	font-family: 'Lucida Grande', Arial, sans-serif;
+	font-size: 8pt;
+}
+
 #login {
 	margin: auto;
 	margin-top: 30px;
@@ -19,4 +26,44 @@
 
 .align-center {
 	text-align: center;
+}
+
+#roster, #tabs, #messages {
+	float: left;
+}
+
+#roster {
+	width: 20%;
+	background-color: #CCCCCC;
+	border: solid #333333 1px;
+	min-height: 300px;
+}
+
+#roster li {
+	padding-left: 10px;
+	border-bottom: solid black 1px;
+}
+
+#roster li:hover { 
+	background-color: #999999;
+}
+
+#roster li.online {
+	border-right: solid green 10px;
+}
+
+#roster li.away {
+	border-right: solid blue 10px;
+}
+
+#roster li.busy {
+	border-right: solid yellow 10px;
+}
+
+#roster li.offline {
+	border-right: solid red 10px;
+}
+
+#tabs, #messages {
+	width: 80%;
 }

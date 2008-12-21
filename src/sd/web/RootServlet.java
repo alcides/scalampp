@@ -52,6 +52,8 @@ public class RootServlet extends HttpServlet {
 				checkLogin(request,out,conn);
 		} else if ( req.equals("messages") && method.equals("get")) {
 			checkMessages(request,out,conn);
+		} else if ( req.equals("roster") && method.equals("get")) {
+			checkRoster(request,out,conn);
 		} else {
 			out.println("Hello");
 		}
@@ -81,8 +83,17 @@ public class RootServlet extends HttpServlet {
 	public void checkMessages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		try {
 			JSONObject j = new JSONObject();
-			j.accumulate("status","ok");
-			j.accumulate("messages",con.retrieveMessages());
+			j.put("status","ok");
+			j.put("messages",con.retrieveMessages());
+			out.println(j);
+		} catch (JSONException e) {}
+	}
+	
+	public void checkRoster(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+		try {
+			JSONObject j = new JSONObject();
+			j.put("status","ok");
+			j.put("roster",con.retrieveRoster());
 			out.println(j);
 		} catch (JSONException e) {}
 	}

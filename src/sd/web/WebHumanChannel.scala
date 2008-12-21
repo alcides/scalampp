@@ -32,6 +32,16 @@ class WebHumanChannel extends HumanChannel {
 		arr
 	}
 	
+	def retrieveRoster = {
+		var arr = new JSONArray()
+		for ( c <- contacts ) {
+			var o = new JSONObject()
+			o.put("jid",c.jid)
+			o.put("status",c.status)
+			arr.put(o)
+		}
+		arr
+	}
 	
 	def isOpen = open
 	def close = {
