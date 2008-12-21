@@ -78,10 +78,16 @@ public class RootServlet extends HttpServlet {
 
 
 	public void checkMessages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
-		out.println( con.checkMessages() );
+		Json j = new Json();
+		j.update("status","ok");
+		j.update("message",con.checkMessages());
+		out.println(j);
 	}
 	
 	public void checkLogin(HttpServletRequest request, PrintWriter out, ChatConnection con) {
-		out.println( con.checkLogin() );
+		int i = con.checkLogin();
+		if ( i == 0) out.println(new JsonMessage("wait","Please wait"));
+		if ( i < 0) out.println(new JsonMessage("fail","Wrong Login"));
+		if ( i > 0) out.println(new JsonMessage("ok","logged"));		
 	}
 }

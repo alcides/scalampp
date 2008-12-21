@@ -27,26 +27,23 @@ class TCPClientListener(val s:Socket, val session:ClientSession,val hc:HumanChan
 			}
 		} 
 		catch {
-			case e : EOFException => {} //println("EOF: " + e)
-			case e : IOException => {} //println("IO: " + e)
-			// case _ => println("wtf?")
+			case e : EOFException => { hc.close }
+			case e : IOException => { hc.close } 
 		}
 	}
 }
 
 object TCPClient {
+	var s:Socket = null
+	var out:SocketOutChannel = null
+	var fails = 0
+	var cycle = true
 	def main(host:String,port:Int,username:String,password:String) = {
-				
-		var s:Socket = null
-		var out:SocketOutChannel = null
-		
-		var cycle = true
 		var kb = new Scanner(System.in)
 	
 		def connect():Socket = {
 			new Socket(host,port)
 		}
-		var fails = 0
 
 		while (cycle) {
 			try {
@@ -80,25 +77,27 @@ object TCPClient {
 						s.close
 					println("Connection terminated...")
 				}
-				/*case e : IOException => {
-					try {
-						if (fails < 2) {
-							println("Reconnecting in "+Config.retryTimeOut+" seconds...")
-							Thread.sleep(Config.retryTimeOut * 1000)
-							fails += 1
-						} else {
-							cycle = false
-						}
-					} 
-					catch {
-						case e : InterruptedException => {}
-					}
-				} */
+				case e : IOException =>reconnect
+				case e: SocketException => reconnect
 			} 
 		}
 		()
 	}
 	
+	def reconnect = {
+		try {
+			if (fails < 2) {
+				println("Reconnecting in "+Config.retryTimeOut+" seconds...")
+				Thread.sleep(Config.retryTimeOut * 1000)
+				fails += 1
+			} else {
+				cycle = false
+			}
+		} 
+		catch {
+			case e : InterruptedException => {}
+		}
+	}
 	
 	def changeToTLS(s:Socket,host:String,port:Int):Socket = {
 		var	out = new SocketOutChannel(s)

@@ -66,6 +66,7 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 					
 					case <failure><not-authorized/></failure> => {
 						session.logged = -1
+						println("failed")
 						exit
 					}
 					
