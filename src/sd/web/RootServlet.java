@@ -24,7 +24,15 @@ public class RootServlet extends HttpServlet {
 	}
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-	
+		route("get",request,response);
+    }
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		route("post",request,response);
+    }
+
+
+	public void route(String method, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession s = request.getSession(true);
 		ChatConnection conn = conns.get(s.getId());
 		if ( conn == null ) {
@@ -36,15 +44,17 @@ public class RootServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
 		String req = request.getRequestURI().replaceAll(prefix + "/","");
-		if ( req.equals("login") ) login(request,out,conn);
-		else if ( req.equals("login/check") ) checkLogin(request,out,conn);
-		else if ( req.equals("messages/check") ) checkMessages(request,out,conn);
-		else out.println("Hello");
-    }
-
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        doGet(request,response);
-    }
+		if ( req.equals("login") ) {
+			if (method.equals("post"))
+				login(request,out,conn);
+			else 
+				checkLogin(request,out,conn);
+		} else if ( req.equals("messages") && method.equals("get")) {
+			checkMessages(request,out,conn);
+		} else {
+			out.println("Hello");
+		}
+	}
 
 	private void login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		HttpSession s = request.getSession(true);
