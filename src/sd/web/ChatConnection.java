@@ -57,6 +57,20 @@ public class ChatConnection extends Object{
 	public void sendPresence(String s) {
 		out.write(XMLStrings.presence_set(s));
 	}
+	
+	public void rosterAdd(String jid) {
+		out.write( XMLStrings.roster_item_request( session.getStanzaId() , jid ) );
+		out.write( XMLStrings.presence_subscribe( jid, session.getJID()) );
+	}
+
+	public void rosterDel(String jid) {
+		out.write( XMLStrings.roster_item_remove( session.getStanzaId() ,jid) );
+		out.write( XMLStrings.presence_unsubscribe( jid, session.getJID()) );
+	}
+	
+	public void rosterRequest() {
+		out.write(XMLStrings.roster_request(session.getStanzaId()));
+	}
 
 	public JSONArray retrieveMessages() {
 		return hc.retrieveMessages();

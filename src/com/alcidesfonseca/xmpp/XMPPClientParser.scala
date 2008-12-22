@@ -21,6 +21,9 @@ object Roster {
 		contacts = contacts.remove { c2 => c2.jid == c.jid } // in case of replace
 		contacts = contacts.::(c)
 	}
+	def removeContact(jid:String) = {
+		contacts = contacts.remove(s => s.jid == jid)
+	}
 }
 
 class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser {
@@ -66,7 +69,6 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 					
 					case <failure><not-authorized/></failure> => {
 						session.logged = -1
-						println("failed")
 						exit
 					}
 					
@@ -81,8 +83,26 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 					
 					case <iq><query>{ roster @ _ * }</query></iq> => {
 						if ( roster.length > 0 ) {
-							roster(0).foreach { i => Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString )) }
-							out.write(XMLStrings.presence(session.jid))
+
+							roster(0).foreach { i => 
+								if ((i \ "@jid").toString != "") {
+									(xml \ "@type").toString match {
+								    	case "set" => {
+											var method = (i \ "@subscription").toString
+											if (method == "remove") {
+												Roster.removeContact((i \ "@jid").toString)
+											} else {
+												Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString ))	
+												out.write(XMLStrings.presence(session.jid))											
+											}
+										}
+										case "result" => {
+											Roster.addContact(new Contact((i \ "@name").toString, (i \ "@jid").toString ))	
+											out.write(XMLStrings.presence(session.jid))
+										}
+									}
+								}
+							}
 							printRoster
 						}
 					}

@@ -35,6 +35,17 @@ var open_contact = function(jid) {
 	return open_window(jid);
 }
 
+var add_contact = function() {
+	$post("roster/add",{ jid: prompt("Enter the jid: ", "") }, function(r) {
+		if ( r.status == "error") alert(r.message);	
+	});
+}
+
+var del_contact = function() {
+	$post("roster/del",{ jid: prompt("Enter the jid: ", "") }, function(r) {
+		if ( r.status == "error") alert(r.message);	
+	});
+}
 
 var add_to_log = function(j,s) {
 	var w = open_window(shortJid(j));
@@ -108,7 +119,7 @@ var wait_for_login = function() {
 	});
 }
 
-var initialize_statuses = function() {
+var initialize_roster = function() {
 	var sel = $('roster').select(".status")[0];
 	for (var i=0;i<statuses.length;i++) {
 		option = new Option(statuses[i],statuses[i]);
@@ -117,12 +128,16 @@ var initialize_statuses = function() {
 	sel.observe("change",function(e) {  
 		change_status_to(this.value);	
 	});
+	
+	$('roster').select('.add')[0].observe("click",add_contact)
+	$('roster').select('.del')[0].observe("click",del_contact)
+	
 }; 
 
 var switch_to_chat = function() {
 	$('chat').show();
 	$("roster").innerHTML = roster_template.evaluate({});	
-	initialize_statuses();
+	initialize_roster();
 	new PeriodicalExecuter(get_updates, 5);
 }
 

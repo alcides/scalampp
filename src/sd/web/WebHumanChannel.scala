@@ -12,7 +12,7 @@ class WebHumanChannel extends HumanChannel {
 	var messages:List[Message] = List()
 
 	def updateContacts(l:List[Contact]) = {
-		contacts = l
+		contacts = for ( c <- l) yield c
 	}
 	
 	def insertMessage(m:Message) = {
@@ -35,10 +35,12 @@ class WebHumanChannel extends HumanChannel {
 	def retrieveRoster = {
 		var arr = new JSONArray()
 		for ( c <- contacts ) {
-			var o = new JSONObject()
-			o.put("jid",c.jid)
-			o.put("status",c.status)
-			arr.put(o)
+			if ( c.jid != "") {
+				var o = new JSONObject()
+				o.put("jid",c.jid)
+				o.put("status",c.status)
+				arr.put(o)
+			}
 		}
 		arr
 	}

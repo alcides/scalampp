@@ -60,6 +60,10 @@ public class RootServlet extends HttpServlet {
 			view_post_status(request,out,conn);
 		} else if ( req.equals("roster") && method.equals("get")) {
 			view_get_roster(request,out,conn);
+		} else if ( req.equals("roster/add") && method.equals("post")) {
+			view_post_rosterAdd(request,out,conn);
+		} else if ( req.equals("roster/del") && method.equals("post")) {
+			view_post_rosterDel(request,out,conn);
 		} else if ( req.equals("updates") && method.equals("get")) {
 			view_get_updates(request,out,conn);
 		} else {
@@ -95,7 +99,7 @@ public class RootServlet extends HttpServlet {
 	public void view_post_messages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		String to = request.getParameter("to");
 		String what = request.getParameter("content");		
-		if ( to.length() + what.length() > 0) {
+		if ( to != null && what != null) {
 			con.sendMessage(to,what);
 			out.println(new JsonMessage("ok","Message Sent"));
 		} else {
@@ -105,9 +109,29 @@ public class RootServlet extends HttpServlet {
 	
 	public void view_post_status(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		String sta = request.getParameter("presence");		
-		if (sta != null && con != null) {
+		if (sta != null) {
 			con.sendPresence(sta);
 			out.println(new JsonMessage("ok","Status updated"));
+		} else {
+			out.println(new JsonMessage("error","Can't be blank."));
+		}
+	}
+	
+	public void view_post_rosterAdd(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+		String jid = request.getParameter("jid");
+		if ( jid != null) {
+			con.rosterAdd(jid);
+			out.println(new JsonMessage("ok","Request Sent"));
+		} else {
+			out.println(new JsonMessage("error","Can't be blank."));
+		}
+	}
+	
+	public void view_post_rosterDel(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+		String jid = request.getParameter("jid");
+		if ( jid != null) {
+			con.rosterDel(jid);
+			out.println(new JsonMessage("ok","Request Sent"));
 		} else {
 			out.println(new JsonMessage("error","Can't be blank."));
 		}

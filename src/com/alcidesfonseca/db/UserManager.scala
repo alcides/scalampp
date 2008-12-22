@@ -49,6 +49,7 @@ class User(val name:String, val pass:String) {
 			false
 		else {
 			RemoteDatabase.update("INSERT INTO friends VALUES (NULL, '"+f.jid+"', '"+f.name+"','"+name+"','none');")
+			getFriends
 			true
 		}	
 	}
@@ -56,6 +57,7 @@ class User(val name:String, val pass:String) {
 	def removeFriend(f:Friend) = synchronized {
 		if ( getFriends.exists { fr => fr.jid == f.jid }   ) {
 			RemoteDatabase.update("DELETE FROM friends WHERE jid='"+f.jid+"' AND user_name='"+name+"';")
+			getFriends
 			true
 		} else false
 	}

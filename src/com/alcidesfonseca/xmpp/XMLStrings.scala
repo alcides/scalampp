@@ -106,11 +106,12 @@ object XMLStrings {
 	def roster_set(fs:List[Friend]):Elem = roster_set(fs,"none")	
 	def roster_set(fs:List[Friend],s:String):Elem = {
 		var roster = new Queue[Node]()
-		fs.foreach{ f => if (s.equals("remove")) roster += roster_item_remove(f) else roster += roster_item(f,s) }
+		fs.foreach{ f => if (s.equals("remove")) roster += roster_item_remove_raw(f) else roster += roster_item(f,s) }
 		<iq type="set" ><query xmlns="jabber:iq:roster">{ roster }</query></iq>
 	}
 	
 	def roster_item(f:Friend,s:String):Elem = <item jid={ f.jid } name={ f.name } subscription={ s }><group>Contacts</group></item>
+	
 	def roster_item(f:Friend):Elem = roster_item(f,f.subscription)
 	
 	def roster_item_request(id:String,jid:String) = <iq type="set" id={ id }>
@@ -119,12 +120,13 @@ object XMLStrings {
 		</query>
 	</iq>
 	
+	def roster_item_remove_raw(jid:String) = <item jid={ jid } subscription="remove"/>
+	
 	def roster_item_remove(id:String,jid:String):Elem = <iq type="set" id={ id }>
-		<query xmlns="jabber:iq:roster"><item jid={ jid } subscription="remove"/></query>
+		<query xmlns="jabber:iq:roster"> { roster_item_remove_raw(jid) } </query>
 	</iq>
-	def roster_item_remove(f:Friend):Elem = <iq type="set">
-		<query xmlns="jabber:iq:roster"><item jid={ f.jid } subscription="remove"/></query>
-	</iq>
+	
+	def roster_item_remove_raw(f:Friend):Elem = roster_item_remove_raw(f.jid)
 	
 	def roster_item_sent(id:String,jid:String) = <iq to={ jid } type="result" id={ jid } />
 	
