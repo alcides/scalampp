@@ -27,7 +27,7 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 				// Send message
 				if ( commands(0).equals("send") ) {
 					if (commands.length < 3) println("Erro: numero errado de parametros")
-					else out.write( XMLStrings.message_chat(commands(1),commands(2)) )
+					else out.write( XMLStrings.message_chat(commands(1),commands.drop(2).mkString(" ") ))
 				}
 				
 				// Add Contact

@@ -5,6 +5,7 @@ import java.io._
 import java.net._
 
 import sd._
+import sd.cli._
 import com.alcidesfonseca.xmpp._
 import scala.xml._
 import java.util.Scanner
@@ -12,7 +13,7 @@ import java.util.Scanner
 class UDPClientListener(val s:DatagramSocket, val session:ClientSession) extends Thread {
 	var out = session.out
 	
-	var cstream = new XMPPClientParser(session)
+	var cstream = new XMPPClientParser(session, new CLIHumanChannel())
 	
 	override def run = {
 		try {
