@@ -3,3 +3,4 @@ html
 documentation
 dist
 release
+db/dev.db
