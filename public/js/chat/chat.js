@@ -44,6 +44,11 @@ var add_to_log = function(j,s) {
 	
 };
 
+var change_status_to = function(st) {
+	$post("status",{ presence: st },function(r) {
+		if ( r.status == "error") alert(r.message);	
+	});
+};
 
 var send_message = function(jid,content) {
 	$post("messages",{ to: jid, content: content },function(r) {
@@ -56,23 +61,29 @@ var receive_message = function(m) {
  	add_to_log(m.from,message_template.evaluate(m));
 };
 
-var get_messages = function() {
-	$get("messages",function(m) {
-		m.messages.each(function(m) {
-			receive_message(m)
-		})
+
+var get_updates = function() {
+	$get("updates", function(m) {
+		get_messages(m);
+		get_roster(m);
 	});
 }
 
-var get_roster = function() {
-	$get("roster",function(m) {
-		var r = "<ul>";
-		m.roster.each(function(c) {
-			r += roster_item_template.evaluate(c);
-		});
-		r += "</ul>";
-		$("roster").innerHTML = roster_template.evaluate({list: r, jid: m.myJid });
+var get_messages = function(m) {
+	m.messages.each(function(m) {
+		receive_message(m)
+	})
+}
+
+var get_roster = function(m) {
+	var r = "<ul>";
+	m.roster.each(function(c) {
+		r += roster_item_template.evaluate(c);
 	});
+	r += "</ul>";
+	
+	$('roster').select(".list")[0].innerHTML = r;
+	$('roster').select(".jid")[0].innerHTML = m.myJid;
 }
 
 
@@ -97,10 +108,22 @@ var wait_for_login = function() {
 	});
 }
 
+var initialize_statuses = function() {
+	var sel = $('roster').select(".status")[0];
+	for (var i=0;i<statuses.length;i++) {
+		option = new Option(statuses[i],statuses[i]);
+		sel.options[i] = option;
+	}
+	sel.observe("change",function(e) {  
+		change_status_to(this.value);	
+	});
+}; 
+
 var switch_to_chat = function() {
 	$('chat').show();
-	new PeriodicalExecuter(get_roster, 5);
-	new PeriodicalExecuter(get_messages, 3);
+	$("roster").innerHTML = roster_template.evaluate({});	
+	initialize_statuses();
+	new PeriodicalExecuter(get_updates, 5);
 }
 
 window.onload = function() {

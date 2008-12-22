@@ -1,6 +1,6 @@
 var roster_item_template = new Template('<li class="#{status}"><a href="#" onclick="open_contact(\'#{jid}\');">#{jid}</a></li>');
 
-var roster_template = new Template('<div class="roster"> <div class="header"><b>#{jid}</b></div> #{list}</div>');
+var roster_template = new Template('<div class="header"><b class="jid"></b><br /><select class="status"></select></div> <div class="list"></div>');
 
 var message_template = new Template('<p><b>#{from} said:</b> #{content}</p>');
 var message_sent_template = new Template('<p><b class="you">You said:</b> #{content}</p>');

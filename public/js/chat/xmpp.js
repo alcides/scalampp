@@ -4,3 +4,5 @@ var shortJid = function(jid) {
 	    return jid;
 	return jid.substring(0, idx)
 };
+
+var statuses = ["online","away","busy","offline"];

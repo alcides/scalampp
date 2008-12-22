@@ -53,7 +53,11 @@ public class ChatConnection extends Object{
 	public void sendMessage(String to, String content) {
 		out.write(XMLStrings.message_chat(to,content));
 	}
-	
+
+	public void sendPresence(String s) {
+		out.write(XMLStrings.presence_set(s));
+	}
+
 	public JSONArray retrieveMessages() {
 		return hc.retrieveMessages();
 	}

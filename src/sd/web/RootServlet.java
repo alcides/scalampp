@@ -47,27 +47,33 @@ public class RootServlet extends HttpServlet {
 		String req = request.getRequestURI().replaceAll(prefix + "/","");
 		if ( req.equals("login") ) {
 			if (method.equals("post"))
-				login(request,out,conn);
+				view_post_login(request,out,conn);
 			else 
-				checkLogin(request,out,conn);
+				view_get_login(request,out,conn);
 		} else if ( req.equals("messages")) {
 			if (method.equals("post")) {
-				postMessage(request,out,conn);
+				view_post_messages(request,out,conn);
 			} else {
-				checkMessages(request,out,conn);
+				view_get_messages(request,out,conn);
 			}
+		} else if ( req.equals("status") && method.equals("post")) {
+			view_post_status(request,out,conn);
 		} else if ( req.equals("roster") && method.equals("get")) {
-			checkRoster(request,out,conn);
+			view_get_roster(request,out,conn);
+		} else if ( req.equals("updates") && method.equals("get")) {
+			view_get_updates(request,out,conn);
 		} else {
 			out.println("Hello");
 		}
 	}
 
-	private void login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	private void view_post_login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		HttpSession s = request.getSession(true);
 		
 		String u = request.getParameter("user");
 		String p = request.getParameter("pwd");
+		
+		if ( u.length() + p.length() > 0 ) {
 		
 		try	{
 			if (con.connect(u,p)) {
@@ -78,12 +84,15 @@ public class RootServlet extends HttpServlet {
 		} catch (sd.ns.NoServerAvailableException e) {
 			out.println(new JsonMessage("error","No Server Available"));
 		} catch (java.rmi.RemoteException e) {
-			out.println(new JsonMessage("error","Error in connection"));
-		}		
+			
+		}
+	} else {
+		out.println(new JsonMessage("error","Data cannot be blank"));
+	}
 
 	}
 	
-	public void postMessage(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_post_messages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		String to = request.getParameter("to");
 		String what = request.getParameter("content");		
 		if ( to.length() + what.length() > 0) {
@@ -93,8 +102,18 @@ public class RootServlet extends HttpServlet {
 			out.println(new JsonMessage("error","Can't be blank."));
 		}
 	}
+	
+	public void view_post_status(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+		String sta = request.getParameter("presence");		
+		if (sta != null && con != null) {
+			con.sendPresence(sta);
+			out.println(new JsonMessage("ok","Status updated"));
+		} else {
+			out.println(new JsonMessage("error","Can't be blank."));
+		}
+	}
 
-	public void checkMessages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_get_messages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		try {
 			JSONObject j = new JSONObject();
 			j.put("status","ok");
@@ -105,7 +124,7 @@ public class RootServlet extends HttpServlet {
 		}
 	}
 	
-	public void checkRoster(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_get_roster(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		try {
 			JSONObject j = new JSONObject();
 			j.put("status","ok");
@@ -115,10 +134,23 @@ public class RootServlet extends HttpServlet {
 		} catch (JSONException e) {}
 	}
 	
-	public void checkLogin(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_get_login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		int i = con.checkLogin();
 		if ( i == 0) out.println(new JsonMessage("wait","Please wait"));
 		if ( i < 0) out.println(new JsonMessage("fail","Wrong Login"));
 		if ( i > 0) out.println(new JsonMessage("ok","logged"));		
+	}
+	
+	public void view_get_updates(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+			try {
+				JSONObject j = new JSONObject();
+				j.put("status","ok");
+				j.put("messages",con.retrieveMessages());
+				j.put("roster",con.retrieveRoster());
+				j.put("myJid",con.getJid());
+				out.println(j);
+			} catch (JSONException e) {
+				out.println(new JsonMessage("error","Weird error."));
+			}
 	}
 }
