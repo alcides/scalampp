@@ -41,9 +41,7 @@ object XMLStrings {
 		
 	val stream_auth_accepted =  <success xmlns="urn:ietf:params:xml:ns:xmpp-sasl"/>
 	
-	val stream_auth_failed = <failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
-	     <not-authorized/>
-	   </failure>
+	val stream_auth_failed = <failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl"><not-authorized/></failure>
 	
 	val stream_auth_incorrect_encoding = <failure xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
 	     <incorrect-encoding/>

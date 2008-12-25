@@ -141,6 +141,13 @@ var switch_to_chat = function() {
 	new PeriodicalExecuter(get_updates, 5);
 }
 
+
+var start_login = function() {
+	log_retry = 0;
+	$('login').hide();
+	wait_for_login.delay(3);
+}
+
 window.onload = function() {
 	
 	var cb= function() {
@@ -149,10 +156,10 @@ window.onload = function() {
 			user: $("user").value,
 			pwd: $("pwd").value
 		}, function(c) {
-			if (c.status == "error") alert(c.message);
-			else {
-				$('login').hide();
-				wait_for_login.delay(3);
+			if (c.status == "error") {
+				alert(c.message);
+			} else {
+				start_login();
 			}
 		});
 	};
@@ -160,7 +167,9 @@ window.onload = function() {
 	$('enter_chat').onclick = cb;
 	$$("#login input").each(function(e) {
 		e.observe("keydown", function(e) {
-			if ( e.keyCode == 13 ) cb();
+			if ( e.keyCode == 13 ) {
+				cb();
+			}
 		});
 	});
 };

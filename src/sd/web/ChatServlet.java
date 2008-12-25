@@ -10,29 +10,22 @@ import javax.rmi.*;
 
 import java.util.Hashtable;
 import org.json.*;
+import com.alcidesfonseca.mvc.RoutedServlet;
 
-public class RootServlet extends HttpServlet {
+public class ChatServlet extends RoutedServlet {
 	
 	static String prefix = "/chat";
 	
 	private Hashtable<String,ChatConnection> conns;
-	
-    public RootServlet() throws NamingException {
-    }
+
+	public ChatServlet() throws NamingException { 
+		super(); 
+	}
 
 	public void init() {
 		conns = new Hashtable<String,ChatConnection>();
 	}
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		route("get",request,response);
-    }
-
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		route("post",request,response);
-    }
-
-
+	
 	public void route(String method, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession s = request.getSession(true);
 		ChatConnection conn = conns.get(s.getId());
@@ -41,10 +34,10 @@ public class RootServlet extends HttpServlet {
 			conns.put(s.getId(), conn);
 		}
 	
-        response.setContentType("text/html");
+        response.setContentType("application/x-json");
         PrintWriter out = response.getWriter();
 
-		String req = request.getRequestURI().replaceAll(prefix + "/","");
+		String req = getPath(request,prefix);
 		if ( req.equals("login") ) {
 			if (method.equals("post"))
 				view_post_login(request,out,conn);
@@ -67,7 +60,7 @@ public class RootServlet extends HttpServlet {
 		} else if ( req.equals("updates") && method.equals("get")) {
 			view_get_updates(request,out,conn);
 		} else {
-			out.println("Hello");
+			response.sendError(HttpServletResponse.SC_NOT_FOUND,"Page not found.");
 		}
 	}
 
@@ -155,7 +148,9 @@ public class RootServlet extends HttpServlet {
 			j.put("roster",con.retrieveRoster());
 			j.put("myJid",con.getJid());
 			out.println(j);
-		} catch (JSONException e) {}
+		} catch (JSONException e) {
+			out.println(new JsonMessage("error","Weird error."));
+		}
 	}
 	
 	public void view_get_login(HttpServletRequest request, PrintWriter out, ChatConnection con) {

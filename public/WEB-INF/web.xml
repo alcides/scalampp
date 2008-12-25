@@ -27,15 +27,15 @@
   </description>
 
    <servlet>
-      <servlet-name>RootServlet</servlet-name>
+      <servlet-name>ChatServlet</servlet-name>
       <description>
 		Home for out app
       </description>
-      <servlet-class>sd.web.RootServlet</servlet-class>
+      <servlet-class>sd.web.ChatServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-       <servlet-name>RootServlet</servlet-name>
+       <servlet-name>ChatServlet</servlet-name>
         <url-pattern>/chat/*</url-pattern>
     </servlet-mapping>
 
