@@ -24,14 +24,6 @@ public class RootServlet extends HttpServlet {
 		conns = new Hashtable<String,ChatConnection>();
 	}
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		route("get",request,response);
-    }
-
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		route("post",request,response);
-    }
-
 
 	public void route(String method, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession s = request.getSession(true);
@@ -41,7 +33,7 @@ public class RootServlet extends HttpServlet {
 			conns.put(s.getId(), conn);
 		}
 	
-        response.setContentType("text/html");
+        response.setContentType("application/x-json");
         PrintWriter out = response.getWriter();
 
 		String req = request.getRequestURI().replaceAll(prefix + "/","");
