@@ -5,6 +5,8 @@ import sd.ns.ILoadBalancer;
 import sd.tcp.*;
 import com.alcidesfonseca.xmpp.*;
 import java.net.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import org.json.*;
 
 public class ChatConnection extends Object{
@@ -16,15 +18,42 @@ public class ChatConnection extends Object{
 	String host = "";
 	int port = 0;
 	Thread listener = null;
+	GregorianCalendar lastSeen = null;
 	
 	ChatConnection () {
 		hc = new WebHumanChannel();
+		ping();
+	}
+	
+	public void ping() {
+		lastSeen = new GregorianCalendar();
+	}
+	
+	public void close() {
+		listener.interrupt();
+		listener = null;
+		
+		out.write( XMLStrings.presence_unavailable(session.getJID()) );
+		out.write( XMLStrings.stream_end() );
+		out.close();
+	}
+	
+	public boolean checkAndClose() {
+		
+		GregorianCalendar acceptableTime = new GregorianCalendar();
+		acceptableTime.add(Calendar.SECOND, -1 * sd.Config.getWebTimeOut());
+		
+		if ( !hc.isOpen() || lastSeen.getTime().compareTo(acceptableTime.getTime()) < 0 ) {
+			close();
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public boolean connect(String u, String p) throws java.rmi.RemoteException, sd.ns.NoServerAvailableException {
 		if (session != null) {
 			hc = new WebHumanChannel();
-			// TODO
 		}
 	
 		ILoadBalancer lb = Connector.getLoadBalancer();

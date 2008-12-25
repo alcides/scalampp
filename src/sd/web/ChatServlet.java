@@ -24,6 +24,8 @@ public class ChatServlet extends RoutedServlet {
 
 	public void init() {
 		conns = new Hashtable<String,ChatConnection>();
+		Thread wd = new WatchDog(conns);
+		wd.start();
 	}
 	
 	public void route(String method, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -33,6 +35,8 @@ public class ChatServlet extends RoutedServlet {
 			conn = new ChatConnection();
 			conns.put(s.getId(), conn);
 		}
+		
+		conn.ping();
 	
         response.setContentType("application/x-json");
         PrintWriter out = response.getWriter();

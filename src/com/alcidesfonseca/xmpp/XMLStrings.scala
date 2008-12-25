@@ -20,7 +20,7 @@ object XMLStrings {
 	
 	def stream_start_to(host:String) = xml_init + "<stream:stream to='"+host+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
 	
-	val stream_end = "</stream:stream>"
+	def stream_end = "</stream:stream>"
 	
 	def check_start(x:String):Boolean = {
 		XMLValidator.validate(x + stream_end)
