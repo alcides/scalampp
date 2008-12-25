@@ -12,13 +12,13 @@ import java.util.Hashtable;
 import org.json.*;
 import com.alcidesfonseca.mvc.RoutedServlet;
 
-public class RootServlet extends RoutedServlet {
+public class ChatServlet extends RoutedServlet {
 	
 	static String prefix = "/chat";
 	
 	private Hashtable<String,ChatConnection> conns;
 
-	public RootServlet() throws NamingException { 
+	public ChatServlet() throws NamingException { 
 		super(); 
 	}
 
@@ -60,7 +60,9 @@ public class RootServlet extends RoutedServlet {
 		} else if ( req.equals("updates") && method.equals("get")) {
 			view_get_updates(request,out,conn);
 		} else {
-			out.println("Hello");
+			//response.sendError(HttpServletResponse.SC_NOT_FOUND,"Page not found.");
+	        response.setContentType("text/html");
+			out.println("Page Not Found");
 		}
 	}
 
@@ -148,7 +150,9 @@ public class RootServlet extends RoutedServlet {
 			j.put("roster",con.retrieveRoster());
 			j.put("myJid",con.getJid());
 			out.println(j);
-		} catch (JSONException e) {}
+		} catch (JSONException e) {
+			out.println(new JsonMessage("error","Weird error."));
+		}
 	}
 	
 	public void view_get_login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
