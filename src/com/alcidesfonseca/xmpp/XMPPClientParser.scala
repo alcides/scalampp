@@ -67,7 +67,7 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 						out.write( XMLStrings.stream_start_to(session.getHost) )
 					}
 					
-					case <failure><not-authorized/></failure> => {
+					case <failure><not-authorized>{  error @ _ * }</not-authorized></failure> => {
 						session.logged = -1
 						exit
 					}
