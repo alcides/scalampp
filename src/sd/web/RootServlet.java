@@ -10,21 +10,22 @@ import javax.rmi.*;
 
 import java.util.Hashtable;
 import org.json.*;
+import com.alcidesfonseca.mvc.RoutedServlet;
 
-public class RootServlet extends HttpServlet {
+public class RootServlet extends RoutedServlet {
 	
 	static String prefix = "/chat";
 	
 	private Hashtable<String,ChatConnection> conns;
-	
-    public RootServlet() throws NamingException {
-    }
+
+	public RootServlet() throws NamingException { 
+		super(); 
+	}
 
 	public void init() {
 		conns = new Hashtable<String,ChatConnection>();
 	}
-
-
+	
 	public void route(String method, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession s = request.getSession(true);
 		ChatConnection conn = conns.get(s.getId());
@@ -36,7 +37,7 @@ public class RootServlet extends HttpServlet {
         response.setContentType("application/x-json");
         PrintWriter out = response.getWriter();
 
-		String req = request.getRequestURI().replaceAll(prefix + "/","");
+		String req = getPath(request);
 		if ( req.equals("login") ) {
 			if (method.equals("post"))
 				view_post_login(request,out,conn);
