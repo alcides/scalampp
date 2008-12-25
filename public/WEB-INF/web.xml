@@ -39,4 +39,18 @@
         <url-pattern>/chat/*</url-pattern>
     </servlet-mapping>
 
+   <servlet>
+      <servlet-name>AdminServlet</servlet-name>
+      <description>
+		Administration API
+      </description>
+      <servlet-class>sd.web.AdminServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+       <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

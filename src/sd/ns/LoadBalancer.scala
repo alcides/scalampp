@@ -75,4 +75,10 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	def database_update(sql:String) = Database.update(sql)
 	def database_getUsers:List[User] = Database.getUsers 
 	def database_getFriends(name:String):List[Friend] = Database.getFriends(name)
+	
+	// web admin API
+	
+	def getServers = serverList.toArray
+	
+	
 }
