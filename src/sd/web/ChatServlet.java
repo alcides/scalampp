@@ -37,7 +37,7 @@ public class ChatServlet extends RoutedServlet {
         response.setContentType("application/x-json");
         PrintWriter out = response.getWriter();
 
-		String req = getPath(request);
+		String req = getPath(request,prefix);
 		if ( req.equals("login") ) {
 			if (method.equals("post"))
 				view_post_login(request,out,conn);
@@ -60,9 +60,7 @@ public class ChatServlet extends RoutedServlet {
 		} else if ( req.equals("updates") && method.equals("get")) {
 			view_get_updates(request,out,conn);
 		} else {
-			//response.sendError(HttpServletResponse.SC_NOT_FOUND,"Page not found.");
-	        response.setContentType("text/html");
-			out.println("Page Not Found");
+			response.sendError(HttpServletResponse.SC_NOT_FOUND,"Page not found.");
 		}
 	}
 

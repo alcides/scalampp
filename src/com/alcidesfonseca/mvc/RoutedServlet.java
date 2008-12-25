@@ -9,10 +9,8 @@ import javax.naming.*;
 import javax.rmi.*;
 
 public class RoutedServlet extends HttpServlet {
-	String prefix;
 	
 	public RoutedServlet() throws NamingException {
-		prefix = "/";
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -26,7 +24,7 @@ public class RoutedServlet extends HttpServlet {
 	public void route(String method, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 	}
 	
-	public String getPath(HttpServletRequest request) {
+	public String getPath(HttpServletRequest request, String prefix) {
 		return request.getRequestURI().replaceAll(prefix + "/","");
 	}
 }
