@@ -14,10 +14,14 @@ table {
 	width: 100%;
 }
 
-#servers td {
+#servers_table td {
 	text-align: right;
 	width: 20%;
 	vertical-align: top;
+}
+
+#accounts th {
+	text-align: left;
 }
 
 .main {

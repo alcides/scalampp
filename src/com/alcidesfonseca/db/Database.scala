@@ -46,6 +46,19 @@ object Database {
 		(for(i <- 0 until l.size) yield l.get(i)).toList
 	}
 	
+	def updateUser(user:String,pass:String) = {
+		update("UPDATE users SET pass='"+pass+"' WHERE name = '"+user+"'")
+	}
+	
+	def createUser(user:String,pass:String) = {
+		update("INSERT INTO users (NULL,'"+user+"','"+pass+"')");
+	}
+	
+	def deleteUser(user:String) = {
+		update("DELETE FROM friends WHERE user_name = '"+user+"'")
+		update("DELETE FROM users WHERE name = '"+user+"'")
+	}
+	
 	def close = conn.close
 	
 }

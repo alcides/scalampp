@@ -39,4 +39,28 @@ public class LoadBalancerBean extends Object
 		}
 	}	
 	
+	public void setPassword(String u,String p) {
+		try {
+			_lb.setPassword(u,p);
+		} catch ( RemoteException e) { 
+			return;
+		}
+	}
+	
+	public void createUser(String u,String p) {
+		try {
+			_lb.createUser(u,p);
+		} catch ( RemoteException e) { 
+			return;
+		}
+	}
+	
+	public void deleteUser(String u) {
+		try {
+			_lb.deleteUser(u);
+		} catch ( RemoteException e) { 
+			return;
+		}
+	}
+	
 }

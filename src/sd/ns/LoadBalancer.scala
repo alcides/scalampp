@@ -80,5 +80,8 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	
 	def getServers = serverList.toArray
 	def getAccounts = database_getUsers.toArray
+	def setPassword(user:String,pass:String) = Database.updateUser(user,pass)
+	def createUser(user:String,pass:String) = Database.createUser(user,pass)
+	def deleteUser(user:String) = Database.deleteUser(user)
 	
 }

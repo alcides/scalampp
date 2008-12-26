@@ -21,7 +21,7 @@
 		    <li class="tab"><a href="#accounts">Accounts</a></li>  
 		</ul>  
 		<div id="servers">
-			<table border="0" cellspacing="5" cellpadding="5" id="servers" class="sortable">
+			<table border="0" cellspacing="5" cellpadding="5" id="servers_table" class="sortable">
 				<thead>
 					<tr>
 						<th class="sortcol">Address</th>
@@ -31,23 +31,35 @@
 						<th class="sortcol">Clients</th>
 					</tr>
 				</thead>
-				<tbody id="servers_table">
+				<tbody id="servers_table_body">
 				</tbody>
 			</table>
 		</div>  
 		<div id="clients">
-			<table border="0" cellspacing="5" cellpadding="5" id="clients" class="sortable">
+			<table border="0" cellspacing="5" cellpadding="5" id="clients_table" class="sortable">
 				<thead>
 					<tr>
 						<th class="sortcol">jid</th>
 						<th class="sortcol">Server</th>
 					</tr>
 				</thead>
-				<tbody id="clients_table">
+				<tbody id="clients_table_body">
 				</tbody>
 			</table>
 		</div>  
-		<div id="accounts"><p>Note that the styling for the tabs is done with CSS, not the Control.Tabs script.</p></div>  		
+		<div id="accounts">
+			<table border="0" cellspacing="5" cellpadding="5" id="accounts_table" class="sortable">
+				<thead>
+					<tr>
+						<th class="sortcol">Username</th>
+						<th class="sortcol">New Password</th>
+					</tr>
+				</thead>
+				<tbody id="accounts_table_body">
+				</tbody>
+			</table>		
+			
+		</div>  		
 		
 		
 	</div>
