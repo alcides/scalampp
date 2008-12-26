@@ -151,7 +151,7 @@ object XMLStrings {
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	def message_chat(to:String,content:String) = <message to={ to } type="chat"><body>{ content }</body></message>
 	
-	def message_error_body(target:String) = "Unable to devier your message to " + target + "as this mailbox does not exist."
+	def message_error_body(target:String) = "Unable to devier your message to " + target + " as this mailbox does not exist."
 	
 	def message_error(to:String, target:String) = <message from={ InetAddress.getLocalHost.getHostName } to={ to } type="error">
 		<body>{ message_error_body(target) }</body>
