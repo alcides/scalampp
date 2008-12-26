@@ -148,7 +148,7 @@ var start_login = function() {
 	wait_for_login.delay(3);
 }
 
-window.onload = function() {
+document.observe('dom:loaded',function() {
 	
 	var cb= function() {
 		
@@ -172,4 +172,4 @@ window.onload = function() {
 			}
 		});
 	});
-};
+});
