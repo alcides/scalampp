@@ -14,11 +14,21 @@ var populate_servers = function() {
 	});
 };
 
+var populate_clients = function() {
+	var tbody = $("clients_table");
+	tbody.update();
+	servers.each(function(i){
+		i.jids.each(function(j) {
+			tbody.innerHTML += client_row_template.evaluate({ jid:j, server: i.address});
+		});
+	});
+};
 
 var get_servers = function() {
 	$get("servers",function(r) {
 		servers = r.servers;
 		populate_servers();
+		populate_clients();
 	});
 	
 };

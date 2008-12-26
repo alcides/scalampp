@@ -14,7 +14,7 @@ table {
 	width: 100%;
 }
 
-td {
+#servers td {
 	text-align: right;
 	width: 20%;
 	vertical-align: top;
