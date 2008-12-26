@@ -36,8 +36,16 @@ public class AdminServlet extends RoutedServlet {
 		String req = getPath(request,prefix);
 		if ( req.equals("servers") && method.equals("get") ) {
 			view_get_servers(request,out);
-		} else if ( req.equals("accounts") && method.equals("get") ) {
-			view_get_accounts(request,out);
+		} else if ( req.equals("accounts")) { 
+			if ( method.equals("get") ) {
+				view_get_accounts(request,out);
+			} else if ( method.equals("post") ) {
+				view_post_accounts(request,out);
+			} else if ( method.equals("put") ) {
+				view_put_accounts(request,out);
+			} else if ( method.equals("delete") ) {
+				view_delete_accounts(request,out);
+			}
 		} else {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND,"Page not found.");
 		}
@@ -81,4 +89,33 @@ public class AdminServlet extends RoutedServlet {
 		}
 	}
 	
+	private void view_post_accounts(HttpServletRequest request, PrintWriter out) {
+		String uname = request.getParameter("username");
+		String pwd = request.getParameter("password");
+		if ( uname != null && pwd != null) {
+			lbb.setPassword(uname,pwd);
+			out.println(new JsonMessage("ok","Password changed."));
+		} else {
+			out.println(new JsonMessage("error","Can't be blank."));
+		}
+	}
+	private void view_put_accounts(HttpServletRequest request, PrintWriter out) {
+		String uname = request.getParameter("username");
+		String pwd = request.getParameter("password");
+		if ( uname != null && pwd != null) {
+			lbb.createUser(uname,pwd);
+			out.println(new JsonMessage("ok","User Created."));
+		} else {
+			out.println(new JsonMessage("error","Can't be blank."));
+		}
+	}
+	private void view_delete_accounts(HttpServletRequest request, PrintWriter out) {
+		String uname = request.getParameter("username");
+		if ( uname != null) {
+			lbb.deleteUser(uname);
+			out.println(new JsonMessage("ok","User Deleted"));
+		} else {
+			out.println(new JsonMessage("error","Can't be blank."));
+		}
+	}
 }

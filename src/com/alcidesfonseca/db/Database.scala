@@ -47,7 +47,7 @@ object Database {
 	}
 	
 	def updateUser(user:String,pass:String) = {
-		update("UPDATE users SET pass='"+pass+"' WHERE name = '"+user+"'")
+		update("UPDATE users SET pass='"+pass+"' WHERE name='"+user+"'")
 	}
 	
 	def createUser(user:String,pass:String) = {
