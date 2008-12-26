@@ -51,7 +51,7 @@ public class AdminServlet extends RoutedServlet {
 				o.put("address", ar[i].toString());
 				o.put("cpu", ar[i].getCPU());
 				o.put("memory", ar[i].getMemory());
-				o.put("memory", ar[i].getNetwork());
+				o.put("network", ar[i].getNetwork());
 				o.put("jids",ar[i].getClients());
 				a.put(o);
 			}
