@@ -10,10 +10,10 @@ var $get = function(url,callback) {
 	});
 }
 
-var $post = function(url,pars,callback) {
+var $subpost = function(url,method,pars,callback) {
 	
 	new Ajax.Request(prefix + url, {
-		method:'post',
+		method:method,
 		parameters: pars,
 		onSuccess: function(transport) {
 			callback(transport.responseText.evalJSON());
@@ -21,27 +21,17 @@ var $post = function(url,pars,callback) {
 	});
 }
 
+var $post = function(url,pars,callback) {
+	$subpost(url,"post",pars,callback);
+}
+
 var $put = function(url,pars,callback) {
-	
-	new Ajax.Request(prefix + url, {
-		method:'put',
-		parameters: pars,
-		onSuccess: function(transport) {
-			callback(transport.responseText.evalJSON());
-		}
-	});
+	$subpost(url,"put",pars,callback);
 }
 
 
 var $delete = function(url,pars,callback) {
-	
-	new Ajax.Request(prefix + url, {
-		method:'delete',
-		parameters: pars,
-		onSuccess: function(transport) {
-			callback(transport.responseText.evalJSON());
-		}
-	});
+	$subpost(url,"delete",pars,callback);
 }
 
 Array.prototype.contains = function (element) {
