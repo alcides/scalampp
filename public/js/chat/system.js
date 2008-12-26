@@ -21,6 +21,29 @@ var $post = function(url,pars,callback) {
 	});
 }
 
+var $put = function(url,pars,callback) {
+	
+	new Ajax.Request(prefix + url, {
+		method:'put',
+		parameters: pars,
+		onSuccess: function(transport) {
+			callback(transport.responseText.evalJSON());
+		}
+	});
+}
+
+
+var $delete = function(url,pars,callback) {
+	
+	new Ajax.Request(prefix + url, {
+		method:'delete',
+		parameters: pars,
+		onSuccess: function(transport) {
+			callback(transport.responseText.evalJSON());
+		}
+	});
+}
+
 Array.prototype.contains = function (element) {
 	for (var i = 0; i < this.length; i++) 
 	{

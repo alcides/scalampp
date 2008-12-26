@@ -48,19 +48,21 @@ public class ChatServlet extends RoutedServlet {
 			else 
 				view_get_login(request,out,conn);
 		} else if ( req.equals("messages")) {
-			if (method.equals("post")) {
-				view_post_messages(request,out,conn);
+			if (method.equals("put")) {
+				view_put_messages(request,out,conn);
 			} else {
 				view_get_messages(request,out,conn);
 			}
 		} else if ( req.equals("status") && method.equals("post")) {
 			view_post_status(request,out,conn);
-		} else if ( req.equals("roster") && method.equals("get")) {
-			view_get_roster(request,out,conn);
-		} else if ( req.equals("roster/add") && method.equals("post")) {
-			view_post_rosterAdd(request,out,conn);
-		} else if ( req.equals("roster/del") && method.equals("post")) {
-			view_post_rosterDel(request,out,conn);
+		} else if ( req.equals("roster")) {
+			if (method.equals("get")) {
+				view_get_roster(request,out,conn);
+			} else if ( method.equals("put")) {
+				view_put_roster(request,out,conn);
+			} else if ( method.equals("delete")) {
+				view_delete_roster(request,out,conn);
+			}
 		} else if ( req.equals("updates") && method.equals("get")) {
 			view_get_updates(request,out,conn);
 		} else {
@@ -93,7 +95,7 @@ public class ChatServlet extends RoutedServlet {
 
 	}
 	
-	public void view_post_messages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_put_messages(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		String to = request.getParameter("to");
 		String what = request.getParameter("content");		
 		if ( to != null && what != null) {
@@ -114,7 +116,7 @@ public class ChatServlet extends RoutedServlet {
 		}
 	}
 	
-	public void view_post_rosterAdd(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_put_roster(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		String jid = request.getParameter("jid");
 		if ( jid != null) {
 			con.rosterAdd(jid);
@@ -124,7 +126,7 @@ public class ChatServlet extends RoutedServlet {
 		}
 	}
 	
-	public void view_post_rosterDel(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+	public void view_delete_roster(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		String jid = request.getParameter("jid");
 		if ( jid != null) {
 			con.rosterDel(jid);
