@@ -2,8 +2,11 @@ var prefix = "/admin/";
 var servers = [];
 var accounts = [];
 
-var change_pass = function(uname,pass) {
-	alert(uname + ":" + pass);
+var change_pass = function(uname,passf) {
+	$post("accounts",{username: uname, password: passf.value}, function(r) {
+		if ( r.status == "error") alert(r.message);	
+		else passf.value = "";
+	});
 }
 
 var populate_servers = function() {

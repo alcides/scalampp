@@ -2,4 +2,4 @@ var server_row_template = new Template('<tr><td>#{address}</td><td>#{cpu}</td><t
 
 var client_row_template = new Template('<tr><td>#{jid}</td><td>#{server}</td></tr>');
 
-var account_row_template = new Template('<tr><td>#{uname}</td><td><input type="password" onkeypress="if(event.keyCode==13) change_pass(\'#{uname}\',this.value);"></td></tr>');
+var account_row_template = new Template('<tr><td>#{uname}</td><td><input type="password" onkeypress="if(event.keyCode==13) change_pass(\'#{uname}\',this);"></td></tr>');
