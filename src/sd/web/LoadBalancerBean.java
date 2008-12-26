@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 
 import scala.Array;
 import sd.ns.*;
+import com.alcidesfonseca.db.User;
 
 public class LoadBalancerBean extends Object
 {
@@ -29,6 +30,13 @@ public class LoadBalancerBean extends Object
 			return new OnlineServer[0];
 		}
 	}
-	
+
+	public User[] getAccounts() {
+		try {
+			return _lb.getAccounts();
+		} catch ( RemoteException e) { 
+			return new User[0];
+		}
+	}	
 	
 }

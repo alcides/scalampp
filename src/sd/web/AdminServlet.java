@@ -11,6 +11,7 @@ import javax.rmi.*;
 import java.util.Hashtable;
 import org.json.*;
 import com.alcidesfonseca.mvc.RoutedServlet;
+import com.alcidesfonseca.db.User;
 import sd.ns.*;
 
 public class AdminServlet extends RoutedServlet {
@@ -35,6 +36,8 @@ public class AdminServlet extends RoutedServlet {
 		String req = getPath(request,prefix);
 		if ( req.equals("servers") && method.equals("get") ) {
 			view_get_servers(request,out);
+		} else if ( req.equals("accounts") && method.equals("get") ) {
+			view_get_accounts(request,out);
 		} else {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND,"Page not found.");
 		}
@@ -61,4 +64,21 @@ public class AdminServlet extends RoutedServlet {
 			out.println(new JsonMessage("error","Weird error."));
 		}
 	}
+	
+	private void view_get_accounts(HttpServletRequest request, PrintWriter out) {
+		try {
+			JSONObject j = new JSONObject();
+			j.put("status","ok");
+			JSONArray a = new JSONArray();
+			User[] ar = lbb.getAccounts();
+			for(int i = 0; i<ar.length; i++ ) {
+				a.put(ar[i].toString());
+			}
+			j.put("accounts",a);
+			out.println(j);
+		} catch (JSONException e) {
+			out.println(new JsonMessage("error","Weird error."));
+		}
+	}
+	
 }

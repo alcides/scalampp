@@ -25,4 +25,5 @@ trait ILoadBalancer extends Remote
 	def database_getFriends(name:String):List[Friend]
 	
 	def getServers:Array[OnlineServer]
+	def getAccounts:Array[User]	
 }

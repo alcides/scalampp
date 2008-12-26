@@ -79,6 +79,6 @@ class LoadBalancer extends UnicastRemoteObject with ILoadBalancer
 	// web admin API
 	
 	def getServers = serverList.toArray
-	
+	def getAccounts = database_getUsers.toArray
 	
 }
