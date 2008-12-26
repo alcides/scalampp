@@ -51,7 +51,7 @@ object Database {
 	}
 	
 	def createUser(user:String,pass:String) = {
-		update("INSERT INTO users (NULL,'"+user+"','"+pass+"')");
+		update("INSERT INTO users VALUES (NULL,'"+user+"','"+pass+"')");
 	}
 	
 	def deleteUser(user:String) = {

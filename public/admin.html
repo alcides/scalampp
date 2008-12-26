@@ -48,11 +48,19 @@
 			</table>
 		</div>  
 		<div id="accounts">
+			
+			<form action="" onsubmit="return insert_user(this);" method="post" accept-charset="utf-8">
+				<p><label for="user">User:</label> <input type="text" name="user" value=""></p>				
+				<p><label for="pass">Pass:</label> <input type="password" name="pass" value=""></p>				
+				<p class="centered"><input type="submit" value="Insert User"></p>
+			</form>
+			
 			<table border="0" cellspacing="5" cellpadding="5" id="accounts_table" class="sortable">
 				<thead>
 					<tr>
 						<th class="sortcol">Username</th>
-						<th class="sortcol">New Password</th>
+						<th>New Password</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody id="accounts_table_body">

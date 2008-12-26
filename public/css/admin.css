@@ -24,6 +24,35 @@ table {
 	text-align: left;
 }
 
+#accounts form {
+	padding: 10px;
+}
+
+#accounts label {
+	width: 50px;
+	display: block;
+	float: left;
+	text-align: right;
+	margin-right: 10px;
+}
+
+#accounts input {
+	float: left;
+}
+
+#accounts input[type=submit] {
+	float: none;
+}
+
+#accounts p {
+	clear: both;
+	width: 300px;
+}
+
+#accounts p.centered {
+	text-align: center;
+}
+
 .main {
 	width: 960px;
 	margin: auto;

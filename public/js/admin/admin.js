@@ -9,6 +9,28 @@ var change_pass = function(uname,passf) {
 	});
 }
 
+var delete_user = function(uname) {
+	$delete("accounts",{username: uname}, function(r) {
+		if ( r.status == "error") alert(r.message);	
+		else {
+			get_accounts();
+			alert("User " + uname + " deleted.");
+		}
+	});
+}
+
+var insert_user = function(form) {
+	$put("accounts",{username: form.user.value, password: form.pass.value}, function(r) {
+		if ( r.status == "error") alert(r.message);	
+		else {
+			form.user.value = "";
+			form.pass.value = "";
+			get_accounts();
+		}
+	});
+	return false;
+}
+
 var populate_servers = function() {
 	var tbody = $("servers_table_body");
 	tbody.update();
