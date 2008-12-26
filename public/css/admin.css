@@ -16,9 +16,11 @@ table {
 
 td {
 	text-align: right;
+	width: 20%;
+	vertical-align: top;
 }
 
-#container {
+.main {
 	width: 960px;
 	margin: auto;
 	margin-top: 30px;
