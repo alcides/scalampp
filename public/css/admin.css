@@ -10,6 +10,14 @@ a {
 	text-decoration: none;
 }
 
+table {
+	width: 100%;
+}
+
+td {
+	text-align: right;
+}
+
 #container {
 	width: 960px;
 	margin: auto;
