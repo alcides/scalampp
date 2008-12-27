@@ -111,6 +111,14 @@ public class ChatConnection extends Object{
 	public void rosterRequest() {
 		out.write(XMLStrings.roster_request(session.getStanzaId()));
 	}
+	
+	public void rosterAccept(String jid, Boolean a) {
+		if ( a ) {
+			out.write(XMLStrings.presence_subscribed(jid,session.getJID()));
+		} else {
+			out.write(XMLStrings.presence_unsubscribed(jid,session.getJID()));	
+		}
+	}
 
 	public JSONArray retrieveMessages() {
 		return hc.retrieveMessages();
@@ -133,7 +141,7 @@ public class ChatConnection extends Object{
 		return session.getJID();
 	}
 	
-	public Socket changeToTLS(Socket s,String host, int port) {
+	private Socket changeToTLS(Socket s,String host, int port) {
 		SocketOutChannel out = new SocketOutChannel(s);
 		int r = 0;
 		

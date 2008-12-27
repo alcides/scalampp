@@ -77,14 +77,26 @@ var get_updates = function() {
 	$get("updates", function(m) {
 		get_messages(m);
 		get_roster(m);
+		get_requests(m);
 	});
-}
+};
+
+var get_requests = function(m) {
+	m.requests.each(function(req) {
+		$post("roster",{
+			jid: req,
+			accepted: confirm("Accept " + req + " as a contact?")
+		}, function(r) {
+			if ( r.status == "error") alert(r.message);
+		})
+	});
+};
 
 var get_messages = function(m) {
-	m.messages.each(function(m) {
-		receive_message(m)
+	m.messages.each(function(ms) {
+		receive_message(ms)
 	})
-}
+};
 
 var get_roster = function(m) {
 	var r = "<ul>";
@@ -95,7 +107,7 @@ var get_roster = function(m) {
 	
 	$('roster').select(".list")[0].innerHTML = r;
 	$('roster').select(".jid")[0].innerHTML = m.myJid;
-}
+};
 
 
 var log_retry = 0

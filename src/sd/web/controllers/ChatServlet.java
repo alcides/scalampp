@@ -65,6 +65,8 @@ public class ChatServlet extends RoutedServlet {
 				view_put_roster(request,out,conn);
 			} else if ( method.equals("delete")) {
 				view_delete_roster(request,out,conn);
+			} else if ( method.equals("post")) {
+				view_post_roster(request,out,conn);
 			}
 		} else if ( req.equals("updates") && method.equals("get")) {
 			view_get_updates(request,out,conn);
@@ -135,6 +137,17 @@ public class ChatServlet extends RoutedServlet {
 		if ( jid != null) {
 			con.rosterAdd(jid);
 			out.println(new JSONMessage("ok","Request Sent"));
+		} else {
+			out.println(new JSONMessage("error","Can't be blank."));
+		}
+	}
+	
+	public void view_post_roster(HttpServletRequest request, PrintWriter out, ChatConnection con) {
+		String acc = request.getParameter("accepted");
+		String jid = request.getParameter("jid");
+		if ( acc != null && jid != null) {
+			con.rosterAccept(jid, acc.equals("true") );
+			out.println(new JSONMessage("ok","Request accepted"));
 		} else {
 			out.println(new JSONMessage("error","Can't be blank."));
 		}
