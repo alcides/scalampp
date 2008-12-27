@@ -198,14 +198,15 @@ class XMPPServerParser(val out:OutChannel) extends XMPPParser {
 									} else if ((xml \ "@type").toString == "subscribed") {
 										var to = (xml \ "@to").toString
 									
-										session.user.changeFriend(new Friend("",to),"to") // changing in the contact that accepted
+										session.user.changeFriend(new Friend("",to),"from") // changing in the contact that accepted
 									
 										UserManager.users.filter{ us => us.jid == to }.foreach { 
 											// changing in the contact that requested
-											u => u.changeFriend(new Friend("",session.shortJid),"from") 
+											u => u.changeFriend(new Friend("",session.shortJid),"to") 
 										}
 									
 										SessionManager.send(to,XMLStrings.presence_subscribed(to,session.shortJid))
+										SessionManager.send(to,XMLStrings.presence(to,session.shortJid))
 
 									} else if ((xml \ "@type").toString == "unsubscribed") {
 										var to = (xml \ "@to").toString

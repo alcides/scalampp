@@ -120,6 +120,10 @@ public class ChatConnection extends Object{
 		return hc.retrieveRoster();
 	}
 	
+	public JSONArray retrieveRequests() {
+		return hc.getAndCleanRequests();
+	}
+	
 	public int checkLogin() {
 		if (hc == null || session == null) return 0;
 		return session.isLogged();

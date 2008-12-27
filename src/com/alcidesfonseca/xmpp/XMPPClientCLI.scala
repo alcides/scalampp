@@ -1,6 +1,6 @@
 package com.alcidesfonseca.xmpp
 
-class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
+class XMPPClientCLI(var out:OutChannel, var session:ClientSession, var hc:HumanChannel) {
 	
 	var mode = 0
 	var u:String = ""
@@ -70,9 +70,8 @@ class XMPPClientCLI(var out:OutChannel, var session:ClientSession) {
 			}	
 		}
 		
-		if ( session.requests.length > 0 ) {
-			u = session.requests.head
-			session.requests = session.requests.drop(1)
+		if ( hc.hasRequest ) {
+			u = hc.popRequest
 			println( "O utilizador " + u + " deseja adiciona-lo. Quer aceita-lo?" )
 			mode = 1
 		}

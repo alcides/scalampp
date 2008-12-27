@@ -108,7 +108,7 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 					}
 					
 					case <message>{ content @ _ * }</message> => {
-						printMessage(new Message((xml \ "@from").toString,(content \ "body").text.toString))
+						printMessage(new Message((xml \ "@from").toString,(xml \ "body").text.toString))
 					}
 					
 					case <presence>{ content @ _ * }</presence> => {
@@ -127,7 +127,7 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 						} 
 						
 						if ( (xml \ "@type").text == "subscribe" ) {
-							session.requests = session.requests.::(from)
+							hc.insertRequest(from)
 						}
 
 						if ( (xml \ "@type").length == 0 ) {

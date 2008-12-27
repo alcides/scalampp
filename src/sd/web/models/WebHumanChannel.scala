@@ -10,6 +10,8 @@ class WebHumanChannel extends HumanChannel {
 	var out:PrintStream = System.out
 	var contacts:List[Contact] = List()
 	var messages:List[Message] = List()
+	var requests:List[String] = List()
+	
 
 	def updateContacts(l:List[Contact]) = {
 		contacts = for ( c <- l) yield c
@@ -49,4 +51,26 @@ class WebHumanChannel extends HumanChannel {
 	def close = {
 		open = false
 	}
+	
+	def insertRequest(jid:String) = {
+		requests = requests.::(jid)
+	}
+	
+	def popRequest() = {
+		var u = requests.head
+		requests = requests.drop(1)
+		u
+	}
+	
+	def hasRequest = requests.length > 0
+	
+	def getAndCleanRequests = {
+		var arr = new JSONArray()
+		for (r <- requests) {
+			arr.put(r)
+		}
+		requests = List()		
+		arr
+	}
+	
 }

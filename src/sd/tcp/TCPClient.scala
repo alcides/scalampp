@@ -60,8 +60,9 @@ object TCPClient {
 					session.pass = password
 					
 					// launch receiver
-					new TCPClientListener(s,session,new CLIHumanChannel()).start
-					var cli = new XMPPClientCLI(out,session)
+					var chc = new CLIHumanChannel()
+					new TCPClientListener(s,session,chc).start
+					var cli = new XMPPClientCLI(out,session,chc)
 					cli.begin(host)
 					while (s.isConnected) cli.parseInput(kb.nextLine)
 			

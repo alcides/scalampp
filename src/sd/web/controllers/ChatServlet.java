@@ -186,6 +186,7 @@ public class ChatServlet extends RoutedServlet {
 				j.put("status","ok");
 				j.put("messages",con.retrieveMessages());
 				j.put("roster",con.retrieveRoster());
+				j.put("requests",con.retrieveRequests());
 				j.put("myJid",con.getJid());
 				out.println(j);
 			} catch (JSONException e) {

@@ -14,8 +14,6 @@ class ClientSession(var host:String,var out:OutChannel) {
 	var pass = ""
 	var logged = 0
 	
-	var requests:List[String] = List()
-	
 	def getStanzaId = synchronized { 
 		stz+=1
 		"cl_" + jid + "_" + stz 
