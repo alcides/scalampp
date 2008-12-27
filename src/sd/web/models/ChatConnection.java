@@ -1,4 +1,4 @@
-package sd.web;
+package sd.web.models;
 
 import sd.ns.Connector;
 import sd.ns.ILoadBalancer;
@@ -20,7 +20,7 @@ public class ChatConnection extends Object{
 	Thread listener = null;
 	GregorianCalendar lastSeen = null;
 	
-	ChatConnection () {
+	public ChatConnection () {
 		hc = new WebHumanChannel();
 		ping();
 	}

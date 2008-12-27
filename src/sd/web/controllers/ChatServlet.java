@@ -1,4 +1,4 @@
-package sd.web;
+package sd.web.controllers;
 
 import java.io.*;
 import java.text.*;
@@ -11,6 +11,7 @@ import javax.rmi.*;
 import java.util.Hashtable;
 import org.json.*;
 import com.alcidesfonseca.mvc.RoutedServlet;
+import sd.web.models.*;
 
 public class ChatServlet extends RoutedServlet {
 	

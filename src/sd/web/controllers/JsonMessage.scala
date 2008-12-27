@@ -1,4 +1,4 @@
-package sd.web
+package sd.web.controllers
 
 import org.json._
 

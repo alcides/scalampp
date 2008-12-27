@@ -1,4 +1,4 @@
-package sd.web
+package sd.web.models
 
 import com.alcidesfonseca.xmpp._
 import java.io.PrintStream

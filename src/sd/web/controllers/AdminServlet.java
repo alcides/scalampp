@@ -1,4 +1,4 @@
-package sd.web;
+package sd.web.controllers;
 
 import java.io.*;
 import java.text.*;
@@ -13,6 +13,7 @@ import org.json.*;
 import com.alcidesfonseca.mvc.RoutedServlet;
 import com.alcidesfonseca.db.User;
 import sd.ns.*;
+import sd.web.models.*;
 
 public class AdminServlet extends RoutedServlet {
 	

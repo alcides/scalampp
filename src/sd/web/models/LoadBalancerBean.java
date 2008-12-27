@@ -1,4 +1,4 @@
-package sd.web;
+package sd.web.models;
 
 import java.net.MalformedURLException;
 import java.net.URLEncoder;

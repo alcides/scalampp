@@ -1,8 +1,10 @@
-package sd.web;
+package sd.web.controllers;
 
 import java.lang.Thread;
 import java.util.Hashtable;
 import java.util.Enumeration;
+
+import sd.web.models.*;
 
 public class WatchDog extends Thread
 {

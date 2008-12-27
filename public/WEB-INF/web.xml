@@ -31,7 +31,7 @@
       <description>
 		Home for out app
       </description>
-      <servlet-class>sd.web.ChatServlet</servlet-class>
+      <servlet-class>sd.web.controllers.ChatServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -44,7 +44,7 @@
       <description>
 		Administration API
       </description>
-      <servlet-class>sd.web.AdminServlet</servlet-class>
+      <servlet-class>sd.web.controllers.AdminServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
