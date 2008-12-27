@@ -11,7 +11,7 @@ var open_window = function(jid) {
 		win = new Window({
 			className: "mac_os_x",
 			title: "Chat with " + jid, 
-			width:300, 
+			width:400, 
 			height:200,
 			minWidth: 100,
 			minHeight: 100,
