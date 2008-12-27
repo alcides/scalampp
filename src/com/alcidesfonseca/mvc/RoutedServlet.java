@@ -17,6 +17,14 @@ public class RoutedServlet extends HttpServlet {
 		route("get",request,response);
     }
 
+	public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		route("put",request,response);
+    }
+
+	public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		route("delete",request,response);
+    }
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String m = request.getParameter("_method");
 		if ( m != null ) {
