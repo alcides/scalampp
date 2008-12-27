@@ -4,10 +4,14 @@ import sd.ns.Connector;
 import sd.ns.ILoadBalancer;
 import sd.tcp.*;
 import com.alcidesfonseca.xmpp.*;
+import pt.uc.dei.sd.SecurityHelper;
+
 import java.net.*;
+import java.io.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import org.json.*;
+
 
 public class ChatConnection extends Object{
 	
@@ -51,17 +55,14 @@ public class ChatConnection extends Object{
 		return false;
 	}
 	
-	public boolean connect(String u, String p) throws java.rmi.RemoteException, sd.ns.NoServerAvailableException {
-		if (session != null) {
-			hc = new WebHumanChannel();
-		}
-	
-		ILoadBalancer lb = Connector.getLoadBalancer();
-		InetSocketAddress sa = lb.getServer();
+	public boolean connect(String u, String p, InetSocketAddress sa) throws java.rmi.RemoteException, sd.ns.NoServerAvailableException {
 		port = sa.getPort();
 		host = sa.getHostName();
 		try {
 			s = new Socket(host,port);
+			if (host.equals("jabber.org")) {
+				s = changeToTLS(s,host,port);
+			}
 		} catch (java.net.UnknownHostException e) {
 			return false;
 		} catch (java.io.IOException e) {
@@ -70,13 +71,23 @@ public class ChatConnection extends Object{
 		out = new SocketOutChannel(s);
 		session = new ClientSession(host,out);	
 		session.setLogin(u,p);
-	
+
 		listener = new TCPClientListener(s,session,hc);
 		listener.start();
 
 		// starts to send		
 		out.write( XMLStrings.stream_start_to(host) );
 		return true;
+	}
+	
+	public boolean connect(String u, String p) throws java.rmi.RemoteException, sd.ns.NoServerAvailableException {
+		if (session != null) {
+			hc = new WebHumanChannel();
+		}
+	
+		ILoadBalancer lb = Connector.getLoadBalancer();
+		InetSocketAddress sa = lb.getServer();
+		return connect(u,p,sa);
 	}
 	
 	public void sendMessage(String to, String content) {
@@ -116,6 +127,38 @@ public class ChatConnection extends Object{
 	
 	public String getJid() {
 		return session.getJID();
+	}
+	
+	public Socket changeToTLS(Socket s,String host, int port) {
+		SocketOutChannel out = new SocketOutChannel(s);
+		int r = 0;
+		
+		try	{	
+			BufferedReader in = new BufferedReader( new InputStreamReader( s.getInputStream() ));
+	
+			out.write(XMLStrings.stream_start_to(host));
+			out.write(XMLStrings.start_tls());
+	
+			XMLParser parser = new XMLParser(new XMPPEmptyParser());
+	
+			while ( !parser.getTemp().contains("<proceed") ) {
+				r = in.read();
+				parser.parseInt(r);
+			}
+			
+			try {
+				return SecurityHelper.executeTLSNegotiation(s,host,port);}
+			catch ( java.security.NoSuchAlgorithmException e) { 
+				return s;
+			}
+			catch ( java.security.KeyManagementException e) { 
+				return s;
+			}
+			
+		} catch (IOException e) {
+			return s;
+		}
+		
 	}
 	
 }

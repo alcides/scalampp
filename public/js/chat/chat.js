@@ -154,7 +154,8 @@ document.observe('dom:loaded',function() {
 		
 		$post('login',{
 			user: $("user").value,
-			pwd: $("pwd").value
+			pwd: $("pwd").value,
+			server: ($("server").checked) ? "jabber" : ""
 		}, function(c) {
 			if (c.status == "error") {
 				alert(c.message);

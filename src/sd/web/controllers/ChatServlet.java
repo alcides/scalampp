@@ -1,6 +1,7 @@
 package sd.web.controllers;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.text.*;
 import java.util.*;
 import javax.servlet.*;
@@ -74,26 +75,37 @@ public class ChatServlet extends RoutedServlet {
 
 	private void view_post_login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		HttpSession s = request.getSession(true);
+		boolean r;
 		
 		String u = request.getParameter("user");
 		String p = request.getParameter("pwd");
+		String serv = request.getParameter("server");
+		
 		
 		if ( u.length() + p.length() > 0 ) {
 		
-		try	{
-			if (con.connect(u,p)) {
-				out.println(new JSONMessage("ok","Connection started"));
-			} else {
-				out.println(new JSONMessage("error","Error in connection"));
+			try	{
+				
+				if ( serv.equals("") ) {
+					r = con.connect(u,p);
+				} else {
+					r = con.connect(u,p,new InetSocketAddress("jabber.org",5222));
+				}
+				
+				if (r) {
+					out.println(new JSONMessage("ok","Connection started"));
+				} else {
+					out.println(new JSONMessage("error","Error in connection"));
+				}
+				
+			} catch (sd.ns.NoServerAvailableException e) {
+				out.println(new JSONMessage("error","No Server Available"));
+			} catch (java.rmi.RemoteException e) {
+				out.println(new JSONMessage("error","Error in Connection"));			
 			}
-		} catch (sd.ns.NoServerAvailableException e) {
-			out.println(new JSONMessage("error","No Server Available"));
-		} catch (java.rmi.RemoteException e) {
-			
+		} else {
+			out.println(new JSONMessage("error","Data cannot be blank"));
 		}
-	} else {
-		out.println(new JSONMessage("error","Data cannot be blank"));
-	}
 
 	}
 	

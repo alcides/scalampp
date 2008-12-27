@@ -28,7 +28,7 @@ object XMLStrings {
 	
 	def stream_auth(user:String,pass:String) = <auth mechanism="PLAIN" xmlns="urn:ietf:params:xml:ns:xmpp-sasl">{ Base64.encodeBytes( ( '\0' + user + '\0' + pass ).getBytes("ISO-8859-1") ) }</auth>
 	
-	val start_tls = <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+ 	def start_tls = <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
 	
 	val stream_auth_methods = <stream:features>
 			<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
