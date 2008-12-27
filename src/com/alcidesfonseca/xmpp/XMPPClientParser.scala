@@ -108,7 +108,7 @@ class XMPPClientParser(session:ClientSession,hc:HumanChannel) extends XMPPParser
 					}
 					
 					case <message>{ content @ _ * }</message> => {
-						printMessage(new Message((xml \ "@from").toString,content(0).text.toString))
+						printMessage(new Message((xml \ "@from").toString,(content \ "body").text.toString))
 					}
 					
 					case <presence>{ content @ _ * }</presence> => {
