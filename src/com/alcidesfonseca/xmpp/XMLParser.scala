@@ -36,4 +36,6 @@ class XMLParser(var s:XMPPParser) {
 	}
 	
 	def filter(c:Char):String = filter(c.asInstanceOf[Int])
+	
+	def getTemp = data_to_parse
 }

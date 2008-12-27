@@ -23,7 +23,7 @@
 
   <property name="src.includes"      value="**/*.scala"/>
   <property name="src.excludes"      value="**/*.class"/>
-  <property name="src.java2.includes" value="**sd/web/*.java,**com/alcidesfonseca/mvc/*.java"/>
+  <property name="src.java2.includes" value="**sd/web/**/*.java,**com/alcidesfonseca/mvc/**/*.java"/>
 
   <property name="sqlite.jar" value="./lib/sqlitejdbc.jar"/>
   <property name="scala-library.jar" value="${scala.home}/lib/scala-library.jar"/>

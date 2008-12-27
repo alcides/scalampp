@@ -23,4 +23,10 @@ trait ILoadBalancer extends Remote
 	def database_update(sql:String)
 	def database_getUsers:List[User]
 	def database_getFriends(name:String):List[Friend]
+	
+	def getServers:Array[OnlineServer]
+	def getAccounts:Array[User]
+	def setPassword(user:String,pass:String):Unit
+	def createUser(user:String,pass:String):Unit
+	def deleteUser(user:String):Unit
 }

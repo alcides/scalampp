@@ -20,3 +20,8 @@ In the build folder:
 @scala BootClient@ - Starts a XMPP client
 
 @scala BootClient --jabber@ - Starts a XMPP client connecting to Jabber.org
+
+
+h3.WebInterface:
+
+Start the Tomcat from the build folde, after compiling. Also, make a softlink from the ROOT folder in the tomcat home to the public folder in this project. This alone should be enough to run the project.

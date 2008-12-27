@@ -20,7 +20,7 @@ object XMLStrings {
 	
 	def stream_start_to(host:String) = xml_init + "<stream:stream to='"+host+"' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>"
 	
-	val stream_end = "</stream:stream>"
+	def stream_end = "</stream:stream>"
 	
 	def check_start(x:String):Boolean = {
 		XMLValidator.validate(x + stream_end)
@@ -28,7 +28,7 @@ object XMLStrings {
 	
 	def stream_auth(user:String,pass:String) = <auth mechanism="PLAIN" xmlns="urn:ietf:params:xml:ns:xmpp-sasl">{ Base64.encodeBytes( ( '\0' + user + '\0' + pass ).getBytes("ISO-8859-1") ) }</auth>
 	
-	val start_tls = <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
+ 	def start_tls = <starttls xmlns="urn:ietf:params:xml:ns:xmpp-tls"/>
 	
 	val stream_auth_methods = <stream:features>
 			<mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
@@ -151,7 +151,7 @@ object XMLStrings {
 	def message_chat(from:String,to:String,content:String) = <message to={ to } from={ from } type="chat"><body>{ content }</body></message>
 	def message_chat(to:String,content:String) = <message to={ to } type="chat"><body>{ content }</body></message>
 	
-	def message_error_body(target:String) = "Unable to devier your message to " + target + "as this mailbox does not exist."
+	def message_error_body(target:String) = "Unable to devier your message to " + target + " as this mailbox does not exist."
 	
 	def message_error(to:String, target:String) = <message from={ InetAddress.getLocalHost.getHostName } to={ to } type="error">
 		<body>{ message_error_body(target) }</body>

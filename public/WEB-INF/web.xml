@@ -31,12 +31,26 @@
       <description>
 		Home for out app
       </description>
-      <servlet-class>sd.web.ChatServlet</servlet-class>
+      <servlet-class>sd.web.controllers.ChatServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
        <servlet-name>ChatServlet</servlet-name>
         <url-pattern>/chat/*</url-pattern>
     </servlet-mapping>
+
+   <servlet>
+      <servlet-name>AdminServlet</servlet-name>
+      <description>
+		Administration API
+      </description>
+      <servlet-class>sd.web.controllers.AdminServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+       <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>

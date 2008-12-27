@@ -36,13 +36,13 @@ var open_contact = function(jid) {
 }
 
 var add_contact = function() {
-	$post("roster/add",{ jid: prompt("Enter the jid: ", "") }, function(r) {
+	$put("roster",{ jid: prompt("Enter the jid: ", "") }, function(r) {
 		if ( r.status == "error") alert(r.message);	
 	});
 }
 
 var del_contact = function() {
-	$post("roster/del",{ jid: prompt("Enter the jid: ", "") }, function(r) {
+	$delete("roster",{ jid: prompt("Enter the jid: ", "") }, function(r) {
 		if ( r.status == "error") alert(r.message);	
 	});
 }
@@ -62,7 +62,7 @@ var change_status_to = function(st) {
 };
 
 var send_message = function(jid,content) {
-	$post("messages",{ to: jid, content: content },function(r) {
+	$put("messages",{ to: jid, content: content },function(r) {
 		if ( r.status == "error") alert(r.message);
 		else add_to_log(jid,message_sent_template.evaluate({ content: content }));
 	});
@@ -148,13 +148,14 @@ var start_login = function() {
 	wait_for_login.delay(3);
 }
 
-window.onload = function() {
+document.observe('dom:loaded',function() {
 	
 	var cb= function() {
 		
 		$post('login',{
 			user: $("user").value,
-			pwd: $("pwd").value
+			pwd: $("pwd").value,
+			server: ($("server").checked) ? "jabber" : ""
 		}, function(c) {
 			if (c.status == "error") {
 				alert(c.message);
@@ -172,4 +173,4 @@ window.onload = function() {
 			}
 		});
 	});
-};
+});

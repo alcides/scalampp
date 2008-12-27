@@ -6,6 +6,7 @@ import java.util.GregorianCalendar
 import java.net._
 import java.rmi._
 
+@serializable
 class OnlineServer(var serverAddress:InetSocketAddress,var pb:IPingBack, var serverData:ServerData) {
 	
 	override def toString = serverAddress.toString
@@ -29,5 +30,11 @@ class OnlineServer(var serverAddress:InetSocketAddress,var pb:IPingBack, var ser
 		catch {
 			case e : RemoteException => false
 		}
-	}	
+	}
+	
+	def getCPU = serverData.cpuLoad
+	def getMemory = serverData.memoryLoad
+	def getNetwork = serverData.networkLoad
+	def getClients = sessions.toArray
+	
 }
