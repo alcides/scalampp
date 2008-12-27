@@ -14,6 +14,7 @@ import com.alcidesfonseca.mvc.RoutedServlet;
 import com.alcidesfonseca.db.User;
 import sd.ns.*;
 import sd.web.models.*;
+import sd.web.templates.JSONMessage;
 
 public class AdminServlet extends RoutedServlet {
 	
@@ -70,7 +71,7 @@ public class AdminServlet extends RoutedServlet {
 			j.put("servers",a);
 			out.println(j);
 		} catch (JSONException e) {
-			out.println(new JsonMessage("error","Weird error."));
+			out.println(new JSONMessage("error","Weird error."));
 		}
 	}
 	
@@ -86,7 +87,7 @@ public class AdminServlet extends RoutedServlet {
 			j.put("accounts",a);
 			out.println(j);
 		} catch (JSONException e) {
-			out.println(new JsonMessage("error","Weird error."));
+			out.println(new JSONMessage("error","Weird error."));
 		}
 	}
 	
@@ -95,9 +96,9 @@ public class AdminServlet extends RoutedServlet {
 		String pwd = request.getParameter("password");
 		if ( uname != null && pwd != null) {
 			lbb.setPassword(uname,pwd);
-			out.println(new JsonMessage("ok","Password changed."));
+			out.println(new JSONMessage("ok","Password changed."));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 	private void view_put_accounts(HttpServletRequest request, PrintWriter out) {
@@ -105,18 +106,18 @@ public class AdminServlet extends RoutedServlet {
 		String pwd = request.getParameter("password");
 		if ( uname != null && pwd != null) {
 			lbb.createUser(uname,pwd);
-			out.println(new JsonMessage("ok","User Created."));
+			out.println(new JSONMessage("ok","User Created."));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 	private void view_delete_accounts(HttpServletRequest request, PrintWriter out) {
 		String uname = request.getParameter("username");
 		if ( uname != null) {
 			lbb.deleteUser(uname);
-			out.println(new JsonMessage("ok","User Deleted"));
+			out.println(new JSONMessage("ok","User Deleted"));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 }

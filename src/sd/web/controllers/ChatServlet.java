@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import org.json.*;
 import com.alcidesfonseca.mvc.RoutedServlet;
 import sd.web.models.*;
+import sd.web.templates.JSONMessage;
 
 public class ChatServlet extends RoutedServlet {
 	
@@ -81,17 +82,17 @@ public class ChatServlet extends RoutedServlet {
 		
 		try	{
 			if (con.connect(u,p)) {
-				out.println(new JsonMessage("ok","Connection started"));
+				out.println(new JSONMessage("ok","Connection started"));
 			} else {
-				out.println(new JsonMessage("error","Error in connection"));
+				out.println(new JSONMessage("error","Error in connection"));
 			}
 		} catch (sd.ns.NoServerAvailableException e) {
-			out.println(new JsonMessage("error","No Server Available"));
+			out.println(new JSONMessage("error","No Server Available"));
 		} catch (java.rmi.RemoteException e) {
 			
 		}
 	} else {
-		out.println(new JsonMessage("error","Data cannot be blank"));
+		out.println(new JSONMessage("error","Data cannot be blank"));
 	}
 
 	}
@@ -101,9 +102,9 @@ public class ChatServlet extends RoutedServlet {
 		String what = request.getParameter("content");		
 		if ( to != null && what != null) {
 			con.sendMessage(to,what);
-			out.println(new JsonMessage("ok","Message Sent"));
+			out.println(new JSONMessage("ok","Message Sent"));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 	
@@ -111,9 +112,9 @@ public class ChatServlet extends RoutedServlet {
 		String sta = request.getParameter("presence");		
 		if (sta != null) {
 			con.sendPresence(sta);
-			out.println(new JsonMessage("ok","Status updated"));
+			out.println(new JSONMessage("ok","Status updated"));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 	
@@ -121,9 +122,9 @@ public class ChatServlet extends RoutedServlet {
 		String jid = request.getParameter("jid");
 		if ( jid != null) {
 			con.rosterAdd(jid);
-			out.println(new JsonMessage("ok","Request Sent"));
+			out.println(new JSONMessage("ok","Request Sent"));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 	
@@ -131,9 +132,9 @@ public class ChatServlet extends RoutedServlet {
 		String jid = request.getParameter("jid");
 		if ( jid != null) {
 			con.rosterDel(jid);
-			out.println(new JsonMessage("ok","Request Sent"));
+			out.println(new JSONMessage("ok","Request Sent"));
 		} else {
-			out.println(new JsonMessage("error","Can't be blank."));
+			out.println(new JSONMessage("error","Can't be blank."));
 		}
 	}
 
@@ -144,7 +145,7 @@ public class ChatServlet extends RoutedServlet {
 			j.put("messages",con.retrieveMessages());
 			out.println(j);
 		} catch (JSONException e) {
-			out.println(new JsonMessage("error","Weird error."));
+			out.println(new JSONMessage("error","Weird error."));
 		}
 	}
 	
@@ -156,15 +157,15 @@ public class ChatServlet extends RoutedServlet {
 			j.put("myJid",con.getJid());
 			out.println(j);
 		} catch (JSONException e) {
-			out.println(new JsonMessage("error","Weird error."));
+			out.println(new JSONMessage("error","Weird error."));
 		}
 	}
 	
 	public void view_get_login(HttpServletRequest request, PrintWriter out, ChatConnection con) {
 		int i = con.checkLogin();
-		if ( i == 0) out.println(new JsonMessage("wait","Please wait"));
-		if ( i < 0) out.println(new JsonMessage("fail","Wrong Login"));
-		if ( i > 0) out.println(new JsonMessage("ok","logged"));		
+		if ( i == 0) out.println(new JSONMessage("wait","Please wait"));
+		if ( i < 0) out.println(new JSONMessage("fail","Wrong Login"));
+		if ( i > 0) out.println(new JSONMessage("ok","logged"));		
 	}
 	
 	public void view_get_updates(HttpServletRequest request, PrintWriter out, ChatConnection con) {
@@ -176,7 +177,7 @@ public class ChatServlet extends RoutedServlet {
 				j.put("myJid",con.getJid());
 				out.println(j);
 			} catch (JSONException e) {
-				out.println(new JsonMessage("error","Weird error."));
+				out.println(new JSONMessage("error","Weird error."));
 			}
 	}
 }

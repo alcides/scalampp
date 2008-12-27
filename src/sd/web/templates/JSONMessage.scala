@@ -1,8 +1,8 @@
-package sd.web.controllers
+package sd.web.templates
 
 import org.json._
 
-class JsonMessage(status:String, content:String) {
+class JSONMessage(status:String, content:String) {
 	var j = new JSONObject()
 	j.accumulate("status",status)
 	j.accumulate("message",content)
