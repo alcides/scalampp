@@ -62,11 +62,20 @@ var populate_accounts = function() {
 	});	
 };
 
+var populate_ns = function(s) {
+	var i = s.indexOf("endpoint:[") + "endpoint:[".length;
+	var f = s.indexOf("]",i);
+	
+	
+	$('ns').innerHTML = "LoadBalancer: " + s.slice(i,f);
+}
+
 var get_servers = function() {
 	$get("servers",function(r) {
 		servers = r.servers;
 		populate_servers();
 		populate_clients();
+		populate_ns(r.ns);
 	});
 };
 

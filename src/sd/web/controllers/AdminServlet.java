@@ -69,6 +69,7 @@ public class AdminServlet extends RoutedServlet {
 				a.put(o);
 			}
 			j.put("servers",a);
+			j.put("ns",lbb.getNamingService());
 			out.println(j);
 		} catch (JSONException e) {
 			out.println(new JSONMessage("error","Weird error."));
