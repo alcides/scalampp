@@ -24,4 +24,4 @@ In the build folder:
 
 h3. WebInterface:
 
-Start the Tomcat from the build folde, after compiling. Also, make a softlink from the ROOT folder in the tomcat home to the public folder in this project. This alone should be enough to run the project.
+Start the Tomcat from the build folder, after compiling. Also, make a softlink from the ROOT folder in the tomcat home to the public folder in this project. This alone should be enough to run the project.
