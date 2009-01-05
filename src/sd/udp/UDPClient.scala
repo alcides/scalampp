@@ -10,10 +10,10 @@ import com.alcidesfonseca.xmpp._
 import scala.xml._
 import java.util.Scanner
 
-class UDPClientListener(val s:DatagramSocket, val session:ClientSession) extends Thread {
+class UDPClientListener(val s:DatagramSocket, val session:ClientSession,val hc:HumanChannel) extends Thread {
 	var out = session.out
 	
-	var cstream = new XMPPClientParser(session, new CLIHumanChannel())
+	var cstream = new XMPPClientParser(session, hc)
 	
 	override def run = {
 		try {
@@ -58,8 +58,9 @@ object UDPClient {
 				session.pass = password
 				
 				// launch receiver
-				new UDPClientListener(aSocket,session).start
-				var cli = new XMPPClientCLI(out,session)
+				var chc = new CLIHumanChannel()
+				new UDPClientListener(aSocket,session,chc).start
+				var cli = new XMPPClientCLI(out,session,chc)
 				cli.begin(host)
 				while (true) cli.parseInput(kb.nextLine)
 			 } 
